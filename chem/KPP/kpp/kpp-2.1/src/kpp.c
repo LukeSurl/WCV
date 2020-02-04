@@ -508,12 +508,13 @@ int status;
 char name[ 200 ];
 char *p;
 int i,j;
-  
+  printf("\nKPP debug1");
   AllocInternalArrays();
-
+  printf("\nKPP debug2");
   p = getenv("KPP_HOME");
+  printf("\nKPP debug3");
   if( p ) strcpy( Home, p );
-
+  printf("\nKPP debug4");
   switch( argc ) {
     case 3: eqFileName = argv[1];
             rootFileName = argv[2];
@@ -533,17 +534,21 @@ int i,j;
     default: FatalError(1,"\nUsage :"
 		          "\n        kpp <equations file> [output file]\n");
   }
-
+  printf("\nKPP debug 5");
   printf("\nThis is KPP-%s.\n", KPP_VERSION);
-
+  printf("\nKPP debug 6");
   printf("\nKPP is parsing the equation file.");
+  
+  printf("\nKPP debug 7");
   status = ParseEquationFile( argv[1] );
-
+  printf(status);
+  printf("\n KPP debug 7.5");
+  printf("\nKPP debug 8");
   if( status ) FatalError(2,"%d errors and %d warnings encountered.", 
                            nError, nWarning ); 
   /* Allocate some internal data structures */
   AllocStructArrays();
-
+  printf("\nKPP debug 9");
   printf("\nKPP is computing Jacobian sparsity structure.");
   ReorderSpecies( UNSORT );
   if (useReorder==1){

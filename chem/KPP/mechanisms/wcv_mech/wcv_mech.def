@@ -212,11 +212,11 @@
   ATK_3=(a0/(1+a0/b0))*(fc**(1/(1+log10(a0/b0)*log10(a0/b0)))) 
   END FUNCTION ATK_3
 !___________________________________________________
-   REAL(KIND=dp) FUNCTION ORGBRPROD( A0,B0,CH3BRCONC,TEMP, C_M,RATEMULTI )
+   REAL(KIND=dp) FUNCTION ORGBRPROD(A0,B0,CH3BRCONC,TEMP,C_M,RATEMULTI)
     REAL(KIND=dp),INTENT(IN) :: TEMP
     REAL(KIND=dp),INTENT(IN) :: A0,B0,C_M
-    REAL(KIND=dp),INTENT(IN) :: CH3BRCONC !fixed molar ratio of CH3BR in troposphere. 
-    REAL(KIND=dp),INTENT(IN) :: RATEMULTI !number to multiply rate by to cover for other Br reactions.
+    REAL(KIND=dp),INTENT(IN) :: CH3BRCONC !fix CH3BR in troposphere. 
+    REAL(KIND=dp),INTENT(IN) :: RATEMULTI !X rate to for oth reacts
     ORGBRPROD = RATEMULTI * (CH3BRCONC * C_M) * A0 * EXP(- B0 /TEMP )
     END FUNCTION ORGBRPROD
 
@@ -431,7 +431,7 @@
 
 !--- define parameters ---
 
-! gamma = 0.1; values vary for surface type, see IUPAC 2013 compilation #5649, g=0.1 is not too bad...
+! gamma = 0.1
  xg=0.1d0
 ! fail safe:
  xM = 1.d20
@@ -478,21 +478,27 @@
 ! sqrt(8*R_gas/pi)=4.60138
 ! v_mean in cm/s is 100 times this
 
-   xtr = 0.25d0 * SQRT(TEMP/xM) * 4.60138d0 * xg * (SURF_DCEN * 1.0d2)
+ xtr = 0.25d0 * SQRT(TEMP/xM) * 4.60138d0 * xg * (SURF_DCEN * 1.0d2)
 
 ! calculate relative rates
 ! het_total = [H2O] + f_Cl- [Cl-] + f_Br- [Br-]
-! f_Cl- = 5e2, f_Br- = 3e5 (see Behnke et al, 1997, von Glasow et al, 2002a)
-! assume Henry's law equilibrium with 1st dissociation ==> [X-] = K_HX H_HX p_HX / [H+]
-! conversion  concentration [mol m-3_air] to partial pressure [hPa]: p=RTc plus unit conversion (see WRF 58)
+! f_Cl- = 5e2, f_Br- = 3e5 
+!(see Behnke et al, 1997, von Glasow et al, 2002a)
+! assume Henry's law equilibrium with 
+!1st dissociation ==> [X-] = K_HX H_HX p_HX / [H+]
+! conversion  concentration [mol m-3_air] 
+!to partial pressure [hPa]: p=RTc plus unit conversion (see WRF 58)
  xHp = 1.d-2 ! assume pH=2
  xCLfac = 8.314 * 9.869d-6 * TEMP / xHp * 5.0d2*xH_HCL*1.7d6
  xBRfac = 8.314 * 9.869d-6 * TEMP / xHp * 3.0d5*xH_HBR*1.d9
  hetT=  55.55d0 + xCLfac * C_HCL + xBRfac * C_HBR
 
-! for b0 = 2/3: xbr = xXfac * [HX] but the rate expression needs to be divided 
-! by [HX] as it's formulated as a pseudo-1st order reaction, hence for reactions
-! with [HX] leading to XY, the rate needs to be divided by [HX], hence it does
+! for b0 = 2/3: xbr = xXfac * [HX] 
+!but the rate expression needs to be divided 
+! by [HX] as it's formulated as a pseudo-1st order reaction,
+! hence for reactions
+! with [HX] leading to XY, the rate needs to be divided by [HX],
+! hence it does
 ! not appear here:
  IF (b0 .EQ. 1) THEN
   xBR=55.55d0
@@ -504,7 +510,8 @@
   xBR=xBRfac !* C(I_HBr) / C(I_HBr)
  ENDIF
 
-! why was water multiplied as well in old style het reactions??? unit conversion?
+! why was water multiplied as well in 
+!old style het reactions??? unit conversion?
 
  IF (hetT .GT. 0.d0) then
   xhet_sim3 = xtr * xBR / hetT

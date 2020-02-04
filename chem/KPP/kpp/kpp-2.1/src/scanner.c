@@ -889,20 +889,29 @@ int code;
     InlineCode[i].maxlen = 0;
   }  
   
+  printf("\n debug001");
   EqnNr = 0;
   SpcNr = 0;
-  
+  printf("\n debug002");
   DeclareAtom( "CANCEL" );   
   SetAtomType( "CANCEL", CANCEL_CHECK );
   DeclareAtom( "IGNORE" );   
   SetAtomType( "IGNORE", NO_CHECK );
+  printf("\n debug003");
   DeclareSpecies( DUMMY_SPC, "???" );
   StoreSpecies( MAX_SPECIES-1, DUMMY_SPC, "HV" );
+  printf("\n debug004");
   AddAtom( "CANCEL", "1" );
+  printf("\n debug005");
   StoreSpecies( MAX_SPECIES-2, DUMMY_SPC, "PROD" );
-
+  printf("\n Before Parser");
+  printf("\nfilename variable is '%s'",filename);
+  printf("\n debug006");
   code = Parser( filename );
-
+  printf("\n debug007");
+  printf("\n xxxx");
+  printf(code);
+  printf("\n After Parser");
   return code;
 }
 
