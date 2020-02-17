@@ -1,5 +1,5 @@
 #!/bin/bash
-cd /home/lsurl/WCV/WRF/chem/KPP/kpp/kpp-2.1/src/
+cd /home/lsurl/WCV/editing/WRF_delta/chem/KPP/kpp/kpp-2.1/src/
 flex scan.l
 sed -i '
 1 i \
@@ -28,5 +28,5 @@ sed -i '
 #define COMMENT2 22 \
 #define EQN_ID 23 \
 #define INL_CODE 24 
-' /home/lsurl/WCV/WRF/chem/KPP/kpp/kpp-2.1/src/lex.yy.c
-cd /home/lsurl/WCV/WRF/
+' /home/lsurl/WCV/editing/WRF_delta/chem/KPP/kpp/kpp-2.1/src/lex.yy.c
+cd /home/lsurl/WCV/editing/WRF_delta/

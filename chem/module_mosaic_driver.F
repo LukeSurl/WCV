@@ -7818,31 +7818,42 @@ n2o5_flag = config_flags%n2o5_hetchem
 	end subroutine aerchem_debug_dump 
 
 !=WCV surf area scheme====================================
- SUBROUTINE SURF_AREA ( chem, num_chem, q_maxd_asize, &
-                   q_maxd_atype,   &
-                   q_dcen_sect, surf_dcen, rho_phy,  &
+ SUBROUTINE SURF_AREA ( chem, num_chem, i_maxd_asize, &
+                   i_maxd_atype,   &
+                   i_dcen_sect, surf_dcen, rho_phy,  &
                    ids,ide, jds,jde, kds,kde, ims,ime, &
                    jms,jme, kms,kme, &
                    its,ite, jts,jte, kts,kte )
 !========================================================================
  USE module_data_mosaic_asect
- use module_configure, only: p_num_a01, p_num_a02, p_num_a03, p_num_a04, p_num_a05, p_num_a06,  &
-                             p_num_a07, p_num_a08, p_surf_dcen
+ use module_configure, only: p_num_a01, p_num_a02, &
+                             p_num_a03, p_num_a04, &
+                             p_num_a05, p_num_a06, &
+                             p_num_a07, p_num_a08, &
+                             p_water_a01, p_water_a02, &
+                             p_water_a03, p_water_a04, &
+                             p_water_a05, p_water_a06, &
+                             p_water_a07, p_water_a08, &
+                             p_surf_dcen
 
  IMPLICIT NONE
  INTEGER, intent(in) :: num_chem
  REAL, intent(inout), dimension(ims:ime, kms:kme, jms:jme, num_chem) :: chem
  INTEGER q_maxd_asize
  INTEGER q_maxd_atype
- REAL,    intent(in) :: q_dcen_sect(q_maxd_asize, q_maxd_atype) ! center size of section (cm)
+ REAL,    intent(in) :: i_dcen_sect(i_maxd_asize, i_maxd_atype) ! input center size of section (cm)
+ REAL                   o_dcen_sect(i_maxd_asize, i_maxd_atype) ! output center size of section (cm)
  REAL, dimension(ims:ime, kms:kme, jms:jme) :: surf_a01, surf_a02, surf_a03, surf_a04, surf_a05, &
-                                               surf_a06, surf_a07, surf_a08    ! total aerosol surface area for bin m by dcen
- REAL, intent(inout), dimension(ims:ime, kms:kme, jms:jme) :: surf_dcen  ! total aerosol surface area by dcen
- REAL, intent(in), dimension(ims:ime, kms:kme, jms:jme ) :: rho_phy        ! density at mid-level  (kg/m3)
+                      surf_a06, surf_a07, surf_a08    ! total aerosol surface area for bin m by dcen
+ REAL, dimension(ims:ime, kms:kme, jms:jme) :: vol_a01, vol_a02, vol_a03, vol_a04, vol_a05, &
+                               vol_a06, vol_a07, vol_a08    ! total aerosol volume for bin m by dcen
+ REAL, intent(inout), dimension(ims:ime, kms:kme, jms:jme) :: surf_dcen  ! total aerosol SA by dcen
+ REAL, intent(in), dimension(ims:ime, kms:kme, jms:jme ) :: rho_phy  ! density at mid-level  (kg/m3)
  INTEGER, intent(in) :: ids,ide, jds,jde, kds,kde, &
                         ims,ime, jms,jme, kms,kme, &
                         its,ite, jts,jte, kts,kte
  REAL, parameter :: PI = 3.14159
+ REAL, parameter :: waterdens = 1000000. !ug/cm^3
  INTEGER :: m,i,j,k,n,l
 
 
@@ -7851,7 +7862,6 @@ n2o5_flag = config_flags%n2o5_hetchem
  do i= its,ite
 
  chem(i,k,j,p_surf_dcen)=0.0
-
  surf_a01(i,k,j)=0.0
  surf_a02(i,k,j)=0.0
  surf_a03(i,k,j)=0.0
@@ -7861,14 +7871,48 @@ n2o5_flag = config_flags%n2o5_hetchem
  surf_a07(i,k,j)=0.0
  surf_a08(i,k,j)=0.0
 
- surf_a01(i,k,j) = 4. * PI * ((q_dcen_sect(1,1) / 2.)**2.) * chem(i,k,j,p_num_a01) 
- surf_a02(i,k,j) = 4. * PI * ((q_dcen_sect(2,1) / 2.)**2.) * chem(i,k,j,p_num_a02) 
- surf_a03(i,k,j) = 4. * PI * ((q_dcen_sect(3,1) / 2.)**2.) * chem(i,k,j,p_num_a03)  
- surf_a04(i,k,j) = 4. * PI * ((q_dcen_sect(4,1) / 2.)**2.) * chem(i,k,j,p_num_a04) 
- surf_a05(i,k,j) = 4. * PI * ((q_dcen_sect(5,1) / 2.)**2.) * chem(i,k,j,p_num_a05) 
- surf_a06(i,k,j) = 4. * PI * ((q_dcen_sect(6,1) / 2.)**2.) * chem(i,k,j,p_num_a06) 
- surf_a07(i,k,j) = 4. * PI * ((q_dcen_sect(7,1) / 2.)**2.) * chem(i,k,j,p_num_a07) 
- surf_a08(i,k,j) = 4. * PI * ((q_dcen_sect(8,1) / 2.)**2.) * chem(i,k,j,p_num_a08) 
+ !get dry volumes, cm^3/kg air
+ vol_a01(i,k,j) = (4./3.) * PI * ((i_dcen_sect(1,1) / 2.)**3.) * chem(i,k,j,p_num_a01)
+ vol_a02(i,k,j) = (4./3.) * PI * ((i_dcen_sect(2,1) / 2.)**3.) * chem(i,k,j,p_num_a02)
+ vol_a03(i,k,j) = (4./3.) * PI * ((i_dcen_sect(3,1) / 2.)**3.) * chem(i,k,j,p_num_a03) 
+ vol_a04(i,k,j) = (4./3.) * PI * ((i_dcen_sect(4,1) / 2.)**3.) * chem(i,k,j,p_num_a04)
+ vol_a05(i,k,j) = (4./3.) * PI * ((i_dcen_sect(5,1) / 2.)**3.) * chem(i,k,j,p_num_a05)
+ vol_a06(i,k,j) = (4./3.) * PI * ((i_dcen_sect(6,1) / 2.)**3.) * chem(i,k,j,p_num_a06)
+ vol_a07(i,k,j) = (4./3.) * PI * ((i_dcen_sect(7,1) / 2.)**3.) * chem(i,k,j,p_num_a07)
+ vol_a08(i,k,j) = (4./3.) * PI * ((i_dcen_sect(8,1) / 2.)**3.) * chem(i,k,j,p_num_a08)
+
+ !add water, chem(i,k,j,p_water_aXX) has units ug/kg dry air, convert to cm3/kg
+
+ vol_a01(i,k,j) = vol_a01(i,k,j) + chem(i,k,j,p_water_a01)/waterdens
+ vol_a02(i,k,j) = vol_a02(i,k,j) + chem(i,k,j,p_water_a02)/waterdens
+ vol_a03(i,k,j) = vol_a03(i,k,j) + chem(i,k,j,p_water_a03)/waterdens
+ vol_a04(i,k,j) = vol_a04(i,k,j) + chem(i,k,j,p_water_a04)/waterdens
+ vol_a05(i,k,j) = vol_a05(i,k,j) + chem(i,k,j,p_water_a05)/waterdens
+ vol_a06(i,k,j) = vol_a06(i,k,j) + chem(i,k,j,p_water_a06)/waterdens
+ vol_a07(i,k,j) = vol_a07(i,k,j) + chem(i,k,j,p_water_a07)/waterdens
+ vol_a08(i,k,j) = vol_a08(i,k,j) + chem(i,k,j,p_water_a08)/waterdens
+
+ !Keep assuming spheres, calaculate wet diameters
+
+ o_dcen_sect(1,1) = 2 * ((3. / (4. * PI )) * vol_a01(i,k,j) )^(1./3.)
+ o_dcen_sect(2,1) = 2 * ((3. / (4. * PI )) * vol_a02(i,k,j) )^(1./3.)
+ o_dcen_sect(3,1) = 2 * ((3. / (4. * PI )) * vol_a03(i,k,j) )^(1./3.)
+ o_dcen_sect(4,1) = 2 * ((3. / (4. * PI )) * vol_a04(i,k,j) )^(1./3.)
+ o_dcen_sect(5,1) = 2 * ((3. / (4. * PI )) * vol_a05(i,k,j) )^(1./3.)
+ o_dcen_sect(6,1) = 2 * ((3. / (4. * PI )) * vol_a06(i,k,j) )^(1./3.)
+ o_dcen_sect(7,1) = 2 * ((3. / (4. * PI )) * vol_a07(i,k,j) )^(1./3.)
+ o_dcen_sect(8,1) = 2 * ((3. / (4. * PI )) * vol_a08(i,k,j) )^(1./3.)
+
+ !Use these wet diameters to calculate surface area
+
+ surf_a01(i,k,j) = 4. * PI * ((o_dcen_sect(1,1) / 2.)**2.) * chem(i,k,j,p_num_a01) 
+ surf_a02(i,k,j) = 4. * PI * ((o_dcen_sect(2,1) / 2.)**2.) * chem(i,k,j,p_num_a02) 
+ surf_a03(i,k,j) = 4. * PI * ((o_dcen_sect(3,1) / 2.)**2.) * chem(i,k,j,p_num_a03)  
+ surf_a04(i,k,j) = 4. * PI * ((o_dcen_sect(4,1) / 2.)**2.) * chem(i,k,j,p_num_a04) 
+ surf_a05(i,k,j) = 4. * PI * ((o_dcen_sect(5,1) / 2.)**2.) * chem(i,k,j,p_num_a05) 
+ surf_a06(i,k,j) = 4. * PI * ((o_dcen_sect(6,1) / 2.)**2.) * chem(i,k,j,p_num_a06) 
+ surf_a07(i,k,j) = 4. * PI * ((o_dcen_sect(7,1) / 2.)**2.) * chem(i,k,j,p_num_a07) 
+ surf_a08(i,k,j) = 4. * PI * ((o_dcen_sect(8,1) / 2.)**2.) * chem(i,k,j,p_num_a08) 
 
  chem(i,k,j,p_surf_dcen) = surf_a01(i,k,j) + surf_a02(i,k,j) + &
     surf_a03(i,k,j) + surf_a04(i,k,j) + &
