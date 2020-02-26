@@ -387,11 +387,11 @@
 !--- rates for various pathways (determined by function arguments)
 
 ! j = 1: HOBr + HBr --> Br2
-      IF ((J .EQ. 1) .AND. (C_HBR .GT. 1.d-16)) THEN
+      IF ((J .EQ. 1) .AND. (MIN(C_HBR,C_HOBR) .GT. 1.d4)) THEN
         xhet_sim2b=xg*xc*sqrt(TEMP/xMHOBR)/C_HBR * yBR2
       ENDIF
 ! j = 2: HOBr + HCl --> BrCl
-      IF ((J .EQ. 2) .AND. (C_HBR.GT. 1.d-16)) THEN
+      IF ((J .EQ. 2) .AND. (MIN(C_HCL,C_HOBR) .GT. 1.d4)) THEN
         xhet_sim2b=xg*xc*SQRT(TEMP/xMHOBR)/C_HCL * yBRCL
       ENDIF
 
@@ -399,13 +399,13 @@
 ! this approach calculates which uptake (HOX or HX) is rate limiting so 
 ! the reaction can change from effective HOX uptake to HX uptake:
 ! j = 3: HOCl + HBr --> BrCl
-      IF ((J .EQ. 3) .AND. (MIN(C_HBR,C_HOCL) .GT. 1.d-16)) THEN
+      IF ((J .EQ. 3) .AND. (MIN(C_HBR,C_HOCL) .GT. 1.d4)) THEN
         xHOCL=xg*xc*SQRT(TEMP/xMHOCL)*C_HOCL
         xHBR=xg*xc*SQRT(TEMP/xMHBR)*C_HBR
         xhet_sim2b=MIN(xHBR,xHOCl) / (C_HOCL*C_HBR)
       ENDIF
 ! j = 4: HOCl + HCl --> Cl2
-      IF ((J .EQ. 4) .AND. (MIN(C_HCL,C_HOCL) .GT. 1.d-16)) THEN
+      IF ((J .EQ. 4) .AND. (MIN(C_HCL,C_HOCL) .GT. 1.d4)) THEN
         xHOCL=xg*xc*SQRT(TEMP/xMHOCL)*C_HOCL
         xHCL=xg*xc*SQRT(TEMP/xMHCL)*C_HCL
         xhet_sim2b=MIN(xHCL,xHOCL) / (C_HOCL*C_HCL)
