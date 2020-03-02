@@ -256,7 +256,6 @@
 	real :: dum
 	real :: rsub0(l2maxd,kmaxd,nsubareamaxd)
 
-        REAL, dimension(ims:ime, kms:kme, jms:jme) :: surf_dcen   
 
 	character*100 msg
 
@@ -500,7 +499,7 @@
 
     CALL SURF_AREA ( chem, num_chem, maxd_asize, &
                    maxd_atype,   &
-                   dcen_sect, surf_dcen, rho_phy,  &
+                   dcen_sect, rho_phy,  &
                    ids,ide, jds,jde, kds,kde, ims,ime, &
                    jms,jme, kms,kme, &
                    its,ite, jts,jte, kts,kte )
@@ -7820,7 +7819,7 @@ n2o5_flag = config_flags%n2o5_hetchem
 !=WCV surf area scheme====================================
  SUBROUTINE SURF_AREA ( chem, num_chem, i_maxd_asize, &
                    i_maxd_atype,   &
-                   i_dcen_sect, surf_dcen, rho_phy,  &
+                   i_dcen_sect, rho_phy,  &
                    ids,ide, jds,jde, kds,kde, ims,ime, &
                    jms,jme, kms,kme, &
                    its,ite, jts,jte, kts,kte )
@@ -7834,7 +7833,7 @@ n2o5_flag = config_flags%n2o5_hetchem
                              p_water_a03, p_water_a04, &
                              p_water_a05, p_water_a06, &
                              p_water_a07, p_water_a08, &
-                             p_surf_dcen
+                             p_surf_dcen, p_recipd
 
  IMPLICIT NONE
  INTEGER, intent(in) :: num_chem
@@ -7847,7 +7846,6 @@ n2o5_flag = config_flags%n2o5_hetchem
                       surf_a06, surf_a07, surf_a08    ! total aerosol surface area for bin m by dcen
  REAL, dimension(ims:ime, kms:kme, jms:jme) :: vol_a01, vol_a02, vol_a03, vol_a04, vol_a05, &
                                vol_a06, vol_a07, vol_a08    ! total aerosol volume for bin m by dcen
- REAL, intent(inout), dimension(ims:ime, kms:kme, jms:jme) :: surf_dcen  ! total aerosol SA by dcen
  REAL, intent(in), dimension(ims:ime, kms:kme, jms:jme ) :: rho_phy  ! density at mid-level  (kg/m3)
  INTEGER, intent(in) :: ids,ide, jds,jde, kds,kde, &
                         ims,ime, jms,jme, kms,kme, &
@@ -7862,6 +7860,8 @@ n2o5_flag = config_flags%n2o5_hetchem
  do i= its,ite
 
  chem(i,k,j,p_surf_dcen)=0.0
+ chem(i,k,j,p_recipd)=0.0
+
  surf_a01(i,k,j)=0.0
  surf_a02(i,k,j)=0.0
  surf_a03(i,k,j)=0.0
@@ -7940,6 +7940,23 @@ n2o5_flag = config_flags%n2o5_hetchem
   chem(i,k,j,p_surf_dcen) = chem(i,k,j,p_surf_dcen) * rho_phy(i,k,j) * 1e-6 
   ! cm^2/kg --> cm^2/cm^3
 
+!Compute weighted reciprocal of the wet diameter
+ chem(i,k,j,p_recipd)   = ( chem(i,k,j,p_num_a01)/o_dcen_sect(1,1) + &
+                            chem(i,k,j,p_num_a02)/o_dcen_sect(2,1) + &
+                            chem(i,k,j,p_num_a03)/o_dcen_sect(3,1) + &
+                            chem(i,k,j,p_num_a04)/o_dcen_sect(4,1) + &
+                            chem(i,k,j,p_num_a05)/o_dcen_sect(5,1) + &
+                            chem(i,k,j,p_num_a06)/o_dcen_sect(6,1) + &
+                            chem(i,k,j,p_num_a07)/o_dcen_sect(7,1) + &
+                            chem(i,k,j,p_num_a08)/o_dcen_sect(8,1) )/&
+                          ( chem(i,k,j,p_num_a01) + &
+                            chem(i,k,j,p_num_a02) + &
+                            chem(i,k,j,p_num_a03) + &
+                            chem(i,k,j,p_num_a04) + &
+                            chem(i,k,j,p_num_a05) + &
+                            chem(i,k,j,p_num_a06) + &
+                            chem(i,k,j,p_num_a07) + &
+                            chem(i,k,j,p_num_a08) )
 
 
  enddo

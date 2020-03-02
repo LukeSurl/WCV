@@ -318,12 +318,15 @@
 !_________________________________________________
 
       REAL(KIND=dp) FUNCTION xhet_sim2b(J,SURF_DCEN,&
-                             HET_GAMMA1,&
+                             RECIPD,HET_GAMMA1,&
                              C_HBR,&
-                             C_HOBR,C_HCL,C_HOCL,TEMP)
+                             C_HOBR,C_HCL,C_HOCL,&
+                             C_M,TEMP)
       
       INTEGER,INTENT(IN) :: J
-      REAL(KIND=dp),INTENT(IN) :: SURF_DCEN,C_HBR,C_HOBR,C_HCL,C_HOCL,TEMP
+      REAL(KIND=dp),INTENT(IN) :: C_HBR,C_HOBR,C_HCL,C_HOCL,TEMP
+      REAL(KIND=dp),INTENT(IN) :: C_M
+      REAL(KIND=dp),INTENT(IN) :: SURF_DCEN,RECIPD
       REAL(KIND=dp),INTENT(IN) :: HET_GAMMA1
       REAL(KIND=dp) :: xg,xc
       REAL(KIND=dp) :: xMHOCL,xMHCL,xMHOBR,xMHBR
@@ -331,6 +334,7 @@
       REAL(KIND=dp) :: xpr
       REAL(KIND=dp) :: yBR2,yBRCL
       REAL(KIND=dp) :: xHOCL,xHBR,xHCL
+      REAL(KIND=dp) :: P,D,Kn,v
 ! calculate pseudo-first order rate coefficient for heterogeneous reaction 
 ! of HOX and HY to XY
 ! k=0.25 gamma v_mean A
@@ -377,22 +381,67 @@
 
 !--- calculate total heterogeneous rate of gas phase reactant ---
 
+!Pressure, in Pa
+!P = (n/V)*k_boltz*T
+P=(C_M*1.d6)*1.38d-23*TEMP !pressure Pa
+
+
 ! k = 1/4 v gamma A
 ! aer_totsurf -  surface_area, calculated in SR oneD_dist
 ! v_mean in m/s: v_mean = sqrt(8*R_gas*T/(pi*M))
 ! sqrt(8*R_gas/pi)=4.60138
 ! v_mean in cm/s is 100 times this
-   xc = 0.25d0 * 4.60138d0 * 100 * SURF_DCEN
+   xc = 0.25d0 * 4.60138d0 * 100.d0 * SURF_DCEN
 
 !--- rates for various pathways (determined by function arguments)
 
 ! j = 1: HOBr + HBr --> Br2
+      
+
       IF ((J .EQ. 1) .AND. (MIN(C_HBR,C_HOBR) .GT. 1.d4)) THEN
-        xhet_sim2b=xg*xc*sqrt(TEMP/xMHOBR)/C_HBR * yBR2
+
+      !diffussion coefficient at temp T
+      !D(HOBr,296)=84 Torr.cm2.s-1 empirical value from Tang et al 2014 
+      !D=11200 Pa.cm2.s-1 
+      !Fuller's method for temperature transformation
+      D=(1.12d4/P)*(TEMP/296.d0)**1.75d0
+
+      !mean molecular speed of HOBr in cm/s
+      v = 1.d2 * sqrt(8.d0*8.1345*TEMP/(3.14159d0*xMHOBR))
+
+      !Knudsen number
+      Kn = (6.d0*D/v)*RECIPD
+
+      !new gamma
+      xg = 1.d0/(1.d0/HET_GAMMA1 + ((0.75d0+0.286d0*Kn)/(Kn*(Kn+1.d0))))
+
+      !Output psuedo k
+      xhet_sim2b=0.25d0*v*xg/C_HBR * yBR2
+      !The rate will be this value, multiplied by C_HBR (cancelling),
+      !C_HOBR, and the surface area.
       ENDIF
 ! j = 2: HOBr + HCl --> BrCl
       IF ((J .EQ. 2) .AND. (MIN(C_HCL,C_HOBR) .GT. 1.d4)) THEN
-        xhet_sim2b=xg*xc*SQRT(TEMP/xMHOBR)/C_HCL * yBRCL
+      !diffussion coefficient at temp T
+      !D(HOBr,296)=111 Torr.cm2.s-1 empirical value from Tang et al 2014
+      !D=11000 Pa.cm2.s-1 
+      !Fuller's method for temperature transformation
+      D=(1.1d4/P)*(TEMP/296.d0)**1.75d0
+
+      !mean molecular speed of HOBr in cm/s
+      v = 1.d2 * sqrt(8.d0*8.1345*TEMP/(3.14159d0*xMHOBR))
+
+      !Knudsen number
+      Kn = (6.d0*D/v)*RECIPD
+
+      !new gamma
+      xg = 1.d0/(1.d0/HET_GAMMA1 + ((0.75d0+0.286d0*Kn)/(Kn*(Kn+1.d0))))
+
+      !Output psuedo k
+      xhet_sim2b=0.25d0*v*xg/C_HCL * yBRCL
+      !The rate will be this value, multiplied by C_HCL (cancelling),
+      !C_HOBR, and the surface area.
+
       ENDIF
 
 ! HOCl uptake - use Luke's approach as no quick equilibria as for Br2Cl-
@@ -400,15 +449,98 @@
 ! the reaction can change from effective HOX uptake to HX uptake:
 ! j = 3: HOCl + HBr --> BrCl
       IF ((J .EQ. 3) .AND. (MIN(C_HBR,C_HOCL) .GT. 1.d4)) THEN
-        xHOCL=xg*xc*SQRT(TEMP/xMHOCL)*C_HOCL
-        xHBR=xg*xc*SQRT(TEMP/xMHBR)*C_HBR
-        xhet_sim2b=MIN(xHBR,xHOCl) / (C_HOCL*C_HBR)
+
+      !A) If HBr is rate limiting
+      !diffussion coefficient at temp T
+      !D(HBr,296)=95 Torr.cm2.s-1 empirical value from Tang et al 2014
+      !D=12600 Pa.cm2.s-1 
+      !Fuller's method for temperature transformation
+      D=(1.26d4/P)*(TEMP/296.d0)**1.75d0
+
+      !mean molecular speed of HOBr in cm/s
+      v = 1.d2 * sqrt(8.d0*8.1345*TEMP/(3.14159d0*xMHBR))
+
+      !Knudsen number
+      Kn = (6.d0*D/v)*RECIPD
+
+      !new gamma
+      xg = 1.d0/(1.d0/HET_GAMMA1 + ((0.75d0+0.286d0*Kn)/(Kn*(Kn+1.d0))))
+
+      !Output rate per cm2
+      xHBR=0.25d0*v*xg * C_HBR
+ 
+
+      !B) If HOCl is rate limiting
+      !diffussion coefficient at temp T
+      !D(HOCl,296)=110 Torr.cm2.s-1 Fuller's method for approximation
+      !D=15000 Pa.cm2.s-1 
+      !Fuller's method for temperature transformation
+      D=(1.5d4/P)*(TEMP/296.d0)**1.75d0
+
+      !mean molecular speed of HOBr in cm/s
+      v = 1.d2 * sqrt(8.d0*8.1345*TEMP/(3.14159d0*xMHOCL))
+
+      !Knudsen number
+      Kn = (6.d0*D/v)*RECIPD
+
+      !new gamma
+      xg = 1.d0/(1.d0/HET_GAMMA1 + ((0.75d0+0.286d0*Kn)/(Kn*(Kn+1.d0))))
+
+      !Output rate per cm2
+      xHOCL=0.25d0*v*xg * C_HOCL
+
+
+      !The rate will be the slowest rate. Divide this by C_HBR and
+      !C_HOCL as this will be multiplied by both these by KPP later
+
+      xhet_sim2b=MIN(xHBR,xHOCl) / (C_HOCL*C_HBR)
       ENDIF
 ! j = 4: HOCl + HCl --> Cl2
       IF ((J .EQ. 4) .AND. (MIN(C_HCL,C_HOCL) .GT. 1.d4)) THEN
-        xHOCL=xg*xc*SQRT(TEMP/xMHOCL)*C_HOCL
-        xHCL=xg*xc*SQRT(TEMP/xMHCL)*C_HCL
-        xhet_sim2b=MIN(xHCL,xHOCL) / (C_HOCL*C_HCL)
+!A) If HCl is rate limiting
+      !diffussion coefficient at temp T
+      !D(HCl,296)=118 Torr.cm2.s-1 empirical value from Tang et al 2014
+      !D=15700 Pa.cm2.s-1 
+      !Fuller's method for temperature transformation
+      D=(1.57d4/P)*(TEMP/296.d0)**1.75d0
+
+      !mean molecular speed of HOBr in cm/s
+      v = 1.d2 * sqrt(8.d0*8.1345*TEMP/(3.14159d0*xMHCL))
+
+      !Knudsen number
+      Kn = (6.d0*D/v)*RECIPD
+
+      !new gamma
+      xg = 1.d0/(1.d0/HET_GAMMA1 + ((0.75d0+0.286d0*Kn)/(Kn*(Kn+1.d0))))
+
+      !Output rate per cm2
+      xHCL=0.25d0*v*xg * C_HCL
+ 
+
+      !B) If HOCl is rate limiting
+      !diffussion coefficient at temp T
+      !D(HOCl,296)=110 Torr.cm2.s-1 Fuller's method for approximation
+      !D=15000 Pa.cm2.s-1 
+      !Fuller's method for temperature transformation
+      D=(1.5d4/P)*(TEMP/296.d0)**1.75d0
+
+      !mean molecular speed of HOBr in cm/s
+      v = 1.d2 * sqrt(8.d0*8.1345*TEMP/(3.14159d0*xMHOCL))
+
+      !Knudsen number
+      Kn = (6.d0*D/v)*RECIPD
+
+      !new gamma
+      xg = 1.d0/(1.d0/HET_GAMMA1 + ((0.75d0+0.286d0*Kn)/(Kn*(Kn+1.d0))))
+
+      !Output rate per cm2
+      xHOCL=0.25d0*v*xg * C_HOCL
+
+
+      !The rate will be the slowest rate. Divide this by C_HCL and
+      !C_HOCL as this will be multiplied by both these by KPP later
+
+      xhet_sim2b=MIN(xHCL,xHOCl) / (C_HOCL*C_HCL)
       ENDIF
 !      print *,'xhet_sim2b = ',xhet_sim2b,aer_totsurf
 !      print *,xc,xHOBr,xHBr
