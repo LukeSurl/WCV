@@ -500,7 +500,7 @@
     CALL SURF_AREA ( chem, num_chem, maxd_asize, &
                    maxd_atype,   &
                    dcen_sect, &
-                   t_phy, rho_phy, p_phy  &
+                   t_phy, rho_phy, p_phy,  &
                    ids,ide, jds,jde, kds,kde, ims,ime, &
                    jms,jme, kms,kme, &
                    its,ite, jts,jte, kts,kte )
@@ -7821,7 +7821,7 @@ n2o5_flag = config_flags%n2o5_hetchem
  SUBROUTINE SURF_AREA ( chem, num_chem, i_maxd_asize, &
                    i_maxd_atype,   &
                    i_dcen_sect, &
-                   t_phy, rho_phy, p_phy  &
+                   t_phy, rho_phy, p_phy,  &
                    ids,ide, jds,jde, kds,kde, ims,ime, &
                    jms,jme, kms,kme, &
                    its,ite, jts,jte, kts,kte )
@@ -7850,9 +7850,7 @@ n2o5_flag = config_flags%n2o5_hetchem
  REAL :: vol_a01, vol_a02, vol_a03, vol_a04, vol_a05, &
                   vol_a06, vol_a07, vol_a08    ! total aerosol volume for bin m by dcen
 
- real, intent(in),   &
-		dimension( ims:ime, kms:kme, jms:jme ) :: &
-		t_phy, rho_phy, p_phy
+ real, intent(in), dimension( ims:ime, kms:kme, jms:jme ) :: t_phy,rho_phy,p_phy
 !   t_phy - temperature (K)
 !   rho_phy - air density (kg/m^3)
 !   p_phy - air pressure (Pa)
@@ -7863,6 +7861,9 @@ n2o5_flag = config_flags%n2o5_hetchem
  REAL, parameter :: waterdens = 1000000.0 !ug/cm^3
  REAL recipd
  REAL :: v_hobr,D_hobr,Kn_hobr
+ REAL :: v_hocl,D_hocl,Kn_hocl
+ REAL :: v_hbr,D_hbr,Kn_hbr
+ REAL :: v_hcl,D_hcl,Kn_hcl
  INTEGER :: m,i,j,k,n,l
 
 

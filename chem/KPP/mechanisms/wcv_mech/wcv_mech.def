@@ -319,15 +319,13 @@
 
       REAL(KIND=dp) FUNCTION xhet_sim2b(J,SURF_DCEN,&
                              Y_HOBR,Y_HOCL,Y_HBR,Y_HCL,&
-                             HET_GAMMA1,&
                              C_HBR,&
                              C_HOBR,C_HCL,C_HOCL,TEMP)
       
       INTEGER,INTENT(IN) :: J
       REAL(KIND=dp),INTENT(IN) :: SURF_DCEN,C_HBR,C_HOBR,C_HCL,C_HOCL,TEMP
       REAL(KIND=dp),INTENT(IN) :: Y_HOBR,Y_HOCL,Y_HBR,Y_HCL
-      REAL(KIND=dp),INTENT(IN) :: HET_GAMMA1
-      REAL(KIND=dp) :: xg,xc
+      REAL(KIND=dp) :: xc
       REAL(KIND=dp) :: xMHOCL,xMHCL,xMHOBR,xMHBR
       REAL(KIND=dp) :: xH_HCL,xH_HBR
       REAL(KIND=dp) :: xpr
@@ -341,8 +339,8 @@
 ! Gamma values are calculated, accounting for diffusion, in MOSAIC
 
       xhet_sim2b = 0.d0
-! gamma set in namelist.input
-      xg = HET_GAMMA1
+! gamma set by MOSAIC
+!      xg = HET_GAMMA1
 ! Molar mass for HOCl
       xMHOCL = 5.2d-2
 ! Molar mass for HCl
