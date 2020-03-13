@@ -7845,10 +7845,12 @@ n2o5_flag = config_flags%n2o5_hetchem
  INTEGER i_maxd_atype
  REAL,    intent(in) :: i_dcen_sect(i_maxd_asize, i_maxd_atype) ! input center size of section (cm)
  REAL                   o_dcen_sect(i_maxd_asize, i_maxd_atype) ! output center size of section (cm)
- REAL :: surf_a01, surf_a02, surf_a03, surf_a04, surf_a05, &
-                   surf_a06, surf_a07, surf_a08    ! total aerosol surface area for bin m by dcen
- REAL :: vol_a01, vol_a02, vol_a03, vol_a04, vol_a05, &
-                  vol_a06, vol_a07, vol_a08    ! total aerosol volume for bin m by dcen
+ REAL, dimension(ims:ime, kms:kme, jms:jme) :: surf_a01, surf_a02, surf_a03, &
+       surf_a04, surf_a05, &
+       surf_a06, surf_a07, surf_a08  ! total aerosol surface area for bin m by dcen
+ REAL, dimension(ims:ime, kms:kme, jms:jme) :: vol_a01, vol_a02, vol_a03, &
+                 vol_a04, vol_a05, &
+               vol_a06, vol_a07, vol_a08 ! total aerosol volume for bin m by dcen
 
  real, intent(in), dimension( ims:ime, kms:kme, jms:jme ) :: t_phy,rho_phy,p_phy
 !   t_phy - temperature (K)
@@ -7859,11 +7861,11 @@ n2o5_flag = config_flags%n2o5_hetchem
                         its,ite, jts,jte, kts,kte
  REAL, parameter :: PI = 3.14159
  REAL, parameter :: waterdens = 1000000.0 !ug/cm^3
- REAL recipd
- REAL :: v_hobr,D_hobr,Kn_hobr
- REAL :: v_hocl,D_hocl,Kn_hocl
- REAL :: v_hbr,D_hbr,Kn_hbr
- REAL :: v_hcl,D_hcl,Kn_hcl
+ REAL, dimension(ims:ime, kms:kme, jms:jme) :: recipd
+ REAL, dimension(ims:ime, kms:kme, jms:jme) :: v_hobr,D_hobr,Kn_hobr
+ REAL, dimension(ims:ime, kms:kme, jms:jme) :: v_hocl,D_hocl,Kn_hocl
+ REAL, dimension(ims:ime, kms:kme, jms:jme) :: v_hbr,D_hbr,Kn_hbr
+ REAL, dimension(ims:ime, kms:kme, jms:jme) :: v_hcl,D_hcl,Kn_hcl
  INTEGER :: m,i,j,k,n,l
 
 
@@ -7879,44 +7881,44 @@ n2o5_flag = config_flags%n2o5_hetchem
  chem(i,k,j,p_y_hcl)=0.6
 
  !get dry volumes, cm^3/kg air
- vol_a01 = (4./3.) * PI * ((i_dcen_sect(1,1) / 2.)**3.) * chem(i,k,j,p_num_a01)
- vol_a02 = (4./3.) * PI * ((i_dcen_sect(2,1) / 2.)**3.) * chem(i,k,j,p_num_a02)
- vol_a03 = (4./3.) * PI * ((i_dcen_sect(3,1) / 2.)**3.) * chem(i,k,j,p_num_a03) 
- vol_a04 = (4./3.) * PI * ((i_dcen_sect(4,1) / 2.)**3.) * chem(i,k,j,p_num_a04)
- vol_a05 = (4./3.) * PI * ((i_dcen_sect(5,1) / 2.)**3.) * chem(i,k,j,p_num_a05)
- vol_a06 = (4./3.) * PI * ((i_dcen_sect(6,1) / 2.)**3.) * chem(i,k,j,p_num_a06)
- vol_a07 = (4./3.) * PI * ((i_dcen_sect(7,1) / 2.)**3.) * chem(i,k,j,p_num_a07)
- vol_a08 = (4./3.) * PI * ((i_dcen_sect(8,1) / 2.)**3.) * chem(i,k,j,p_num_a08)
+ vol_a01(i,k,j) = (4./3.) * PI * ((i_dcen_sect(1,1) / 2.)**3.) * chem(i,k,j,p_num_a01)
+ vol_a02(i,k,j) = (4./3.) * PI * ((i_dcen_sect(2,1) / 2.)**3.) * chem(i,k,j,p_num_a02)
+ vol_a03(i,k,j) = (4./3.) * PI * ((i_dcen_sect(3,1) / 2.)**3.) * chem(i,k,j,p_num_a03) 
+ vol_a04(i,k,j) = (4./3.) * PI * ((i_dcen_sect(4,1) / 2.)**3.) * chem(i,k,j,p_num_a04)
+ vol_a05(i,k,j) = (4./3.) * PI * ((i_dcen_sect(5,1) / 2.)**3.) * chem(i,k,j,p_num_a05)
+ vol_a06(i,k,j) = (4./3.) * PI * ((i_dcen_sect(6,1) / 2.)**3.) * chem(i,k,j,p_num_a06)
+ vol_a07(i,k,j) = (4./3.) * PI * ((i_dcen_sect(7,1) / 2.)**3.) * chem(i,k,j,p_num_a07)
+ vol_a08(i,k,j) = (4./3.) * PI * ((i_dcen_sect(8,1) / 2.)**3.) * chem(i,k,j,p_num_a08)
 
  !add water, chem(i,k,j,p_water_aXX) has units ug/kg dry air, convert to cm3/kg
 
- vol_a01 = vol_a01 + chem(i,k,j,p_water_a01)/waterdens
- vol_a02 = vol_a02 + chem(i,k,j,p_water_a02)/waterdens
- vol_a03 = vol_a03 + chem(i,k,j,p_water_a03)/waterdens
- vol_a04 = vol_a04 + chem(i,k,j,p_water_a04)/waterdens
- vol_a05 = vol_a05 + chem(i,k,j,p_water_a05)/waterdens
- vol_a06 = vol_a06 + chem(i,k,j,p_water_a06)/waterdens
- vol_a07 = vol_a07 + chem(i,k,j,p_water_a07)/waterdens
- vol_a08 = vol_a08 + chem(i,k,j,p_water_a08)/waterdens
+ vol_a01(i,k,j) = vol_a01(i,k,j) + chem(i,k,j,p_water_a01)/waterdens
+ vol_a02(i,k,j) = vol_a02(i,k,j) + chem(i,k,j,p_water_a02)/waterdens
+ vol_a03(i,k,j) = vol_a03(i,k,j) + chem(i,k,j,p_water_a03)/waterdens
+ vol_a04(i,k,j) = vol_a04(i,k,j) + chem(i,k,j,p_water_a04)/waterdens
+ vol_a05(i,k,j) = vol_a05(i,k,j) + chem(i,k,j,p_water_a05)/waterdens
+ vol_a06(i,k,j) = vol_a06(i,k,j) + chem(i,k,j,p_water_a06)/waterdens
+ vol_a07(i,k,j) = vol_a07(i,k,j) + chem(i,k,j,p_water_a07)/waterdens
+ vol_a08(i,k,j) = vol_a08(i,k,j) + chem(i,k,j,p_water_a08)/waterdens
 
  !Keep assuming spheres, calaculate wet diameters
 
  o_dcen_sect(1,1) = 2. * ((3. / (4. * PI )) * &
-        (vol_a01/chem(i,k,j,p_num_a01)) )**(1./3.)
+        (vol_a01(i,k,j)/chem(i,k,j,p_num_a01)) )**(1./3.)
  o_dcen_sect(2,1) = 2. * ((3. / (4. * PI )) * &
-        (vol_a02/chem(i,k,j,p_num_a02)) )**(1./3.)
+        (vol_a02(i,k,j)/chem(i,k,j,p_num_a02)) )**(1./3.)
  o_dcen_sect(3,1) = 2. * ((3. / (4. * PI )) * &
-        (vol_a03/chem(i,k,j,p_num_a03)) )**(1./3.)
+        (vol_a03(i,k,j)/chem(i,k,j,p_num_a03)) )**(1./3.)
  o_dcen_sect(4,1) = 2. * ((3. / (4. * PI )) * &
-        (vol_a04/chem(i,k,j,p_num_a04)) )**(1./3.)
+        (vol_a04(i,k,j)/chem(i,k,j,p_num_a04)) )**(1./3.)
  o_dcen_sect(5,1) = 2. * ((3. / (4. * PI )) * &
-        (vol_a05/chem(i,k,j,p_num_a05)) )**(1./3.)
+        (vol_a05(i,k,j)/chem(i,k,j,p_num_a05)) )**(1./3.)
  o_dcen_sect(6,1) = 2. * ((3. / (4. * PI )) * &
-        (vol_a06/chem(i,k,j,p_num_a06)) )**(1./3.)
+        (vol_a06(i,k,j)/chem(i,k,j,p_num_a06)) )**(1./3.)
  o_dcen_sect(7,1) = 2. * ((3. / (4. * PI )) * &
-        (vol_a07/chem(i,k,j,p_num_a07)) )**(1./3.)
+        (vol_a07(i,k,j)/chem(i,k,j,p_num_a07)) )**(1./3.)
  o_dcen_sect(8,1) = 2. * ((3. / (4. * PI )) * &
-        (vol_a08/chem(i,k,j,p_num_a08)) )**(1./3.)
+        (vol_a08(i,k,j)/chem(i,k,j,p_num_a08)) )**(1./3.)
 
  !Allow a maximum of x3.1623 of the diameter (10x area)
  do m=1,8
@@ -7930,25 +7932,25 @@ n2o5_flag = config_flags%n2o5_hetchem
 
  !Use these wet diameters to calculate surface area
 
- surf_a01 = 4. * PI * ((o_dcen_sect(1,1) / 2.)**2.) * chem(i,k,j,p_num_a01) 
- surf_a02 = 4. * PI * ((o_dcen_sect(2,1) / 2.)**2.) * chem(i,k,j,p_num_a02) 
- surf_a03 = 4. * PI * ((o_dcen_sect(3,1) / 2.)**2.) * chem(i,k,j,p_num_a03)  
- surf_a04 = 4. * PI * ((o_dcen_sect(4,1) / 2.)**2.) * chem(i,k,j,p_num_a04) 
- surf_a05 = 4. * PI * ((o_dcen_sect(5,1) / 2.)**2.) * chem(i,k,j,p_num_a05) 
- surf_a06 = 4. * PI * ((o_dcen_sect(6,1) / 2.)**2.) * chem(i,k,j,p_num_a06) 
- surf_a07 = 4. * PI * ((o_dcen_sect(7,1) / 2.)**2.) * chem(i,k,j,p_num_a07) 
- surf_a08 = 4. * PI * ((o_dcen_sect(8,1) / 2.)**2.) * chem(i,k,j,p_num_a08) 
+ surf_a01(i,k,j) = 4. * PI * ((o_dcen_sect(1,1) / 2.)**2.) * chem(i,k,j,p_num_a01) 
+ surf_a02(i,k,j) = 4. * PI * ((o_dcen_sect(2,1) / 2.)**2.) * chem(i,k,j,p_num_a02) 
+ surf_a03(i,k,j) = 4. * PI * ((o_dcen_sect(3,1) / 2.)**2.) * chem(i,k,j,p_num_a03)  
+ surf_a04(i,k,j) = 4. * PI * ((o_dcen_sect(4,1) / 2.)**2.) * chem(i,k,j,p_num_a04) 
+ surf_a05(i,k,j) = 4. * PI * ((o_dcen_sect(5,1) / 2.)**2.) * chem(i,k,j,p_num_a05) 
+ surf_a06(i,k,j) = 4. * PI * ((o_dcen_sect(6,1) / 2.)**2.) * chem(i,k,j,p_num_a06) 
+ surf_a07(i,k,j) = 4. * PI * ((o_dcen_sect(7,1) / 2.)**2.) * chem(i,k,j,p_num_a07) 
+ surf_a08(i,k,j) = 4. * PI * ((o_dcen_sect(8,1) / 2.)**2.) * chem(i,k,j,p_num_a08) 
 
- chem(i,k,j,p_surf_dcen) = surf_a01 + surf_a02 + &
-    surf_a03 + surf_a04 + &
-    surf_a05 + surf_a06 + &
-    surf_a07 + surf_a08    
+ chem(i,k,j,p_surf_dcen) = surf_a01(i,k,j) + surf_a02(i,k,j) + &
+    surf_a03(i,k,j) + surf_a04(i,k,j) + &
+    surf_a05(i,k,j) + surf_a06(i,k,j) + &
+    surf_a07(i,k,j) + surf_a08(i,k,j)    
 
   chem(i,k,j,p_surf_dcen) = chem(i,k,j,p_surf_dcen) * rho_phy(i,k,j) * 1e-6 
   ! cm^2/kg --> cm^2/cm^3
 
 !Compute weighted reciprocal of the wet diameter
- recipd   = ( chem(i,k,j,p_num_a01)/o_dcen_sect(1,1) + &
+ recipd(i,k,j)   = ( chem(i,k,j,p_num_a01)/o_dcen_sect(1,1) + &
                             chem(i,k,j,p_num_a02)/o_dcen_sect(2,1) + &
                             chem(i,k,j,p_num_a03)/o_dcen_sect(3,1) + &
                             chem(i,k,j,p_num_a04)/o_dcen_sect(4,1) + &
@@ -7965,10 +7967,10 @@ n2o5_flag = config_flags%n2o5_hetchem
                             chem(i,k,j,p_num_a07) + &
                             chem(i,k,j,p_num_a08) )
  !Molecular speeds, cm/s
- v_hobr = 100.d0*(8.d0*8.3145d0*t_phy(i,k,j)/(PI*0.097d0))**0.5d0
- v_hocl = 100.d0*(8.d0*8.3145d0*t_phy(i,k,j)/(PI*0.052d0))**0.5d0
- v_hbr  = 100.d0*(8.d0*8.3145d0*t_phy(i,k,j)/(PI*0.081d0))**0.5d0
- v_hcl  = 100.d0*(8.d0*8.3145d0*t_phy(i,k,j)/(PI*0.036d0))**0.5d0
+ v_hobr(i,k,j) = 100.d0*(8.d0*8.3145d0*t_phy(i,k,j)/(PI*0.097d0))**0.5d0
+ v_hocl(i,k,j) = 100.d0*(8.d0*8.3145d0*t_phy(i,k,j)/(PI*0.052d0))**0.5d0
+ v_hbr(i,k,j)  = 100.d0*(8.d0*8.3145d0*t_phy(i,k,j)/(PI*0.081d0))**0.5d0
+ v_hcl(i,k,j)  = 100.d0*(8.d0*8.3145d0*t_phy(i,k,j)/(PI*0.036d0))**0.5d0
 
  !D(HOBr,296)=84 Torr.cm2.s-1 empirical value from Tang et al 2014 
  != 11200 Pa.cm2.s-1
@@ -7980,36 +7982,36 @@ n2o5_flag = config_flags%n2o5_hetchem
  !D=15700 Pa.cm2.s-1 
 
  !Fuller's method for temperature transformation
- D_hobr=(1.12d4/p_phy(i,j,k))*(t_phy(i,k,j)/296.d0)**1.75d0
- D_hocl=(1.48d4/p_phy(i,j,k))*(t_phy(i,k,j)/296.d0)**1.75d0
- D_hbr=(1.27d4/p_phy(i,j,k))*(t_phy(i,k,j)/296.d0)**1.75d0
- D_hcl=(1.57d4/p_phy(i,j,k))*(t_phy(i,k,j)/296.d0)**1.75d0
+ D_hobr(i,k,j)=(1.12d4/p_phy(i,j,k))*(t_phy(i,k,j)/296.d0)**1.75d0
+ D_hocl(i,k,j)=(1.48d4/p_phy(i,j,k))*(t_phy(i,k,j)/296.d0)**1.75d0
+ D_hbr(i,k,j)=(1.27d4/p_phy(i,j,k))*(t_phy(i,k,j)/296.d0)**1.75d0
+ D_hcl(i,k,j)=(1.57d4/p_phy(i,j,k))*(t_phy(i,k,j)/296.d0)**1.75d0
  
  !Knudsen number
- Kn_hobr = (6.0d0*D_hobr/v_hobr)*recipd
- Kn_hocl = (6.0d0*D_hocl/v_hocl)*recipd
- Kn_hbr  = (6.0d0*D_hbr/v_hbr)*recipd
- Kn_hcl  = (6.0d0*D_hcl/v_hcl)*recipd
+ Kn_hobr(i,k,j) = (6.0d0*D_hobr(i,k,j)/v_hobr(i,k,j))*recipd(i,k,j)
+ Kn_hocl(i,k,j) = (6.0d0*D_hocl(i,k,j)/v_hocl(i,k,j))*recipd(i,k,j)
+ Kn_hbr(i,k,j)  = (6.0d0*D_hbr(i,k,j)/v_hbr(i,k,j))*recipd(i,k,j)
+ Kn_hcl(i,k,j)  = (6.0d0*D_hcl(i,k,j)/v_hcl(i,k,j))*recipd(i,k,j)
 
  chem(i,k,j,p_y_hobr) = max(0.0d0,min(0.6d0,&
                         1.0d0/((1.0d0/0.6d0) + &
-                        (0.75d0+0.296d0*Kn_hobr)/&
-                        (Kn_hobr*(Kn_hobr+1.0d0)))&
+                        (0.75d0+0.296d0*Kn_hobr(i,k,j))/&
+                        (Kn_hobr(i,k,j)*(Kn_hobr(i,k,j)+1.0d0)))&
                         ))
  chem(i,k,j,p_y_hocl) = max(0.0d0,min(0.6d0,&
                         1.0d0/((1.0d0/0.6d0) + &
-                        (0.75d0+0.296d0*Kn_hocl)/&
-                        (Kn_hocl*(Kn_hocl+1.0d0)))&
+                        (0.75d0+0.296d0*Kn_hocl(i,k,j))/&
+                        (Kn_hocl(i,k,j)*(Kn_hocl(i,k,j)+1.0d0)))&
                         ))
  chem(i,k,j,p_y_hbr) = max(0.0d0,min(0.6d0,&
                         1.0d0/((1.0d0/0.6d0) + &
-                        (0.75d0+0.296d0*Kn_hbr)/&
-                        (Kn_hbr*(Kn_hbr+1.0d0)))&
+                        (0.75d0+0.296d0*Kn_hbr(i,k,j))/&
+                        (Kn_hbr(i,k,j)*(Kn_hbr(i,k,j)+1.0d0)))&
                         ))
  chem(i,k,j,p_y_hcl) = max(0.0d0,min(0.6d0,&
                         1.0d0/((1.0d0/0.6d0) + &
-                        (0.75d0+0.296d0*Kn_hcl)/&
-                        (Kn_hcl*(Kn_hcl+1.0d0)))&
+                        (0.75d0+0.296d0*Kn_hcl(i,k,j))/&
+                        (Kn_hcl(i,k,j)*(Kn_hcl(i,k,j)+1.0d0)))&
                         ))
 
 
