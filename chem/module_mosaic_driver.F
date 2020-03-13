@@ -7999,7 +7999,7 @@ n2o5_flag = config_flags%n2o5_hetchem
  chem(i,k,j,p_y_hocl) = max(0.0d0,min(0.6d0,&
                         1.0d0/((1.0d0/0.6d0) + &
                         (0.75d0+0.296d0*Kn_hocl)/&
-                        (Kn_hock*(Kn_hocl+1.0d0)))&
+                        (Kn_hocl*(Kn_hocl+1.0d0)))&
                         ))
  chem(i,k,j,p_y_hbr) = max(0.0d0,min(0.6d0,&
                         1.0d0/((1.0d0/0.6d0) + &
