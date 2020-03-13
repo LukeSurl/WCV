@@ -7872,7 +7872,7 @@ n2o5_flag = config_flags%n2o5_hetchem
  do i= its,ite
 
  chem(i,k,j,p_surf_dcen)=0.0
- !default to 0.6
+ !default gammas to 0.6
  chem(i,k,j,p_y_hobr)=0.6
  chem(i,k,j,p_y_hocl)=0.6
  chem(i,k,j,p_y_hbr)=0.6
@@ -7901,21 +7901,21 @@ n2o5_flag = config_flags%n2o5_hetchem
 
  !Keep assuming spheres, calaculate wet diameters
 
- o_dcen_sect(1,1) = 2 * ((3. / (4. * PI )) * &
+ o_dcen_sect(1,1) = 2. * ((3. / (4. * PI )) * &
         (vol_a01/chem(i,k,j,p_num_a01)) )**(1./3.)
- o_dcen_sect(2,1) = 2 * ((3. / (4. * PI )) * &
+ o_dcen_sect(2,1) = 2. * ((3. / (4. * PI )) * &
         (vol_a02/chem(i,k,j,p_num_a02)) )**(1./3.)
- o_dcen_sect(3,1) = 2 * ((3. / (4. * PI )) * &
+ o_dcen_sect(3,1) = 2. * ((3. / (4. * PI )) * &
         (vol_a03/chem(i,k,j,p_num_a03)) )**(1./3.)
- o_dcen_sect(4,1) = 2 * ((3. / (4. * PI )) * &
+ o_dcen_sect(4,1) = 2. * ((3. / (4. * PI )) * &
         (vol_a04/chem(i,k,j,p_num_a04)) )**(1./3.)
- o_dcen_sect(5,1) = 2 * ((3. / (4. * PI )) * &
+ o_dcen_sect(5,1) = 2. * ((3. / (4. * PI )) * &
         (vol_a05/chem(i,k,j,p_num_a05)) )**(1./3.)
- o_dcen_sect(6,1) = 2 * ((3. / (4. * PI )) * &
+ o_dcen_sect(6,1) = 2. * ((3. / (4. * PI )) * &
         (vol_a06/chem(i,k,j,p_num_a06)) )**(1./3.)
- o_dcen_sect(7,1) = 2 * ((3. / (4. * PI )) * &
+ o_dcen_sect(7,1) = 2. * ((3. / (4. * PI )) * &
         (vol_a07/chem(i,k,j,p_num_a07)) )**(1./3.)
- o_dcen_sect(8,1) = 2 * ((3. / (4. * PI )) * &
+ o_dcen_sect(8,1) = 2. * ((3. / (4. * PI )) * &
         (vol_a08/chem(i,k,j,p_num_a08)) )**(1./3.)
 
  !Allow a maximum of x3.1623 of the diameter (10x area)
@@ -7981,9 +7981,9 @@ n2o5_flag = config_flags%n2o5_hetchem
 
  !Fuller's method for temperature transformation
  D_hobr=(1.12d4/p_phy(i,j,k))*(t_phy(i,k,j)/296.d0)**1.75d0
- D_hobr=(1.48d4/p_phy(i,j,k))*(t_phy(i,k,j)/296.d0)**1.75d0
- D_hobr=(1.27d4/p_phy(i,j,k))*(t_phy(i,k,j)/296.d0)**1.75d0
- D_hobr=(1.57d4/p_phy(i,j,k))*(t_phy(i,k,j)/296.d0)**1.75d0
+ D_hocl=(1.48d4/p_phy(i,j,k))*(t_phy(i,k,j)/296.d0)**1.75d0
+ D_hbr=(1.27d4/p_phy(i,j,k))*(t_phy(i,k,j)/296.d0)**1.75d0
+ D_hcl=(1.57d4/p_phy(i,j,k))*(t_phy(i,k,j)/296.d0)**1.75d0
  
  !Knudsen number
  Kn_hobr = (6.*D_hobr/v_hobr)*recipd
@@ -7991,14 +7991,22 @@ n2o5_flag = config_flags%n2o5_hetchem
  Kn_hbr  = (6.*D_hbr/v_hbr)*recipd
  Kn_hcl  = (6.*D_hcl/v_hcl)*recipd
 
- chem(i,k,j,p_y_hobr) = 1./((1./0.6) + &
-                            (0.75+0.296*Kn_hobr)/(Kn_hobr*(Kn_hobr+1.)))
- chem(i,k,j,p_y_hocl) = 1./((1./0.6) + &
-                            (0.75+0.296*Kn_hocl)/(Kn_hocl*(Kn_hocl+1.)))
- chem(i,k,j,p_y_hbr) = 1./((1./0.6) + &
-                            (0.75+0.296*Kn_hbr)/(Kn_hbr*(Kn_hbr+1.)))
- chem(i,k,j,p_y_hcl) = 1./((1./0.6) + &
-                            (0.75+0.296*Kn_hcl)/(Kn_hcl*(Kn_hcl+1.)))
+ chem(i,k,j,p_y_hobr) = max(0.,min(0.6,&
+                        1./((1./0.6) + &
+                        (0.75+0.296*Kn_hobr)/(Kn_hobr*(Kn_hobr+1.)))&
+                        ))
+ chem(i,k,j,p_y_hocl) = max(0.,min(0.6,&
+                        1./((1./0.6) + &
+                        (0.75+0.296*Kn_hocl)/(Kn_hock*(Kn_hocl+1.)))&
+                        ))
+ chem(i,k,j,p_y_hbr) = max(0.,min(0.6,&
+                        1./((1./0.6) + &
+                        (0.75+0.296*Kn_hbr)/(Kn_hbr*(Kn_hbr+1.)))&
+                        ))
+ chem(i,k,j,p_y_hcl) = max(0.,min(0.6,&
+                        1./((1./0.6) + &
+                        (0.75+0.296*Kn_hcl)/(Kn_hcl*(Kn_hcl+1.)))&
+                        ))
 
 
 
