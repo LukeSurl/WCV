@@ -7965,10 +7965,10 @@ n2o5_flag = config_flags%n2o5_hetchem
                             chem(i,k,j,p_num_a07) + &
                             chem(i,k,j,p_num_a08) )
  !Molecular speeds, cm/s
- v_hobr = 100.*(8.*8.3145*t_phy(i,k,j)/(PI*0.097))**0.5
- v_hocl = 100.*(8.*8.3145*t_phy(i,k,j)/(PI*0.052))**0.5
- v_hbr  = 100.*(8.*8.3145*t_phy(i,k,j)/(PI*0.081))**0.5
- v_hcl  = 100.*(8.*8.3145*t_phy(i,k,j)/(PI*0.036))**0.5
+ v_hobr = 100.d0*(8.d0*8.3145d0*t_phy(i,k,j)/(PI*0.097d0))**0.5d0
+ v_hocl = 100.d0*(8.d0*8.3145d0*t_phy(i,k,j)/(PI*0.052d0))**0.5d0
+ v_hbr  = 100.d0*(8.d0*8.3145d0*t_phy(i,k,j)/(PI*0.081d0))**0.5d0
+ v_hcl  = 100.d0*(8.d0*8.3145d0*t_phy(i,k,j)/(PI*0.036d0))**0.5d0
 
  !D(HOBr,296)=84 Torr.cm2.s-1 empirical value from Tang et al 2014 
  != 11200 Pa.cm2.s-1
@@ -7986,26 +7986,30 @@ n2o5_flag = config_flags%n2o5_hetchem
  D_hcl=(1.57d4/p_phy(i,j,k))*(t_phy(i,k,j)/296.d0)**1.75d0
  
  !Knudsen number
- Kn_hobr = (6.*D_hobr/v_hobr)*recipd
- Kn_hocl = (6.*D_hocl/v_hocl)*recipd
- Kn_hbr  = (6.*D_hbr/v_hbr)*recipd
- Kn_hcl  = (6.*D_hcl/v_hcl)*recipd
+ Kn_hobr = (6.0d0*D_hobr/v_hobr)*recipd
+ Kn_hocl = (6.0d0*D_hocl/v_hocl)*recipd
+ Kn_hbr  = (6.0d0*D_hbr/v_hbr)*recipd
+ Kn_hcl  = (6.0d0*D_hcl/v_hcl)*recipd
 
- chem(i,k,j,p_y_hobr) = max(0.,min(0.6,&
-                        1./((1./0.6) + &
-                        (0.75+0.296*Kn_hobr)/(Kn_hobr*(Kn_hobr+1.)))&
+ chem(i,k,j,p_y_hobr) = max(0.0d0,min(0.6d0,&
+                        1.0d0/((1.0d0/0.6d0) + &
+                        (0.75d0+0.296d0*Kn_hobr)/&
+                        (Kn_hobr*(Kn_hobr+1.0d0)))&
                         ))
- chem(i,k,j,p_y_hocl) = max(0.,min(0.6,&
-                        1./((1./0.6) + &
-                        (0.75+0.296*Kn_hocl)/(Kn_hock*(Kn_hocl+1.)))&
+ chem(i,k,j,p_y_hocl) = max(0.0d0,min(0.6d0,&
+                        1.0d0/((1.0d0/0.6d0) + &
+                        (0.75d0+0.296d0*Kn_hocl)/&
+                        (Kn_hock*(Kn_hocl+1.0d0)))&
                         ))
- chem(i,k,j,p_y_hbr) = max(0.,min(0.6,&
-                        1./((1./0.6) + &
-                        (0.75+0.296*Kn_hbr)/(Kn_hbr*(Kn_hbr+1.)))&
+ chem(i,k,j,p_y_hbr) = max(0.0d0,min(0.6d0,&
+                        1.0d0/((1.0d0/0.6d0) + &
+                        (0.75d0+0.296d0*Kn_hbr)/&
+                        (Kn_hbr*(Kn_hbr+1.0d0)))&
                         ))
- chem(i,k,j,p_y_hcl) = max(0.,min(0.6,&
-                        1./((1./0.6) + &
-                        (0.75+0.296*Kn_hcl)/(Kn_hcl*(Kn_hcl+1.)))&
+ chem(i,k,j,p_y_hcl) = max(0.0d0,min(0.6d0,&
+                        1.0d0/((1.0d0/0.6d0) + &
+                        (0.75d0+0.296d0*Kn_hcl)/&
+                        (Kn_hcl*(Kn_hcl+1.0d0)))&
                         ))
 
 
