@@ -7834,7 +7834,7 @@ n2o5_flag = config_flags%n2o5_hetchem
                              p_water_a03, p_water_a04, &
                              p_water_a05, p_water_a06, &
                              p_water_a07, p_water_a08, &
-                             p_surf_dcen
+                             p_surf_dcen, p_recipd
 
  IMPLICIT NONE
  INTEGER, intent(in) :: num_chem
@@ -7862,6 +7862,7 @@ n2o5_flag = config_flags%n2o5_hetchem
  do i= its,ite
 
  chem(i,k,j,p_surf_dcen)=0.0
+ chem(i,k,j,p_recipd)=0.000000001
  surf_a01(i,k,j)=0.0
  surf_a02(i,k,j)=0.0
  surf_a03(i,k,j)=0.0
@@ -7939,6 +7940,27 @@ n2o5_flag = config_flags%n2o5_hetchem
 
   chem(i,k,j,p_surf_dcen) = chem(i,k,j,p_surf_dcen) * rho_phy(i,k,j) * 1e-6 
   ! cm^2/kg --> cm^2/cm^3
+
+  !weighted reciprocal of wet diameter
+  chem(i,k,j,p_recipd) = (&
+                           chem(i,k,j,p_num_a01)/o_dcen_sect(1,1) + &
+                           chem(i,k,j,p_num_a02)/o_dcen_sect(2,1) + &
+                           chem(i,k,j,p_num_a03)/o_dcen_sect(3,1) + &
+                           chem(i,k,j,p_num_a04)/o_dcen_sect(4,1) + &
+                           chem(i,k,j,p_num_a05)/o_dcen_sect(5,1) + &
+                           chem(i,k,j,p_num_a06)/o_dcen_sect(6,1) + &
+                           chem(i,k,j,p_num_a07)/o_dcen_sect(7,1) + &
+                           chem(i,k,j,p_num_a08)/o_dcen_sect(8,1) &
+                          )/(&
+                           chem(i,k,j,p_num_a01) + &
+                           chem(i,k,j,p_num_a02) + &
+                           chem(i,k,j,p_num_a03) + &
+                           chem(i,k,j,p_num_a04) + &
+                           chem(i,k,j,p_num_a05) + &
+                           chem(i,k,j,p_num_a06) + &
+                           chem(i,k,j,p_num_a07) + &
+                           chem(i,k,j,p_num_a08) &
+                           )
 
 
 

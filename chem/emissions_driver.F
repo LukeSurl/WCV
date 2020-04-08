@@ -686,24 +686,24 @@ if(config_flags%emiss_opt_vol == 5)then
         CALL wrf_debug(15,'Adding volcanic emissions')
                do k=kts,kte
                 conv1=float(ivolcano)*alt(i,k,j)*dtstep/dz8w(i,k,j)
-                !other inorganics, 70% of primary aerosol
-                chem(i,k,j,p_oin_a01)=chem(i,k,j,p_oin_a01)+(emis_vol(i,k,j,p_e_vash1)*conv1*0.7)
-                chem(i,k,j,p_oin_a02)=chem(i,k,j,p_oin_a02)+(emis_vol(i,k,j,p_e_vash2)*conv1*0.7)
-                chem(i,k,j,p_oin_a03)=chem(i,k,j,p_oin_a03)+(emis_vol(i,k,j,p_e_vash3)*conv1*0.7)
-                chem(i,k,j,p_oin_a04)=chem(i,k,j,p_oin_a04)+(emis_vol(i,k,j,p_e_vash4)*conv1*0.7)
-                chem(i,k,j,p_oin_a05)=chem(i,k,j,p_oin_a05)+(emis_vol(i,k,j,p_e_vash5)*conv1*0.7)
-                chem(i,k,j,p_oin_a06)=chem(i,k,j,p_oin_a06)+(emis_vol(i,k,j,p_e_vash6)*conv1*0.7)
-                chem(i,k,j,p_oin_a07)=chem(i,k,j,p_oin_a07)+(emis_vol(i,k,j,p_e_vash7)*conv1*0.7)
-                chem(i,k,j,p_oin_a08)=chem(i,k,j,p_oin_a08)+(emis_vol(i,k,j,p_e_vash8)*conv1*0.7)
-                !sulphate, 30% of primary aerosol
-                chem(i,k,j,p_so4_a01)=chem(i,k,j,p_so4_a01)+(emis_vol(i,k,j,p_e_vash1)*conv1*0.3)
-                chem(i,k,j,p_so4_a02)=chem(i,k,j,p_so4_a02)+(emis_vol(i,k,j,p_e_vash2)*conv1*0.3)
-                chem(i,k,j,p_so4_a03)=chem(i,k,j,p_so4_a03)+(emis_vol(i,k,j,p_e_vash3)*conv1*0.3)
-                chem(i,k,j,p_so4_a04)=chem(i,k,j,p_so4_a04)+(emis_vol(i,k,j,p_e_vash4)*conv1*0.3)
-                chem(i,k,j,p_so4_a05)=chem(i,k,j,p_so4_a05)+(emis_vol(i,k,j,p_e_vash5)*conv1*0.3)
-                chem(i,k,j,p_so4_a06)=chem(i,k,j,p_so4_a06)+(emis_vol(i,k,j,p_e_vash6)*conv1*0.3)
-                chem(i,k,j,p_so4_a07)=chem(i,k,j,p_so4_a07)+(emis_vol(i,k,j,p_e_vash7)*conv1*0.3)
-                chem(i,k,j,p_so4_a08)=chem(i,k,j,p_so4_a08)+(emis_vol(i,k,j,p_e_vash8)*conv1*0.3)
+                !other inorganics, 00% of primary aerosol
+                chem(i,k,j,p_oin_a01)=chem(i,k,j,p_oin_a01)+(emis_vol(i,k,j,p_e_vash1)*conv1*0.0)
+                chem(i,k,j,p_oin_a02)=chem(i,k,j,p_oin_a02)+(emis_vol(i,k,j,p_e_vash2)*conv1*0.0)
+                chem(i,k,j,p_oin_a03)=chem(i,k,j,p_oin_a03)+(emis_vol(i,k,j,p_e_vash3)*conv1*0.0)
+                chem(i,k,j,p_oin_a04)=chem(i,k,j,p_oin_a04)+(emis_vol(i,k,j,p_e_vash4)*conv1*0.0)
+                chem(i,k,j,p_oin_a05)=chem(i,k,j,p_oin_a05)+(emis_vol(i,k,j,p_e_vash5)*conv1*0.0)
+                chem(i,k,j,p_oin_a06)=chem(i,k,j,p_oin_a06)+(emis_vol(i,k,j,p_e_vash6)*conv1*0.0)
+                chem(i,k,j,p_oin_a07)=chem(i,k,j,p_oin_a07)+(emis_vol(i,k,j,p_e_vash7)*conv1*0.0)
+                chem(i,k,j,p_oin_a08)=chem(i,k,j,p_oin_a08)+(emis_vol(i,k,j,p_e_vash8)*conv1*0.0)
+                !sulphate, 100% of primary aerosol
+                chem(i,k,j,p_so4_a01)=chem(i,k,j,p_so4_a01)+(emis_vol(i,k,j,p_e_vash1)*conv1*1.0)
+                chem(i,k,j,p_so4_a02)=chem(i,k,j,p_so4_a02)+(emis_vol(i,k,j,p_e_vash2)*conv1*1.0)
+                chem(i,k,j,p_so4_a03)=chem(i,k,j,p_so4_a03)+(emis_vol(i,k,j,p_e_vash3)*conv1*1.0)
+                chem(i,k,j,p_so4_a04)=chem(i,k,j,p_so4_a04)+(emis_vol(i,k,j,p_e_vash4)*conv1*1.0)
+                chem(i,k,j,p_so4_a05)=chem(i,k,j,p_so4_a05)+(emis_vol(i,k,j,p_e_vash5)*conv1*1.0)
+                chem(i,k,j,p_so4_a06)=chem(i,k,j,p_so4_a06)+(emis_vol(i,k,j,p_e_vash6)*conv1*1.0)
+                chem(i,k,j,p_so4_a07)=chem(i,k,j,p_so4_a07)+(emis_vol(i,k,j,p_e_vash7)*conv1*1.0)
+                chem(i,k,j,p_so4_a08)=chem(i,k,j,p_so4_a08)+(emis_vol(i,k,j,p_e_vash8)*conv1*1.0)
                 
                 !gas phase chemistry species
                 conv = float(ivolcano)*4.828e-4/rho_phy(i,k,j)*dtstep/(dz8w(i,k,j)*60.)
