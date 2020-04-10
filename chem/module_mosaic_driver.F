@@ -135,6 +135,7 @@
 		id, curr_secs, ktau, dtstep, ktauc, dtstepc, config_flags, &
 		t_phy, rho_phy, p_phy,                            &
 		moist, chem, vbs_nbin,                            &
+		rr_het_hobr_hbr,rr_het_hobr_hcl,    & !LSURL
 		ids,ide, jds,jde, kds,kde,                        &
 		ims,ime, jms,jme, kms,kme,                        &
 		its,ite, jts,jte, kts,kte                         )
@@ -497,13 +498,21 @@
 2910	continue
 2920	continue
 ! call WCV surface area scheme
+!Now calcualtes gammas
+!    CALL SURF_AREA ( chem, num_chem, maxd_asize, &
+!                   maxd_atype,   &
+!                   dcen_sect, surf_dcen, rho_phy,  &
+!                   ids,ide, jds,jde, kds,kde, ims,ime, &
+!                   jms,jme, kms,kme, &
+!                   its,ite, jts,jte, kts,kte )
 
-    CALL SURF_AREA ( chem, num_chem, maxd_asize, &
+  CALL GAMMAS ( chem, num_chem, maxd_asize, &
                    maxd_atype,   &
-                   dcen_sect, surf_dcen, rho_phy,  &
+                   t_phy, p_phy, rho_phy,  &
                    ids,ide, jds,jde, kds,kde, ims,ime, &
                    jms,jme, kms,kme, &
-                   its,ite, jts,jte, kts,kte )
+                   its,ite, jts,jte, kts,kte,&
+                   rr_het_hobr_hbr,rr_het_hobr_hcl )
 
 !   rce 2005-apr-30 - added 2 calls to print_mosaic_stats
 	call print_mosaic_stats( 1 )
@@ -7817,160 +7826,277 @@ n2o5_flag = config_flags%n2o5_hetchem
 	return
 	end subroutine aerchem_debug_dump 
 
-!=WCV surf area scheme====================================
- SUBROUTINE SURF_AREA ( chem, num_chem, i_maxd_asize, &
-                   i_maxd_atype,   &
-                   i_dcen_sect, surf_dcen, rho_phy,  &
+!=WCV gamma scheme====================================
+ SUBROUTINE GAMMAS ( chem, num_chem, &
+                   t_phy, p_phy, rho_phy,  &
                    ids,ide, jds,jde, kds,kde, ims,ime, &
                    jms,jme, kms,kme, &
-                   its,ite, jts,jte, kts,kte )
+                   its,ite, jts,jte, kts,kte,&
+                   ph_het_hobr_hbr,ph_het_hobr_hcl )
 !========================================================================
- USE module_data_mosaic_asect
- use module_configure, only: p_num_a01, p_num_a02, &
-                             p_num_a03, p_num_a04, &
-                             p_num_a05, p_num_a06, &
-                             p_num_a07, p_num_a08, &
-                             p_water_a01, p_water_a02, &
-                             p_water_a03, p_water_a04, &
-                             p_water_a05, p_water_a06, &
-                             p_water_a07, p_water_a08, &
-                             p_surf_dcen, p_recipd
+ use module_configure, only: p_surf_dcen, p_hcl, p_hbr
+
+ USE module_data_mosaic_asect, ONLY:  &     
+        dcen_sect, ai_phase, numptr_aer, waterptr_aer
+
+  USE module_data_mosaic_kind,  ONLY: r8
+  USE module_data_mosaic_other, ONLY: pi 
+
 
  IMPLICIT NONE
  INTEGER, intent(in) :: num_chem
  REAL, intent(inout), dimension(ims:ime, kms:kme, jms:jme, num_chem) :: chem
- INTEGER i_maxd_asize
- INTEGER i_maxd_atype
- REAL,    intent(in) :: i_dcen_sect(i_maxd_asize, i_maxd_atype) ! input center size of section (cm)
- REAL                   o_dcen_sect(i_maxd_asize, i_maxd_atype) ! output center size of section (cm)
+
+ REAL(r8), o_dcen ! output center size of section (cm)
  REAL, dimension(ims:ime, kms:kme, jms:jme) :: surf_a01, surf_a02, surf_a03, surf_a04, surf_a05, &
                       surf_a06, surf_a07, surf_a08    ! total aerosol surface area for bin m by dcen
  REAL, dimension(ims:ime, kms:kme, jms:jme) :: vol_a01, vol_a02, vol_a03, vol_a04, vol_a05, &
                                vol_a06, vol_a07, vol_a08    ! total aerosol volume for bin m by dcen
- REAL, intent(inout), dimension(ims:ime, kms:kme, jms:jme) :: surf_dcen  ! total aerosol SA by dcen
- REAL, intent(in), dimension(ims:ime, kms:kme, jms:jme ) :: rho_phy  ! density at mid-level  (kg/m3)
+ !REAL, intent(inout), dimension(ims:ime, kms:kme, jms:jme) :: surf_dcen  ! total aerosol SA by dcen
+ REAL, intent(in), dimension(ims:ime, kms:kme, jms:jme ) :: &
+  t_phy, p_phy, rho_phy  ! Temp (K), press (Pa) and density (kg/m3)
  INTEGER, intent(in) :: ids,ide, jds,jde, kds,kde, &
                         ims,ime, jms,jme, kms,kme, &
                         its,ite, jts,jte, kts,kte
- REAL, parameter :: PI = 3.14159
- REAL, parameter :: waterdens = 1000000.0 !ug/cm^3
- INTEGER :: m,i,j,k,n,l
 
+ REAL, INTENT(OUT), &
+        DIMENSION( ims:ime, kms:kme, jms:jme ) :: ph_het_hobr_hbr,ph_het_hobr_hcl
+        !Output reaction rates (psuedo photolysis rates)
+
+!Aerosol properties
+ REAL(r8) :: num_a, surf_a; vol_a
+ !molecule properties
+ REAL(r8) :: mean_speed_hobr, diffusion_constant_hobr, freepath_hobr, knudsen_hobr,& 
+             j_corr_hobr, k_het_hobr
+ !fractioning
+ REAL(r8) :: xH_HBR, xH_HBR, xpr, yBR2, yBRCL
+
+ INTEGER :: ibin,i,j,k,n,l,n1,w1
+ 
+ !parameters
+ REAL, parameter :: waterdens = 1000000.0_r8 !ug/cm^3
+ REAL, parameter :: gamma_hobr = 0.6_r8
 
  do j= jts,jte
  do k= kts,kte
  do i= its,ite
 
- chem(i,k,j,p_surf_dcen)=0.0
- chem(i,k,j,p_recipd)=0.000000001
- surf_a01(i,k,j)=0.0
- surf_a02(i,k,j)=0.0
- surf_a03(i,k,j)=0.0
- surf_a04(i,k,j)=0.0
- surf_a05(i,k,j)=0.0
- surf_a06(i,k,j)=0.0
- surf_a07(i,k,j)=0.0
- surf_a08(i,k,j)=0.0
+ !default values
 
- !get dry volumes, cm^3/kg air
- vol_a01(i,k,j) = (4./3.) * PI * ((i_dcen_sect(1,1) / 2.)**3.) * chem(i,k,j,p_num_a01)
- vol_a02(i,k,j) = (4./3.) * PI * ((i_dcen_sect(2,1) / 2.)**3.) * chem(i,k,j,p_num_a02)
- vol_a03(i,k,j) = (4./3.) * PI * ((i_dcen_sect(3,1) / 2.)**3.) * chem(i,k,j,p_num_a03) 
- vol_a04(i,k,j) = (4./3.) * PI * ((i_dcen_sect(4,1) / 2.)**3.) * chem(i,k,j,p_num_a04)
- vol_a05(i,k,j) = (4./3.) * PI * ((i_dcen_sect(5,1) / 2.)**3.) * chem(i,k,j,p_num_a05)
- vol_a06(i,k,j) = (4./3.) * PI * ((i_dcen_sect(6,1) / 2.)**3.) * chem(i,k,j,p_num_a06)
- vol_a07(i,k,j) = (4./3.) * PI * ((i_dcen_sect(7,1) / 2.)**3.) * chem(i,k,j,p_num_a07)
- vol_a08(i,k,j) = (4./3.) * PI * ((i_dcen_sect(8,1) / 2.)**3.) * chem(i,k,j,p_num_a08)
+ chem(i,k,j,p_surf_dcen)=0.0_r8
+ k_het_hobr = 0.0_r8
 
- !add water, chem(i,k,j,p_water_aXX) has units ug/kg dry air, convert to cm3/kg
+ !Moleculme paralemers
+ !HOBr
+ !get mean speed of molecule
+ CALL calc_mean_speed(t_phy(i,k,j), 0.097_r8, mean_speed_hobr)
+ ! Calculate the diffusion constant (m2/s) for species ispecies
+ CALL calc_diffusion_constant(t_phy(i,k,j), p_phy(i,k,j), 0.097_r8, diffusion_constant_hobr)
+ ! Calculate the  molecular free path in air (cm)
+ CALL calc_freepath(t_phy(i,k,j), 0.097_r8, diffusion_constant_hobr, freepath_hobr)
 
- vol_a01(i,k,j) = vol_a01(i,k,j) + chem(i,k,j,p_water_a01)/waterdens
- vol_a02(i,k,j) = vol_a02(i,k,j) + chem(i,k,j,p_water_a02)/waterdens
- vol_a03(i,k,j) = vol_a03(i,k,j) + chem(i,k,j,p_water_a03)/waterdens
- vol_a04(i,k,j) = vol_a04(i,k,j) + chem(i,k,j,p_water_a04)/waterdens
- vol_a05(i,k,j) = vol_a05(i,k,j) + chem(i,k,j,p_water_a05)/waterdens
- vol_a06(i,k,j) = vol_a06(i,k,j) + chem(i,k,j,p_water_a06)/waterdens
- vol_a07(i,k,j) = vol_a07(i,k,j) + chem(i,k,j,p_water_a07)/waterdens
- vol_a08(i,k,j) = vol_a08(i,k,j) + chem(i,k,j,p_water_a08)/waterdens
+ do ibin = 1,i_maxd_asize !Start loop over bins
 
+ surf_a = 0.0_r8
+ ! Retrieve aerosol number concentration
+ n1 = numptr_aer(ibin,1,ai_phase)
+ w1 = waterptr_aer(ibin,1)
+ !dry_volume cm^3/kg air
+ vol_a = (4._r8/3._r8) * pi * ((dcen_sect(ibin,1) / 2._r8)**3._r8) * chem(i,k,j,n1)
+ !add water
+ vol_a = vol_a(i,k,j) + chem(it,kt,jt,w1)/waterdens
  !Keep assuming spheres, calaculate wet diameters
 
- o_dcen_sect(1,1) = 2 * ((3. / (4. * PI )) * &
-        (vol_a01(i,k,j)/chem(i,k,j,p_num_a01)) )**(1./3.)
- o_dcen_sect(2,1) = 2 * ((3. / (4. * PI )) * &
-        (vol_a02(i,k,j)/chem(i,k,j,p_num_a02)) )**(1./3.)
- o_dcen_sect(3,1) = 2 * ((3. / (4. * PI )) * &
-        (vol_a03(i,k,j)/chem(i,k,j,p_num_a03)) )**(1./3.)
- o_dcen_sect(4,1) = 2 * ((3. / (4. * PI )) * &
-        (vol_a04(i,k,j)/chem(i,k,j,p_num_a04)) )**(1./3.)
- o_dcen_sect(5,1) = 2 * ((3. / (4. * PI )) * &
-        (vol_a05(i,k,j)/chem(i,k,j,p_num_a05)) )**(1./3.)
- o_dcen_sect(6,1) = 2 * ((3. / (4. * PI )) * &
-        (vol_a06(i,k,j)/chem(i,k,j,p_num_a06)) )**(1./3.)
- o_dcen_sect(7,1) = 2 * ((3. / (4. * PI )) * &
-        (vol_a07(i,k,j)/chem(i,k,j,p_num_a07)) )**(1./3.)
- o_dcen_sect(8,1) = 2 * ((3. / (4. * PI )) * &
-        (vol_a08(i,k,j)/chem(i,k,j,p_num_a08)) )**(1./3.)
+ o_dcen = 2._r8 * ((3._r8 / (4._r8 * pi )) * &
+        (vol_a/chem(i,k,j,n1)) )**(1._r8/3._r8)
 
- !Allow a maximum of x3.1623 of the diameter (10x area)
- do m=1,8
- o_dcen_sect(m,1) = min(o_dcen_sect(m,1),3.1623*i_dcen_sect(m,1))
- end do
-
+!Allow a maximum of x3.1623 of the diameter (10x area)
+ o_dcen = min(o_dcen,3.1623_r8*dcen_sect(ibin,1))
  !Don't allow a smaller diameter
- do m=1,8
- o_dcen_sect(m,1) = max(o_dcen_sect(m,1),i_dcen_sect(m,1))
- end do
+ o_dcen = max(o_dcen,dcen_sect(ibin,1))
+ !Surface area contribution for this bin, cm^2/kg
+ surf_a = 4._r8 * PI * ((o_dcen / 2._r8)**2._r8) * chem(i,k,j,n1)
+ 
+ !convert to cm2/cm3 and add to total
+ chem(i,k,j,p_surf_dcen) = chem(i,k,j,p_surf_dcen) + &
+                           surf_a * rho_phy(i,k,j) * 1E-6_r8 
 
- !Use these wet diameters to calculate surface area
+ ! Calculate the Knudsen number
+ knudsen_hobr = freepath_hobr / o_dcen
 
- surf_a01(i,k,j) = 4. * PI * ((o_dcen_sect(1,1) / 2.)**2.) * chem(i,k,j,p_num_a01) 
- surf_a02(i,k,j) = 4. * PI * ((o_dcen_sect(2,1) / 2.)**2.) * chem(i,k,j,p_num_a02) 
- surf_a03(i,k,j) = 4. * PI * ((o_dcen_sect(3,1) / 2.)**2.) * chem(i,k,j,p_num_a03)  
- surf_a04(i,k,j) = 4. * PI * ((o_dcen_sect(4,1) / 2.)**2.) * chem(i,k,j,p_num_a04) 
- surf_a05(i,k,j) = 4. * PI * ((o_dcen_sect(5,1) / 2.)**2.) * chem(i,k,j,p_num_a05) 
- surf_a06(i,k,j) = 4. * PI * ((o_dcen_sect(6,1) / 2.)**2.) * chem(i,k,j,p_num_a06) 
- surf_a07(i,k,j) = 4. * PI * ((o_dcen_sect(7,1) / 2.)**2.) * chem(i,k,j,p_num_a07) 
- surf_a08(i,k,j) = 4. * PI * ((o_dcen_sect(8,1) / 2.)**2.) * chem(i,k,j,p_num_a08) 
+ ! work out the gamma correction factor
+ j_corr_hobr = &
+           (0.75_r8 * gamma_hobr * (1.0_r8 + knudsen_hobr)) / &
+   (knudsen_hobr ** 2.0_r8 + knudsen_hobr + 0.283_r8 * knudsen_hobr * gamma_hobr &
+                          + 0.75_r8 * gamma_hobr)
 
- chem(i,k,j,p_surf_dcen) = surf_a01(i,k,j) + surf_a02(i,k,j) + &
-    surf_a03(i,k,j) + surf_a04(i,k,j) + &
-    surf_a05(i,k,j) + surf_a06(i,k,j) + &
-    surf_a07(i,k,j) + surf_a08(i,k,j)     
+ !Add this bin's contrinution to the k_het value
+ k_het_hobr = k_het_hobr + 0.25_r8 * mean_speed_hobr * gamma_hobr &
+                           * surf_a * rho_phy(i,k,j) * 1E-6_r8 & !SA
+                           * j_corr_hobr
 
-  chem(i,k,j,p_surf_dcen) = chem(i,k,j,p_surf_dcen) * rho_phy(i,k,j) * 1e-6 
-  ! cm^2/kg --> cm^2/cm^3
+ enddo ! end bin loop
 
-  !weighted reciprocal of wet diameter
-  chem(i,k,j,p_recipd) = (&
-                           chem(i,k,j,p_num_a01)/o_dcen_sect(1,1) + &
-                           chem(i,k,j,p_num_a02)/o_dcen_sect(2,1) + &
-                           chem(i,k,j,p_num_a03)/o_dcen_sect(3,1) + &
-                           chem(i,k,j,p_num_a04)/o_dcen_sect(4,1) + &
-                           chem(i,k,j,p_num_a05)/o_dcen_sect(5,1) + &
-                           chem(i,k,j,p_num_a06)/o_dcen_sect(6,1) + &
-                           chem(i,k,j,p_num_a07)/o_dcen_sect(7,1) + &
-                           chem(i,k,j,p_num_a08)/o_dcen_sect(8,1) &
-                          )/(&
-                           chem(i,k,j,p_num_a01) + &
-                           chem(i,k,j,p_num_a02) + &
-                           chem(i,k,j,p_num_a03) + &
-                           chem(i,k,j,p_num_a04) + &
-                           chem(i,k,j,p_num_a05) + &
-                           chem(i,k,j,p_num_a06) + &
-                           chem(i,k,j,p_num_a07) + &
-                           chem(i,k,j,p_num_a08) &
-                           )
+ !Now compute splitting of reaction pathway between HBr and HCl paths
+ !--- calculate BrCl : Br2 product yield ratio ---
 
+! equilibrium constants: BrCl + Br- <--> Br2Cl-, K_eq1 = 1.8d4
+! equilibrium constants: Br2 + Cl- <--> Br2Cl-, K_eq2 = 1.3d0
+! note: this approach includes effective solubility, [H+] cancels out
+! Henry's law's coefficient for HCl, H_HCl = 
+xH_HCL=1.176_r8*exp(9001.0_r8*((1._r8/t_phy(i,k,j)-3.3557E-3_r8))
+! Henry's law's coefficient for HBr, H_HBr = 
+xH_HBR=1.3_r8*exp(10239.0_r8*((1._r8/t_phy(i,k,j)-3.3557E-3_r8)) 
+! HCl dissociation equilibrium: K_HCl = 1.7d6
+! HBr dissociation equilibrium: K_HBr = 1.0d9
+! calculate product ratio [BrCl] : [Br2]
+xpr = 0._r8
+IF min(chem(i,k,j,p_hbr),chem(i,k,j,p_hcl)) .GT. 1._r8) THEN
+    xpr = 1.3_r8/1.8E4_r8 * 1.7E6_r8/1.0E9_r8 * xH_HCl/xH_HBR * &
+          chem(i,k,j,p_hcl)/chem(i,k,j,p_hbr)
+ENDIF
+! yields for each pathway
+yBR2  = 0._r8
+yBRCL = 0._r8
+IF (xpr .GT. 0._r8) THEN
+   yBR2 = 1._r8 / (1._r8 + xpr)
+ENDIF
+IF (xpr .GT. 0._r8) THEN
+    yBRCL = 1._r8 / (1._r8 + 1._r8/xpr)
+ENDIF
 
+ ! commit reaction rates to a psuedo-photolysis variable
+ !Apply branching
+ ph_het_hobr_hbr(i, k, j) = yBR2 * k_het_hobr * 60._r8 !units min-1
+ ph_het_hobr_hcl(i, k, j) = yBRCL* k_het_hobr * 60._r8 !units min-1
 
  enddo
  enddo
  enddo
 !-----------------------------------
- END SUBROUTINE SURF_AREA
+ END SUBROUTINE GAMMAS
+!------------------------------------------------------------------------
 
-!-----------------------------------------------------------------------
+    SUBROUTINE calc_diffusion_constant(temp, press, molar_weight, diffusion_constant)
+    !By Louis Marelle
+
+!   Calculates the diffusion constant of the species of molar weight
+!   molar_weight
+!
+!   input parameters
+!    temp - Temperature (K)
+!    press - Pressure (Pa)
+!    molar_weight - Molar weight (g/mol)
+!   output parameters
+!    diffusion_constant - Diffusion constant (m2/s)
+!
+
+    USE module_data_mosaic_kind,  ONLY: r8
+
+    IMPLICIT NONE
+
+    ! Subroutine arguments
+    REAL(r8), INTENT(IN) :: temp, press, molar_weight
+    REAL(r8), INTENT(OUT) :: diffusion_constant
+    ! Local variables
+    REAL(r8) :: mw_kg
+    ! Parameters
+    REAL(r8), PARAMETER :: rgas = 8.3144598_r8 !TODO use the one from model constants (J K-1 mol-1, or kg*m2/s2/K/mol)
+
+    ! Molar weight in kg/mol
+    mw_kg =  molar_weight / 1000._r8
+    
+    ! diffusion_constant calculated as D = mean_free_path in air*molecular_velocity/3
+    ! mean_free_path in air calculated according to Seinfeld and Pandis, 1998 edition
+    ! equation 8.6
+    ! molecular_velocity calculated according to Modeling chemistry in and
+    ! above snow at Summit, J.L. Thomas
+    diffusion_constant = 2. * 1.8_r8 * 10._r8 ** (-5) * rgas * temp / &
+        (3. * press * SQRT(0.029_r8) * SQRT(mw_kg))
+
+    END SUBROUTINE calc_diffusion_constant
+
+!------------------------------------------------------------------------
+
+    SUBROUTINE calc_freepath(temp, molar_weight, diffusion_constant, freepath)
+    !By Louis Marelle
+
+!   Calculates the molecular free path in air, in cm
+!
+!   Input parameters
+!    temp - Temperature (K)
+!    diffusion_constant - Diffusion constant (m2/s)
+!    molar_weight - Molar weight (g/mol)
+!   Output parameters
+!    freepath - Molecular freepath in air (cm)
+!    
+
+    USE module_data_mosaic_other, ONLY: pi 
+    USE module_data_mosaic_kind,  ONLY: r8
+
+    IMPLICIT NONE
+
+    ! Subroutine arguments
+    REAL(r8), INTENT(IN) :: temp, molar_weight, diffusion_constant
+    REAL(r8), INTENT(OUT) :: freepath
+    ! Local variables
+    REAL mw_kg, c_bar
+    ! Parameters
+    REAL(r8), PARAMETER :: rgas = 8.3144598_r8 !TODO use the one from model constants (J K-1 mol-1, or kg*m2/s2/K/mol)
+    REAL(r8), PARAMETER :: m_to_cm = 100._r8
+    
+    ! Molar weight in kg/mol
+    mw_kg =  molar_weight / 1000._r8
+
+     
+    ! Mean speed of molecules in m/s
+    c_bar = SQRT(8._r8 * rgas * temp / (pi * mw_kg))
+
+    ! Calculate mean free path (cm) based on Fuchs and Sutugin (1971), equation
+    ! from Seinfeld and Pandis, 1998, Table 11.1
+    freepath = 3._r8 * diffusion_constant / c_bar * m_to_cm
+
+    END SUBROUTINE calc_freepath
+
+!------------------------------------------------------------------------
+
+    SUBROUTINE calc_mean_speed(temp, molar_weight, mean_speed)
+    !By Louis Marelle
+
+!   Calculates the mean speed of molecules in cm/s
+!
+!   Input parameters
+!    temp - Temperature (K)
+!    molar_weight - Molar weight (g/mol)
+!   Output parameters
+!    mean_speed - Mean molecular speed (cm/s)
+
+    USE module_data_mosaic_other, ONLY: pi 
+    USE module_data_mosaic_kind,  ONLY: r8
+
+    IMPLICIT NONE
+
+    ! Subroutine arguments
+    REAL(r8), INTENT(IN) :: temp, molar_weight
+    REAL(r8), INTENT(OUT) :: mean_speed
+    ! Local variables
+    REAL(r8) :: mw_kg
+    ! Parameters
+    REAL(r8), PARAMETER :: rgas = 8.3144598_r8 !TODO use the one from model constants (J K-1 mol-1, or kg*m2/s2/K/mol)
+    REAL(r8), PARAMETER :: m_to_cm = 100._r8 
+
+    ! Molar weight in kg/mol
+    mw_kg =  molar_weight / 1000._r8
+         
+    ! Mean speed of molecules (cm/s), equation PP from Pits & Pits (book) in Box
+    ! 5.2
+    mean_speed = SQRT(8._r8 * rgas * temp / (pi * mw_kg)) * m_to_cm
+    
+    END SUBROUTINE calc_mean_speed
+
+!------------------------------------------------------------------------
+
+    END MODULE module_mosaic_set_heterogeneous
 
 
 !-----------------------------------------------------------------------
