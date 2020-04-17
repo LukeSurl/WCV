@@ -16,6 +16,7 @@
                vdrog3, vdrog3_vbs,brch_ratio,dgnum,dgnumwet,wetdens_ap,    &
                del_h2so4_gasprod,dvmrdt_sv13d,dvmrcwdt_sv13d,              &
                is_CAMMGMP_used,                                            &!BSINGH:01/31/2013: Added is_CAMMGMP_used for cam_mam_aerchem_driver
+               rr_het_hobr_hbr,rr_het_hobr_hcl, &!LSURL 20200410
                ids,ide, jds,jde, kds,kde,                                  &
                ims,ime, jms,jme, kms,kme,                                  &
                its,ite, jts,jte, kts,kte                                   )
@@ -156,6 +157,10 @@
    REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                    &
          INTENT(INOUT ) ::                                          &
                aerwrf
+
+!heterogenous reaction rates
+   REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                    &
+         INTENT(OUT ) :: rr_het_hobr_hbr, rr_het_hobr_hcl !LSURL
 !
 ! aerosol/radm2 interaction
 !
@@ -290,6 +295,7 @@
             id, curr_secs, ktau, dtstep, ktauc, dtstepc, config_flags,  &
             t_phy, rho_phy, p_phy,                                      &
             moist, chem,vbs_nbin,                                       &
+            rr_het_hobr_hbr,rr_het_hobr_hcl, & !LSURL
             ids,ide, jds,jde, kds,kde,                                  &
             ims,ime, jms,jme, kms,kme,                                  &
             its,ite, jts,jte, kts,kte                                   )

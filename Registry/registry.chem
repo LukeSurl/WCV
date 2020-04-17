@@ -1431,6 +1431,9 @@ state    real  ph_brno3        ikj     misc        1         -      rh        "P
 state    real  ph_oclo         ikj     misc        1         -      rh        "PHOTR140"        "OCLO Photolysis Rate" "min{-1}"
 state    real  ph_clno3        ikj     misc        1         -      rh        "PHOTR143"        "CLNO3 Photolysis Rate" "min{-1}"
 state    real  ph_brcl         ikj     misc        1         -      rh        "PHOTR145"        "BRCL Photolysis Rate" "min{-1}"
+#psuedo photolysis rates used for heterogenous reaction rates
+state    real  ph_het_hobr_hbr          ikj     misc        1         -      rh        "HETR_HOBR_HBR"        "HOBR HBR Rate" "min{-1}"
+state    real  ph_het_hobr_hcl          ikj     misc        1         -      rh        "HETR_HOBR_HCL"        "HOBR HCL Rate" "min{-1}"
 
 # photolysis rad field diagnostic variables
 state    real  ph_par          ikj     misc        1         -      -        "ph_par"                "Photosynthetic Active Radiation"  "W m-2"

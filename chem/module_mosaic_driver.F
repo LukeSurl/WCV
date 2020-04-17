@@ -135,7 +135,7 @@
 		id, curr_secs, ktau, dtstep, ktauc, dtstepc, config_flags, &
 		t_phy, rho_phy, p_phy,                            &
 		moist, chem, vbs_nbin,                            &
-		rr_het_hobr_hbr,rr_het_hobr_hcl,    & !LSURL
+		rr_het_hobr_hbr,rr_het_hobr_hcl,    & !psudo photolysis rates LSURL
 		ids,ide, jds,jde, kds,kde,                        &
 		ims,ime, jms,jme, kms,kme,                        &
 		its,ite, jts,jte, kts,kte                         )
@@ -223,6 +223,12 @@
 !   t_phy - temperature (K)
 !   rho_phy - air density (kg/m^3)
 !   p_phy - air pressure (Pa)
+
+	real, intent(out),   &
+		dimension( ims:ime, kms:kme, jms:jme ) :: &
+		rr_het_hobr_hbr,rr_het_hobr_hcl
+! psuedo-photolysis rates for the heterogenous reactions
+! of HOBr with HBR and HCl
 
 	real, intent(in),   &
 		dimension( ims:ime, kms:kme, jms:jme, 1:num_moist ) :: &
@@ -506,8 +512,7 @@
 !                   jms,jme, kms,kme, &
 !                   its,ite, jts,jte, kts,kte )
 
-  CALL GAMMAS ( chem, num_chem, maxd_asize, &
-                   maxd_atype,   &
+  CALL GAMMAS ( chem, num_chem, &
                    t_phy, p_phy, rho_phy,  &
                    ids,ide, jds,jde, kds,kde, ims,ime, &
                    jms,jme, kms,kme, &
@@ -7837,7 +7842,7 @@ n2o5_flag = config_flags%n2o5_hetchem
  use module_configure, only: p_surf_dcen, p_hcl, p_hbr
 
  USE module_data_mosaic_asect, ONLY:  &     
-        dcen_sect, ai_phase, numptr_aer, waterptr_aer
+        dcen_sect, ai_phase, numptr_aer, waterptr_aer, nsize_aer
 
   USE module_data_mosaic_kind,  ONLY: r8
   USE module_data_mosaic_other, ONLY: pi 
@@ -7847,7 +7852,7 @@ n2o5_flag = config_flags%n2o5_hetchem
  INTEGER, intent(in) :: num_chem
  REAL, intent(inout), dimension(ims:ime, kms:kme, jms:jme, num_chem) :: chem
 
- REAL(r8), o_dcen ! output center size of section (cm)
+ REAL(r8) :: o_dcen ! output center size of section (cm)
  REAL, dimension(ims:ime, kms:kme, jms:jme) :: surf_a01, surf_a02, surf_a03, surf_a04, surf_a05, &
                       surf_a06, surf_a07, surf_a08    ! total aerosol surface area for bin m by dcen
  REAL, dimension(ims:ime, kms:kme, jms:jme) :: vol_a01, vol_a02, vol_a03, vol_a04, vol_a05, &
@@ -7864,12 +7869,12 @@ n2o5_flag = config_flags%n2o5_hetchem
         !Output reaction rates (psuedo photolysis rates)
 
 !Aerosol properties
- REAL(r8) :: num_a, surf_a; vol_a
+ REAL(r8) :: num_a, surf_a, vol_a
  !molecule properties
  REAL(r8) :: mean_speed_hobr, diffusion_constant_hobr, freepath_hobr, knudsen_hobr,& 
              j_corr_hobr, k_het_hobr
  !fractioning
- REAL(r8) :: xH_HBR, xH_HBR, xpr, yBR2, yBRCL
+ REAL(r8) :: xH_HBR, xH_HCL, xpr, yBR2, yBRCL
 
  INTEGER :: ibin,i,j,k,n,l,n1,w1
  
@@ -7889,13 +7894,13 @@ n2o5_flag = config_flags%n2o5_hetchem
  !Moleculme paralemers
  !HOBr
  !get mean speed of molecule
- CALL calc_mean_speed(t_phy(i,k,j), 0.097_r8, mean_speed_hobr)
+ CALL calc_mean_speed(t_phy(i,k,j), 0.097, mean_speed_hobr)
  ! Calculate the diffusion constant (m2/s) for species ispecies
- CALL calc_diffusion_constant(t_phy(i,k,j), p_phy(i,k,j), 0.097_r8, diffusion_constant_hobr)
+ CALL calc_diffusion_constant(t_phy(i,k,j), p_phy(i,k,j), 0.097, diffusion_constant_hobr)
  ! Calculate the  molecular free path in air (cm)
- CALL calc_freepath(t_phy(i,k,j), 0.097_r8, diffusion_constant_hobr, freepath_hobr)
+ CALL calc_freepath(t_phy(i,k,j), 0.097, diffusion_constant_hobr, freepath_hobr)
 
- do ibin = 1,i_maxd_asize !Start loop over bins
+ do ibin = 1,nsize_aer(1) !Start loop over bins
 
  surf_a = 0.0_r8
  ! Retrieve aerosol number concentration
@@ -7904,7 +7909,7 @@ n2o5_flag = config_flags%n2o5_hetchem
  !dry_volume cm^3/kg air
  vol_a = (4._r8/3._r8) * pi * ((dcen_sect(ibin,1) / 2._r8)**3._r8) * chem(i,k,j,n1)
  !add water
- vol_a = vol_a(i,k,j) + chem(it,kt,jt,w1)/waterdens
+ vol_a = vol_a + chem(i,k,j,w1)/waterdens
  !Keep assuming spheres, calaculate wet diameters
 
  o_dcen = 2._r8 * ((3._r8 / (4._r8 * pi )) * &
@@ -7944,14 +7949,14 @@ n2o5_flag = config_flags%n2o5_hetchem
 ! equilibrium constants: Br2 + Cl- <--> Br2Cl-, K_eq2 = 1.3d0
 ! note: this approach includes effective solubility, [H+] cancels out
 ! Henry's law's coefficient for HCl, H_HCl = 
-xH_HCL=1.176_r8*exp(9001.0_r8*((1._r8/t_phy(i,k,j)-3.3557E-3_r8))
+xH_HCL=1.176_r8*exp(9001.0_r8*((1._r8/t_phy(i,k,j)-3.3557E-3_r8)))
 ! Henry's law's coefficient for HBr, H_HBr = 
-xH_HBR=1.3_r8*exp(10239.0_r8*((1._r8/t_phy(i,k,j)-3.3557E-3_r8)) 
+xH_HBR=1.3_r8*exp(10239.0_r8*((1._r8/t_phy(i,k,j)-3.3557E-3_r8)))
 ! HCl dissociation equilibrium: K_HCl = 1.7d6
 ! HBr dissociation equilibrium: K_HBr = 1.0d9
 ! calculate product ratio [BrCl] : [Br2]
 xpr = 0._r8
-IF min(chem(i,k,j,p_hbr),chem(i,k,j,p_hcl)) .GT. 1._r8) THEN
+IF (min(chem(i,k,j,p_hbr),chem(i,k,j,p_hcl)) .GT. 1._r8) THEN
     xpr = 1.3_r8/1.8E4_r8 * 1.7E6_r8/1.0E9_r8 * xH_HCl/xH_HBR * &
           chem(i,k,j,p_hcl)/chem(i,k,j,p_hbr)
 ENDIF
@@ -7996,7 +8001,7 @@ ENDIF
     IMPLICIT NONE
 
     ! Subroutine arguments
-    REAL(r8), INTENT(IN) :: temp, press, molar_weight
+    REAL, INTENT(IN) :: temp, press, molar_weight
     REAL(r8), INTENT(OUT) :: diffusion_constant
     ! Local variables
     REAL(r8) :: mw_kg
@@ -8037,8 +8042,8 @@ ENDIF
     IMPLICIT NONE
 
     ! Subroutine arguments
-    REAL(r8), INTENT(IN) :: temp, molar_weight, diffusion_constant
-    REAL(r8), INTENT(OUT) :: freepath
+    REAL, INTENT(IN) :: temp, molar_weight
+    REAL(r8), INTENT(OUT) :: freepath, diffusion_constant
     ! Local variables
     REAL mw_kg, c_bar
     ! Parameters
@@ -8077,7 +8082,7 @@ ENDIF
     IMPLICIT NONE
 
     ! Subroutine arguments
-    REAL(r8), INTENT(IN) :: temp, molar_weight
+    REAL, INTENT(IN) :: temp, molar_weight
     REAL(r8), INTENT(OUT) :: mean_speed
     ! Local variables
     REAL(r8) :: mw_kg
@@ -8096,8 +8101,6 @@ ENDIF
 
 !------------------------------------------------------------------------
 
-    END MODULE module_mosaic_set_heterogeneous
-
 
 !-----------------------------------------------------------------------
-	end module module_mosaic_driver
+    end module module_mosaic_driver
