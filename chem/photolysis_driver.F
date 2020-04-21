@@ -19,7 +19,7 @@
                ph_mekooh,ph_tolooh,ph_terpooh,ph_mvk,                    &
                ph_glyald,ph_hyac,                                        &
                ph_cl2,ph_hocl,ph_fmcl,                                   &
-               ph_br2,ph_bro,ph_hbr,ph_hobr,ph_brno3,                    &
+               ph_br2,ph_bro,ph_brno2,ph_hobr,ph_brno3,                  &
                ph_oclo,ph_clno3,                                &
                ph_brcl,                                                  &
                nref0, nw0, tuv_jmax0,                                    &
@@ -79,7 +79,7 @@
            ph_xooh,ph_isopooh,ph_alkooh,ph_mekooh,ph_tolooh,           &
            ph_terpooh,ph_mvk,ph_glyald,ph_hyac,                        &
            ph_cl2,ph_hocl,ph_fmcl,                                     &
-           ph_br2,ph_bro,ph_hbr,ph_hobr,ph_brno3,                      &
+           ph_br2,ph_bro,ph_brno2,ph_hobr,ph_brno3,                    &
            ph_oclo,ph_clno3,                                  &
            ph_brcl
 
@@ -189,7 +189,7 @@
                ph_hcochest,ph_ch3o2h,ph_ch3coo2h,ph_ch3ono2,ph_hcochob,&
                ph_n2o5,                                                &
                ph_cl2,ph_hocl,                                         &
-               ph_br2,ph_bro,ph_hbr,ph_hobr,ph_brno3,                  &
+               ph_br2,ph_bro,ph_brno2,ph_hobr,ph_brno3,                &
                ph_oclo,ph_clno2,ph_clno3,                              &
                ph_brcl,                                                &
                tauaer1,tauaer2,tauaer3,tauaer4,                        &

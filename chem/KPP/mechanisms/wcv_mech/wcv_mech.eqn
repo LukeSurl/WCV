@@ -25,9 +25,8 @@
            0.07 ALD2 + 0.03 AONE				: 0.025 * j(Pj_ch2om) ;
  {021:J21} BRO + hv = BR + O3                           : j(Pj_bro) ;
  {022:J22} BR2 + hv = 2 BR                              : j(Pj_br2) ;
- {023:J23} HBR + hv = BR                                : j(Pj_hbr) ;
  {024:J24} HOBR + hv = BR + OH                          : j(Pj_hobr) ;
- {025:J25} BRNO2 + hv = BR + NO2                        : 2.5*j(Pj_hobr) ;
+ {025:J25} BRNO2 + hv = BR + NO2                        : j(Pj_brno2) ;
  {026:J26} BRNO3 + hv = BR + NO3                        : j(Pj_brno3) ;
  {027:J27} OCLO + hv = O3 + CLO                         : j(Pj_oclo) ;
  {028:J28} CL2 + hv = 2 CL                              : j(Pj_cl2) ;
@@ -193,7 +192,6 @@
  {127:101} XO2 + HO2 = PROD                             : ARR3(1.7D-13, -1300._dp, TEMP) ;
  {128:102} ANOL + OH = ALD2 + HO2				: 3.35D-12 ;
  {129:103} PAR + XPAR = PROD				: 1.0D-11 ;
- {130:104} HCl = HCl						: 1.0 ; 
  {131:105} NH3 = NH3						: 1.0 ; 
  {132:106} H2SO4 = H2SO4					: 1.0 ;
  {133:107} CH3O2 = .66 HCHO + .32 HO2 + .34 CH3OH	: peroxy(1,CH3O2,ETHP,RO2,C2O3,ANO2,NAP,ISOPP,ISOPN,ISOPO2,XO2,TEMP,C_M) ;
@@ -210,26 +208,25 @@
  {140:114} ISOPN = ALD2 + ONIT + 2 PAR                  : peroxy(8,CH3O2,ETHP,RO2,C2O3,ANO2,NAP,ISOPP,ISOPN,ISOPO2,XO2,TEMP,C_M) ;
  {141:115} ISOPO2 = .5 ALD2 + .5 AONE                   : peroxy(9,CH3O2,ETHP,RO2,C2O3,ANO2,NAP,ISOPP,ISOPN,ISOPO2,XO2,TEMP,C_M) ;
  {142:116} XO2 = PROD					: peroxy(10,CH3O2,ETHP,RO2,C2O3,ANO2,NAP,ISOPP,ISOPN,ISOPO2,XO2,TEMP,C_M) ;
- {143:117} BR + O3 = BRO		       	       : ARR3(1.6D-11, 780._dp,TEMP) ;
- {144:118} BR + HO2 = HBR                               : ARR3(4.8D-12, 310._dp,TEMP) ;
- {145:119} BR + HCHO = HBR + CO + HO2                   : ARR3(1.7D-11, 800._dp,TEMP) ;
- {146:120} BR + CH3OOH = CH3O2 + HBR                    : ARR3(2.66D-12, 1610._dp,TEMP) ;
- {147:121} BRO + HO2 = HOBR + tracer_8                            : ARR3(4.5D-12, -460._dp,TEMP) ;
+ {143:117} BR + O3 = BRO		       	                    : ARR3(1.7D-11, 800._dp,TEMP) ;
+ {144:118} BR + HO2 = HBR                               : ARR3(7.7D-12, 450._dp,TEMP) ;
+ {145:119} BR + HCHO = HBR + CO + HO2                   : ARR3(7.7D-12, 580._dp,TEMP) ;
+ {146:120} BR + CH3OOH = CH3O2 + HBR                    : ARR3(2.7D-12, 1610._dp,TEMP) ;
+ {147:121} BRO + HO2 = HOBR + tracer_8                  : ARR3(4.5D-12, -500._dp,TEMP) ;
  {148:122} BRO + CH3O2 = 0.72HOBR + 0.28 BR +
            0.28 HO2 + HCHO                              : ARR3(4.1D-13, -800._dp,TEMP) ;
- {149:123} BRO + NO = BR + NO2                          : ARR3(8.8D-12, -260._dp,TEMP) ;
+ {149:123} BRO + NO = BR + NO2                          : ARR3(8.7D-12, -260._dp,TEMP) ;
  {150:124} BRO + NO2 = BRNO3                            : TROEMS(5.2D-31, -3.2_dp, 6.9D-12, -2.9_dp, TEMP, C_M) ;
- {151:125} BRO + BRO = 1.62 BR + 0.19 BR2 + tracer_6    : ARR3(1.5D-12, -230._dp,TEMP) ;
- {152:126} HBR + OH = BR + H2O                          : ARR3(5.5D-12, -200._dp,TEMP) ;
+ {151:125} BRO + BRO = 2 BR + tracer_6                  : ARR3(2.7D-12, 0._dp,TEMP) ;
+ {151:125} BRO + BRO = BR2  + tracer_6                  : ARR3(2.9D-14, -840._dp,TEMP) ;
+ {152:126} HBR + OH = BR + H2O                          : ARR3(6.7D-12, -155._dp,TEMP) ;
  {153:127} BR + NO2 = BRNO2                             : ATK_3(4.2d-31,-2.4d0,2.7d-11,0.d0,0.55d0, TEMP, C_M)  ;
  {154:128} BRNO3 = BRO + NO2                            : ARR3(2.8D13, 12360._dp,TEMP) ;
  {157:131} HG + BR = HGBR                               : ARR4MS(1.46D-32,1.86_dp,TEMP,C_M) ;
- {158:132} HGBR = HG + BR                               : ARR3(4.0D9,7292._dp,TEMP) ;
- {159:133} HGBR + BR = HGBR2                            : ARR4(2.5D-10, 0.57_dp,TEMP) ;
- {160:134} HG + BR2 = HGBR2                             : 9.0D-17 ;
- {161:135} HGBR + HGBR = HG + HGBR2                     : 2.0D-14 ;
- {162:136} HGBR2 + SO2 = BR + HG + SO2                  : 6.0D-17 ;
- {163:137} HGBR2 = HG                                   : 1.0D-4 ;
+
+ {158:132} HG + BR = HGBR                               : 1.6D-12 ;
+ {160:134} HG + BRO = HGBR2                             : 4.7D-14 ;
+
  {164:138} API + OH = .0064 API1 + .055 API2            : ARR3(1.2D-11, -440._dp,TEMP) ;
  {165:139} API + NO3 = .0 API1 + .0 API2                : ARR3(1.2D-12, -490._dp,TEMP) ;
  {166:140} API + O3 = .022 API1 + .19 API2              : ARR3(6.3D-16, 580._dp,TEMP) ;
@@ -242,7 +239,6 @@
  {173:147} tracer_6  = tracprod_6                       : 1.0 ;
  {174:148} tracer_8  = tracprod_8                       : 1.0 ;
  {175:149} tracer_9  = tracer_9                         : 1.0D-12 ;
- {176:???} OH = Br                                      : ORGBRPROD(2.35D-12,1300._dp,8.5D-12,TEMP,C_M,8.5_dp) ;
  {177:???} tracer_1  = tracer_1                         : 1.0D-12  ;
  {179:???} CL + O3 = CLO                                : ARR3(2.8D-11, 250._dp,TEMP) ;
  {180:???} CL + HO2 = 0.8 HCL + 0.2 CLO + 0.2 OH        : 4.4D-11 ;
@@ -259,29 +255,18 @@
  {190:???} CLO + NO2 = ClNO3                            : ATK_3(1.6D-31,-3.4D0,7.0d-11,0.0d0,0.4d0,TEMP,C_M) ;
  {191:a??} CLO + CLO = CL2                              : ARR3(1.0D-12,1590._dp,TEMP) ;
  {191:b??} CLO + CLO = OCLO + CL                        : ARR3(3.5D-13,1370._dp,TEMP) ;
+ {191:c??} CLO + CLO = 2 CL                             : ARR3(3.0D-11,2450._dp,TEMP) ;
  {192:???} HCL + OH = H2O + CL                          : ARR3(1.7D-12,230._dp,TEMP) ;
  {193:???} CLNO2 + OH = HOCL + NO2                      : ARR3(2.4D-12,1250._dp,TEMP) ;
  {194:???} CLNO3 + OH = 0.5 CLO + 0.5 HNO3 +
            0.5 HOCL + 0.5 NO3                           :   ARR3(1.2D-12,330._dp,TEMP) ;
- {195:???} BRO + CLO = 0.93 BR + 
-           0.5 OCLO + 0.43 CL + 0.07 BRCL               : ARR3(1.6D-12,-430._dp,TEMP) ; 
- {196:???} HG + CL {+ N2}   = HGCL                      : 0.8 * C_M * ARR3(2.8D-33,680._dp,TEMP) ;
- {197:???} HG + HCL {+O2}  = HGCL + HO2                 : 1.0D-19 ;
- {198:???} HG + CL2        = HGCL2                      : 2.6D-18 ;
- {199:???} HGCL + CL      = HGCL2                       : 2.63D-10 ; 
- {200:???} HGCL + HGCL    = HGCL2 + HG                  : 3.0D-13 ;
- {201:???} HGCL2 + SO2    = HG + CL2 + SO2              : 6.0D-17 ;
- {Het1} N2O5        = 2 HNO3                            : xhet_sim3(1,1,HBR,HCL,SURF_DCEN,TEMP); 
- {Het2} N2O5 + HCL  = ClNO2 + HNO3                      : xhet_sim3(2,1,HBR,HCL,SURF_DCEN,TEMP); 
- {Het3} N2O5 + HBr  = BrNO2 + HNO3                      : xhet_sim3(3,1,HBR,HCL,SURF_DCEN,TEMP); 
- {Het4} CLNO3       = HOCL + HNO3                       : xhet_sim3(1,2,HBR,HCL,SURF_DCEN,TEMP);
- {Het5} CLNO3 + HCL = CL2 + HNO3                        : xhet_sim3(2,2,HBR,HCL,SURF_DCEN,TEMP); 
- {Het6} CLNO3 + HBR = BRCL + HNO3                       : xhet_sim3(3,2,HBR,HCL,SURF_DCEN,TEMP); 
- {Het7} BRNO3       = HOBR + HNO3                       : xhet_sim3(1,3,HBR,HCL,SURF_DCEN,TEMP); 
- {Het8} BRNO3 + HCL = BRCL + HNO3                       : xhet_sim3(2,3,HBR,HCL,SURF_DCEN,TEMP); 
- {Het9} BRNO3 + HBR = BR2 + HNO3                        : xhet_sim3(3,3,HBR,HCL,SURF_DCEN,TEMP); 
- {Het10} HOBR + HBR = BR2                               : xhet_sim2b(1,SURF_DCEN,HET_GAMMA1,HBR,HOBR,HCL,HOCL,TEMP);
- {Het11} HOBR + HCL = BRCL                              : xhet_sim2b(2,SURF_DCEN,HET_GAMMA1,HBR,HOBR,HCL,HOCL,TEMP);
- {Het13} HOCL + HBR = BRCL                              : xhet_sim2b(3,SURF_DCEN,HET_GAMMA1,HBR,HOBR,HCL,HOCL,TEMP);
- {Hg88} HGCL2       = HG + CL2                          : xhet_sim1(3,SURF_DCEN,TEMP);
- {Hg99} HGBR2       = HG + BR2                          : xhet_sim1(4,SURF_DCEN,TEMP);
+ {195:a??} BRO + CLO = BR + OCLO                        : ARR3(1.6D-12,-430._dp,TEMP) ; 
+ {195:b??} BRO + CLO = BRCL                             : ARR3(5.8D-13,-170._dp,TEMP) ; 
+ {195:c??} BRO + CLO = BR + CL                          : ARR3(2.9D-12,-230._dp,TEMP) ; 
+ {196:???} HG + CL   = HGCL                             : 1.8D-11 ;
+ {197:???} HG + CLO  = HGCL2                            : 1.1D-11 ;
+ {Het1} N2O5        = 2 HNO3                            : j(Pj_het_n2o5);
+ {Het4} CLNO3       = HOCL + HNO3                       : j(Pj_het_clno3);
+ {Het7} BRNO3       = HOBR + HNO3                       : j(Pj_het_brno3);
+ {Het10} HOBR + HBR = BR2                               : khet_halogens_aer(j(Pj_het_hobr_hbr),HBR,HOBR);
+ {Het11} HOBR + HCL = BRCL                              : khet_halogens_aer(j(Pj_het_hobr_hbr),HCL,HOBR);

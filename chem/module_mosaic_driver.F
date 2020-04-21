@@ -136,6 +136,7 @@
 		t_phy, rho_phy, p_phy,                            &
 		moist, chem, vbs_nbin,                            &
 		rr_het_hobr_hbr,rr_het_hobr_hcl,    & !psudo photolysis rates LSURL
+		rr_het_n2o5,rr_het_brno3,rr_het_clno3,& !psudo photolysis rates LSURL
 		ids,ide, jds,jde, kds,kde,                        &
 		ims,ime, jms,jme, kms,kme,                        &
 		its,ite, jts,jte, kts,kte                         )
@@ -226,7 +227,8 @@
 
 	real, intent(out),   &
 		dimension( ims:ime, kms:kme, jms:jme ) :: &
-		rr_het_hobr_hbr,rr_het_hobr_hcl
+		rr_het_hobr_hbr,rr_het_hobr_hcl,&
+		rr_het_n2o5,rr_het_brno3,rr_het_clno3
 ! psuedo-photolysis rates for the heterogenous reactions
 ! of HOBr with HBR and HCl
 
@@ -517,7 +519,9 @@
                    ids,ide, jds,jde, kds,kde, ims,ime, &
                    jms,jme, kms,kme, &
                    its,ite, jts,jte, kts,kte,&
-                   rr_het_hobr_hbr,rr_het_hobr_hcl )
+                   rr_het_hobr_hbr,rr_het_hobr_hcl,
+                   rr_het_n2o5,&
+                   rr_het_brno3,rr_het_clno3) 
 
 !   rce 2005-apr-30 - added 2 calls to print_mosaic_stats
 	call print_mosaic_stats( 1 )
@@ -7837,7 +7841,9 @@ n2o5_flag = config_flags%n2o5_hetchem
                    ids,ide, jds,jde, kds,kde, ims,ime, &
                    jms,jme, kms,kme, &
                    its,ite, jts,jte, kts,kte,&
-                   ph_het_hobr_hbr,ph_het_hobr_hcl )
+                   ph_het_hobr_hbr,ph_het_hobr_hcl,&
+                   ph_het_n2o5,&
+                   ph_het_brno3,ph_het_clno3)
 !========================================================================
  use module_configure, only: p_surf_dcen, p_hcl, p_hbr
 
@@ -7873,6 +7879,12 @@ n2o5_flag = config_flags%n2o5_hetchem
  !molecule properties
  REAL(r8) :: mean_speed_hobr, diffusion_constant_hobr, freepath_hobr, knudsen_hobr,& 
              j_corr_hobr, k_het_hobr
+ REAL(r8) :: mean_speed_n2o5, diffusion_constant_n2o5, freepath_n2o5, knudsen_n2o5,& 
+             j_corr_n2o5, k_het_n2o5
+ REAL(r8) :: mean_speed_brno3, diffusion_constant_brno3, freepath_brno3, knudsen_brno3,& 
+             j_corr_brno3, k_het_brno3
+ REAL(r8) :: mean_speed_clno3, diffusion_constant_clno3, freepath_clno3, knudsen_clno3,& 
+             j_corr_clno3, k_het_clno3
  !fractioning
  REAL(r8) :: xH_HBR, xH_HCL, xpr, yBR2, yBRCL
 
@@ -7881,24 +7893,53 @@ n2o5_flag = config_flags%n2o5_hetchem
  !parameters
  REAL, parameter :: waterdens = 1000000.0_r8 !ug/cm^3
  REAL, parameter :: gamma_hobr = 0.6_r8
+ REAL, parameter :: gamma_n2o5 = 0.03_r8
+ REAL, parameter :: gamma_brno3 = 0.11_r8
+ REAL, parameter :: gamma_clno3 = 0.8_r8
 
  do j= jts,jte
  do k= kts,kte
  do i= its,ite
 
  !default values
-
  chem(i,k,j,p_surf_dcen)=0.0_r8
  k_het_hobr = 0.0_r8
+ k_het_n2o5 = 0.0_r8
+ k_het_brno3 = 0.0_r8
+ k_het_clno3 = 0.0_r8
 
  !Moleculme paralemers
  !HOBr
  !get mean speed of molecule
- CALL calc_mean_speed(t_phy(i,k,j), 0.097, mean_speed_hobr)
+ CALL calc_mean_speed(t_phy(i,k,j), 97., mean_speed_hobr)
  ! Calculate the diffusion constant (m2/s) for species ispecies
- CALL calc_diffusion_constant(t_phy(i,k,j), p_phy(i,k,j), 0.097, diffusion_constant_hobr)
+ CALL calc_diffusion_constant(t_phy(i,k,j), p_phy(i,k,j), 97., diffusion_constant_hobr)
  ! Calculate the  molecular free path in air (cm)
- CALL calc_freepath(t_phy(i,k,j), 0.097, diffusion_constant_hobr, freepath_hobr)
+ CALL calc_freepath(t_phy(i,k,j), 97., diffusion_constant_hobr, freepath_hobr)
+
+ !N2O5
+ !get mean speed of molecule
+ CALL calc_mean_speed(t_phy(i,k,j), 108., mean_speed_n2o5)
+ ! Calculate the diffusion constant (m2/s) for species ispecies
+ CALL calc_diffusion_constant(t_phy(i,k,j), p_phy(i,k,j), 108., diffusion_constant_n2o5)
+ ! Calculate the  molecular free path in air (cm)
+ CALL calc_freepath(t_phy(i,k,j), 108., diffusion_constant_n2o5, freepath_n2o5)
+
+ !BrNO3
+ !get mean speed of molecule
+ CALL calc_mean_speed(t_phy(i,k,j), 142., mean_speed_brno3)
+ ! Calculate the diffusion constant (m2/s) for species ispecies
+ CALL calc_diffusion_constant(t_phy(i,k,j), p_phy(i,k,j), 142., diffusion_constant_brno3)
+ ! Calculate the  molecular free path in air (cm)
+ CALL calc_freepath(t_phy(i,k,j), 142., diffusion_constant_brno3, freepath_brno3)
+
+ !ClNO3
+ !get mean speed of molecule
+ CALL calc_mean_speed(t_phy(i,k,j), 97.5, mean_speed_clno3)
+ ! Calculate the diffusion constant (m2/s) for species ispecies
+ CALL calc_diffusion_constant(t_phy(i,k,j), p_phy(i,k,j), 97.5, diffusion_constant_clno3)
+ ! Calculate the  molecular free path in air (cm)
+ CALL calc_freepath(t_phy(i,k,j), 97.5, diffusion_constant_clno3, freepath_clno3)
 
  do ibin = 1,nsize_aer(1) !Start loop over bins
 
@@ -7926,23 +7967,50 @@ n2o5_flag = config_flags%n2o5_hetchem
  chem(i,k,j,p_surf_dcen) = chem(i,k,j,p_surf_dcen) + &
                            surf_a * rho_phy(i,k,j) * 1E-6_r8 
 
- ! Calculate the Knudsen number
- knudsen_hobr = freepath_hobr / o_dcen
+ ! Calculate the Knudsen numbers
+ knudsen_hobr  = 2._r8 * freepath_hobr  / o_dcen
+ knudsen_n2o5  = 2._r8 * freepath_n2o5  / o_dcen
+ knudsen_brno3 = 2._r8 * freepath_brno3 / o_dcen
+ knudsen_clno3 = 2._r8 * freepath_clno3 / o_dcen
 
- ! work out the gamma correction factor
+ ! work out the gamma correction factors
  j_corr_hobr = &
            (0.75_r8 * gamma_hobr * (1.0_r8 + knudsen_hobr)) / &
    (knudsen_hobr ** 2.0_r8 + knudsen_hobr + 0.283_r8 * knudsen_hobr * gamma_hobr &
                           + 0.75_r8 * gamma_hobr)
+ j_corr_n2o5 = &
+           (0.75_r8 * gamma_n2o5 * (1.0_r8 + knudsen_n2o5)) / &
+   (knudsen_n2o5 ** 2.0_r8 + knudsen_n2o5 + 0.283_r8 * knudsen_n2o5 * gamma_n2o5 &
+                          + 0.75_r8 * gamma_n2o5)
+
+ j_corr_brno3 = &
+           (0.75_r8 * gamma_brno3 * (1.0_r8 + knudsen_brno3)) / &
+   (knudsen_brno3 ** 2.0_r8 + knudsen_brno3 + 0.283_r8 * knudsen_brno3 * gamma_brno3 &
+                          + 0.75_r8 * gamma_brno3)
+
+ j_corr_clno3 = &
+           (0.75_r8 * gamma_clno3 * (1.0_r8 + knudsen_clno3)) / &
+   (knudsen_clno3 ** 2.0_r8 + knudsen_clno3 + 0.283_r8 * knudsen_clno3 * gamma_clno3 &
+                          + 0.75_r8 * gamma_clno3)
 
  !Add this bin's contrinution to the k_het value
  k_het_hobr = k_het_hobr + 0.25_r8 * mean_speed_hobr * gamma_hobr &
                            * surf_a * rho_phy(i,k,j) * 1E-6_r8 & !SA
                            * j_corr_hobr
+ k_het_n2o5 = k_het_n2o5 + 0.25_r8 * mean_speed_n2o5 * gamma_n2o5 &
+                           * surf_a * rho_phy(i,k,j) * 1E-6_r8 & !SA
+                           * j_corr_n2o5
+ k_het_brno3 = k_het_brno3 + 0.25_r8 * mean_speed_brno3 * gamma_brno3 &
+                           * surf_a * rho_phy(i,k,j) * 1E-6_r8 & !SA
+                           * j_corr_brno3
+ k_het_clno3 = k_het_clno3 + 0.25_r8 * mean_speed_clno3 * gamma_clno3 &
+                           * surf_a * rho_phy(i,k,j) * 1E-6_r8 & !SA
+                           * j_corr_clno3
 
  enddo ! end bin loop
 
- !Now compute splitting of reaction pathway between HBr and HCl paths
+ !For HOBr only
+ !compute splitting of reaction pathway between HBr and HCl paths
  !--- calculate BrCl : Br2 product yield ratio ---
 
 ! equilibrium constants: BrCl + Br- <--> Br2Cl-, K_eq1 = 1.8d4
@@ -7971,9 +8039,12 @@ IF (xpr .GT. 0._r8) THEN
 ENDIF
 
  ! commit reaction rates to a psuedo-photolysis variable
- !Apply branching
+ !Apply branching for HOBr
  ph_het_hobr_hbr(i, k, j) = yBR2 * k_het_hobr * 60._r8 !units min-1
  ph_het_hobr_hcl(i, k, j) = yBRCL* k_het_hobr * 60._r8 !units min-1
+ ph_het_n2o5(i, k, j)     = k_het_n2o5  * 60._r8 !units min-1
+ ph_het_brno3(i, k, j)    = k_het_brno3 * 60._r8 !units min-1
+ ph_het_clno3(i, k, j)    = k_het_clno3 * 60._r8 !units min-1
 
  enddo
  enddo
@@ -8010,14 +8081,34 @@ ENDIF
 
     ! Molar weight in kg/mol
     mw_kg =  molar_weight / 1000._r8
+
+    !Pressure-independant diffusion coefficients from Wang at al 2014
+    !Atmos. Chem. Phys., 14, 9233–9247, 2014
+    !HOBr :  84 Torr.cm2.s-1=11000 Pa.cm2.s-1 (empirical)
+    !N2O5 :  65 Torr.cm2.s-1= 8700 Pa.cm2.s-1 (empirical)
+    !BrNO3: 270 Torr.cm2.s-1=36000 Pa.cm2.s-1 (theoretical)
+    !ClNO3: 280 Torr.cm2.s-1=37000 Pa.cm2.s-1 (theoretical)
+
+    !diffusion constant = (pressure_indep_coeff/P)*(T/296)^1.75
+
+    !Use MW to identify molecule
+    IF(molar_weight .eq. 97.) THEN !HOBR
+      diffusion_constant = (11000._r8/press)*(temp/296._dp)**1.75_dp
+    ELSEIF(molar_weight .eq. 108.) THEN !N2O5
+      diffusion_constant = ( 8700._r8/press)*(temp/296._dp)**1.75_dp 
+    ELSEIF(molar_weight .eq. 142.) THEN !BRNO3
+      diffusion_constant = (36000._r8/press)*(temp/296._dp)**1.75_dp
+    ELSE !BRNO3
+      diffusion_constant = (37000._r8/press)*(temp/296._dp)**1.75_dp
+
     
-    ! diffusion_constant calculated as D = mean_free_path in air*molecular_velocity/3
-    ! mean_free_path in air calculated according to Seinfeld and Pandis, 1998 edition
-    ! equation 8.6
-    ! molecular_velocity calculated according to Modeling chemistry in and
-    ! above snow at Summit, J.L. Thomas
-    diffusion_constant = 2. * 1.8_r8 * 10._r8 ** (-5) * rgas * temp / &
-        (3. * press * SQRT(0.029_r8) * SQRT(mw_kg))
+    !! diffusion_constant calculated as D = mean_free_path in air*molecular_velocity/3
+    !! mean_free_path in air calculated according to Seinfeld and Pandis, 1998 edition
+    !! equation 8.6
+    !! molecular_velocity calculated according to Modeling chemistry in and
+    !! above snow at Summit, J.L. Thomas
+    !diffusion_constant = 2. * 1.8_r8 * 10._r8 ** (-5) * rgas * temp / &
+    !    (3. * press * SQRT(0.029_r8) * SQRT(mw_kg))
 
     END SUBROUTINE calc_diffusion_constant
 

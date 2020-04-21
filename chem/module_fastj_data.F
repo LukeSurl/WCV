@@ -132,7 +132,7 @@
           'HONO   ', 'N2O5   ', 'HONO2  ',   &
           'HO2NO2 ', 'C2H5O2 ', 'BRO    ',   & 
           'BR2    ', 'HOBR   ', 'BRNO3  ',   &
-          'HBR    ', 'OCLO   ', 'CL2    ',   &
+          'BRNO2  ', 'OCLO   ', 'CL2    ',   &
           'CLNO2  ', 'CLNO3  ', 'HOCL   ',   &
           'BRCL   '                          & 
          / ! Added more entries LUKE SURL
@@ -255,7 +255,7 @@
         'NO2    ',  'NO3_X  ',  'NO3_L  ',  'N2O5   ',   &
         'HONO   ',  'HONO2  ',  'HO2NO2 ',  'C2H5O2 ',   &
         'BRO    ',  'BR2    ',  'HOBR   ',  'BRNO3  ',   & 
-        'HBR    ',  'OCLO   ',  'CL2    ',  'CLNO2  ',   &
+        'BRNO2  ',  'OCLO   ',  'CL2    ',  'CLNO2  ',   &
         'CLNO3  ',  'HOCL   ',  'BRCL   '                & 
          / ! Added more entries LUKE SURL
         data (TITLEJ(2,JTMP), JTMP=4,26)   &              
@@ -264,7 +264,7 @@
         'NO2    ',  'NO3_X  ',  'NO3_L  ',  'N2O5   ',   &
         'HONO   ',  'HONO2  ',  'HO2NO2 ',  'C2H5O2 ',   &
         'BRO    ',  'BR2    ',  'HOBR   ',  'BRNO3  ',   & 
-        'HBR    ',  'OCLO   ',  'CL2    ',  'CLNO2  ',   &
+        'BRNO2  ',  'OCLO   ',  'CL2    ',  'CLNO2  ',   &
         'CLNO3  ',  'HOCL   ',  'BRCL   '                & 
          / ! Added more entries LUKE SURL
         data (TQQ(1,JTMP), JTMP= 4,26)   &
@@ -273,7 +273,7 @@
          200.,   200.,   200.,   225.,   &
          200.,   200.,   200.,   200.,   &
          228.,   297.,   297.,   220.,   & 
-         297.,   204.,   297.,   220.,   &
+         296.,   204.,   297.,   220.,   &
          220.,   200.,   297.            &
          / ! Added more entries LUKE SURL
         data (TQQ(2,JTMP), JTMP= 4,26)   &              
@@ -282,7 +282,7 @@
          300.,   300.,   300.,   300.,   &
          300.,   300.,   300.,   300.,   &
          298.,   298.,   298.,   298.,   & 
-         298.,   296.,   298.,   298.,   &
+         2987.,   296.,   298.,   298.,   &
          296.,   300.,   298.            & 
          / ! Added more entries LUKE SURL
         !____H2O2____at____200____!
@@ -381,11 +381,11 @@
          0.20280E-18,   0.15450E-18,   0.12660E-18,   0.10760E-18,   &
          0.78790E-19,   0.32550E-19,   0.11690E-20   &
          /
-      !____HBR____at____297____! added new photolysis rate for HBR no photolysis in range 
+      !____BRNO2__at____296____! added new photolysis rate for BRNO2 (flat in T)
         data (QQQ(IW,1,17), IW=1, 7)   &
          /   &
-         0.00000E+00,   0.00000E+00,   0.00000E+00,   0.00000E+00,   &
-         0.00000E+00,   0.00000E+00,   0.00000E+00   &
+         33.0000E-20,   17.0000E-20,   11.0000E-20,   11.0000E-20,   &
+         14.0000E-20,   17.0000E-20,   0.00000E+00   &
          /
       !____OCLO___at____204____! added new photolysis rate for OCLO - LUKE SURL 2014-08-04
         data (QQQ(IW,1,18), IW=1, 7)   &
@@ -513,11 +513,11 @@
          0.21440E-18,   0.16400E-18,   0.13500E-18,   0.114700E-18,   &
          0.83500E-19,   0.35380E-19,   0.13100E-20   &
          /
-      !____HBR____at____298____! added new photolysis rate for HBR no photolysis in range
+      !____BRNO2__at____296____! added new photolysis rate for BRNO2 (flat in T)
         data (QQQ(IW,2,17), IW=1, 7)   &
          /   &
-         0.00000E+00,   0.00000E+00,   0.00000E+00,   0.00000E+00,   &
-         0.00000E+00,   0.00000E+00,   0.00000E+00   &
+         33.0000E-20,   17.0000E-20,   11.0000E-20,   11.0000E-20,   &
+         14.0000E-20,   17.0000E-20,   0.00000E+00   &
          /
       !____OCLO___at____296____! added new photolysis rate for OCLO - LUKE SURL 2014-08-04
         data (QQQ(IW,2,18), IW=1, 7)   &

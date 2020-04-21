@@ -77,7 +77,7 @@
                ph_hcochest,ph_ch3o2h,ph_ch3coo2h,ph_ch3ono2,ph_hcochob,&
                ph_n2o5,                                                &
                ph_cl2,ph_hocl,                                         &
-               ph_br2,ph_bro,ph_hbr,ph_hobr,ph_brno3,                  &
+               ph_br2,ph_bro,ph_brno2,ph_hobr,ph_brno3,                &
                ph_oclo,ph_clno2,ph_clno3,                              &
                ph_brcl,                                                &
                tauaer1,tauaer2,tauaer3,tauaer4,                        &
@@ -135,7 +135,7 @@
    lfastj_hno4,  &
    lfastj_c2h5o2, & !LUKE SURL 2014-03-12
    lfastj_bro,   lfastj_br2,    lfastj_hobr,   &
-   lfastj_brno3, lfastj_hbr,                    &
+   lfastj_brno3, lfastj_brno2,                    &
    lfastj_oclo, lfastj_cl2, lfastj_clno2, lfastj_clno3, lfastj_hocl, lfastj_brcl !LUKE SURL 2014-08-04
 
    parameter( lfastj_no2   = 1 )
@@ -156,7 +156,7 @@
    parameter( lfastj_br2   = 16 ) !LUKE SURL 2014-03-11
    parameter( lfastj_hobr  = 17 ) !LUKE SURL 2014-03-11
    parameter( lfastj_brno3 = 18 ) !LUKE SURL 2014-03-11
-   parameter( lfastj_hbr   = 19 ) !LUKE SURL 2014-03-11
+   parameter( lfastj_brno2   = 19 ) !LUKE SURL 2014-03-11
    parameter( lfastj_oclo  = 20 )!LUKE SURL 2014-08-04
    parameter( lfastj_cl2   = 21 )!LUKE SURL 2014-08-04
    parameter( lfastj_clno2 = 22 )!LUKE SURL 2014-08-04
@@ -177,7 +177,7 @@
            ph_hno3,ph_hno4,ph_h2o2,ph_ch2or,ph_ch2om,ph_ch3cho,     &
            ph_ch3coch3,ph_ch3coc2h5,ph_hcocho,ph_ch3cocho,          &
            ph_hcochest,ph_ch3o2h,ph_ch3coo2h,ph_ch3ono2,ph_hcochob, &
-           ph_n2o5,ph_bro,ph_br2,ph_hobr,ph_brno3,ph_hbr,           &
+           ph_n2o5,ph_bro,ph_br2,ph_hobr,ph_brno3,ph_brno2,         &
            ph_oclo,ph_cl2,ph_clno2,ph_clno3,ph_hocl,ph_brcl !LUKE SURL 2014-08-04
    REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                    &
          INTENT(IN ) ::                                             &
@@ -388,7 +388,7 @@
            ph_ch3coch3,ph_ch3coc2h5,ph_hcocho,ph_ch3cocho,        	&
            ph_hcochest,ph_ch3o2h,ph_ch3coo2h,ph_ch3ono2,ph_hcochob, &
            ph_n2o5, &
-           ph_bro,ph_br2,ph_hobr,ph_brno3,ph_hbr,           &
+           ph_bro,ph_br2,ph_hobr,ph_brno3,ph_brno2,           &
            ph_oclo,ph_cl2,ph_clno2,ph_clno3,ph_hocl,ph_brcl) !LUKE SURL 2014-08-04
 ! put the aerosol optical properties into the wrf arrays (this is hard-
 ! coded to 4 spectral bins, nspint)
@@ -429,7 +429,7 @@
         ph_ch3coch3,ph_ch3coc2h5,ph_hcocho,ph_ch3cocho,        	    &
         ph_hcochest,ph_ch3o2h,ph_ch3coo2h,ph_ch3ono2,ph_hcochob,    &
         ph_n2o5, &
-        ph_bro,ph_br2,ph_hobr,ph_brno3,ph_hbr,           &
+        ph_bro,ph_br2,ph_hobr,ph_brno3,ph_brno2,           &
         ph_oclo,ph_cl2,ph_clno2,ph_clno3,ph_hocl,ph_brcl) !LUKE SURL 2014-08-04
 
 	USE module_data_cbmz
@@ -445,7 +445,7 @@
    lfastj_hno4, &
    lfastj_c2h5o2,&  !LUKE SURL 2014-03-12
    lfastj_bro,   lfastj_br2,    lfastj_hobr,   &
-   lfastj_brno3, lfastj_hbr, &
+   lfastj_brno3, lfastj_brno2, &
    lfastj_oclo, lfastj_cl2, lfastj_clno2, lfastj_clno3, lfastj_hocl, lfastj_brcl
 
    parameter( lfastj_no2   = 1 )
@@ -466,7 +466,7 @@
    parameter( lfastj_br2   = 16 ) !LUKE SURL 2014-03-11
    parameter( lfastj_hobr  = 17 ) !LUKE SURL 2014The -03-11
    parameter( lfastj_brno3 = 18 ) !LUKE SURL 2014-03-11
-   parameter( lfastj_hbr   = 19 )!LUKE SURL 2014-03-11
+   parameter( lfastj_brno2   = 19 )!LUKE SURL 2014-03-11
    parameter( lfastj_oclo  = 20 )!LUKE SURL 2014-08-04
    parameter( lfastj_cl2   = 21 )!LUKE SURL 2014-08-04
    parameter( lfastj_clno2 = 22 )!LUKE SURL 2014-08-04
@@ -485,7 +485,7 @@
            ph_ch3coch3,ph_ch3coc2h5,ph_hcocho,ph_ch3cocho,         &
            ph_hcochest,ph_ch3o2h,ph_ch3coo2h,ph_ch3ono2,ph_hcochob,&
            ph_n2o5,&
-           ph_bro,ph_br2,ph_hobr,ph_brno3,ph_hbr,          &
+           ph_bro,ph_br2,ph_hobr,ph_brno3,ph_brno2,          &
            ph_oclo,ph_cl2,ph_clno2,ph_clno3,ph_hocl,ph_brcl
 
    REAL, DIMENSION( kte,nphoto_fastj ), INTENT(INOUT) :: valuej
@@ -517,7 +517,7 @@
 	  ph_br2(iclm,kt,jclm)       = valuej(kt,lfastj_br2)  * ft
 	  ph_hobr(iclm,kt,jclm)      = valuej(kt,lfastj_hobr) * ft
 	  ph_brno3(iclm,kt,jclm)     = valuej(kt,lfastj_brno3) * ft
-	  ph_hbr(iclm,kt,jclm)       = valuej(kt,lfastj_hbr) * ft
+	  ph_brno2(iclm,kt,jclm)     = valuej(kt,lfastj_brno2) * ft
 
           ph_oclo(iclm,kt,jclm)       = valuej(kt,lfastj_oclo) * ft  !LUKE SURL 2014-08-04
           ph_cl2(iclm,kt,jclm)       = valuej(kt,lfastj_cl2) * ft    !LUKE SURL 2014-08-04
@@ -562,7 +562,7 @@
           valuej(kt,lfastj_br2)    = ph_br2(iclm,kt,jclm)  / ft
           valuej(kt,lfastj_hobr)   = ph_hobr(iclm,kt,jclm) / ft
           valuej(kt,lfastj_brno3)  = ph_brno3(iclm,kt,jclm)/ ft
-          valuej(kt,lfastj_hbr)    = ph_hbr(iclm,kt,jclm)  / ft
+          valuej(kt,lfastj_brno2)    = ph_brno2(iclm,kt,jclm)  / ft
 
           valuej(kt,lfastj_oclo)    = ph_oclo(iclm,kt,jclm)  / ft
           valuej(kt,lfastj_cl2)    = ph_cl2(iclm,kt,jclm)  / ft
@@ -663,7 +663,7 @@
    lfastj_hno4, &
    lfastj_c2h5o2, & !LUKE SURL 2014-03-12
    lfastj_bro,   lfastj_br2,    lfastj_hobr,   &
-   lfastj_brno3, lfastj_hbr,                    &
+   lfastj_brno3, lfastj_brno2,                    &
    lfastj_oclo, lfastj_cl2, lfastj_clno2, lfastj_clno3, lfastj_hocl, lfastj_brcl !LUKE SURL 2014-08-04
    parameter( lfastj_no2   = 1 )
    parameter( lfastj_o3a   = 2 )
@@ -683,7 +683,7 @@
    parameter( lfastj_br2   = 16 ) !LUKE SURL 2014-03-11
    parameter( lfastj_hobr  = 17 ) !LUKE SURL 2014-03-11
    parameter( lfastj_brno3 = 18 ) !LUKE SURL 2014-03-11
-   parameter( lfastj_hbr   = 19 )!LUKE SURL 2014-03-11
+   parameter( lfastj_brno2   = 19 )!LUKE SURL 2014-03-11
 
    parameter( lfastj_oclo   = 20 )!LUKE SURL 2014-08-04
    parameter( lfastj_cl2   = 21 )!LUKE SURL 2014-08-04
@@ -861,7 +861,7 @@
              valuej(k, lfastj_br2) = jvalue(k,lfastj_br2)
              valuej(k, lfastj_hobr) = jvalue(k,lfastj_hobr)
              valuej(k, lfastj_brno3) = jvalue(k,lfastj_brno3)
-             valuej(k, lfastj_hbr) = jvalue(k,lfastj_hbr)
+             valuej(k, lfastj_brno2) = jvalue(k,lfastj_brno2)
 
              valuej(k, lfastj_oclo) = jvalue(k,lfastj_oclo)
              valuej(k, lfastj_cl2) = jvalue(k,lfastj_cl2)

@@ -17,6 +17,7 @@
                del_h2so4_gasprod,dvmrdt_sv13d,dvmrcwdt_sv13d,              &
                is_CAMMGMP_used,                                            &!BSINGH:01/31/2013: Added is_CAMMGMP_used for cam_mam_aerchem_driver
                rr_het_hobr_hbr,rr_het_hobr_hcl, &!LSURL 20200410
+               rr_het_n2o5,rr_het_brno3,rr_het_clno3, &!LSURL 20200421
                ids,ide, jds,jde, kds,kde,                                  &
                ims,ime, jms,jme, kms,kme,                                  &
                its,ite, jts,jte, kts,kte                                   )
@@ -296,6 +297,7 @@
             t_phy, rho_phy, p_phy,                                      &
             moist, chem,vbs_nbin,                                       &
             rr_het_hobr_hbr,rr_het_hobr_hcl, & !LSURL
+            rr_het_n2o5,rr_het_brno3,rr_het_clno3, & !LSURL
             ids,ide, jds,jde, kds,kde,                                  &
             ims,ime, jms,jme, kms,kme,                                  &
             its,ite, jts,jte, kts,kte                                   )

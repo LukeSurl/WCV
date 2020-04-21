@@ -975,7 +975,7 @@
               grid%ph_mekooh,grid%ph_tolooh,grid%ph_terpooh,grid%ph_mvk,              &
               grid%ph_glyald,grid%ph_hyac,                                            &
               grid%ph_cl2,grid%ph_hocl,grid%ph_fmcl,                                  &
-              grid%ph_br2,grid%ph_bro,grid%ph_hbr,grid%ph_hobr,grid%ph_brno3,         &
+              grid%ph_br2,grid%ph_bro,grid%ph_brno2,grid%ph_hobr,grid%ph_brno3,       &
               grid%ph_oclo,grid%ph_clno3,                                             &
               grid%ph_brcl,                                                           & 
               config_flags%track_tuv_lev,                                             &
@@ -1579,6 +1579,7 @@ if ( cam_mam_aerosols ) &
               del_h2so4_gasprod,grid%dvmrdt_sv13d,grid%dvmrcwdt_sv13d,                &
               grid%is_CAMMGMP_used,                                                   &
               grid%ph_het_hobr_hbr,grid%ph_het_hobr_hcl, & !LSURL 20200410
+              grid%ph_het_n2o5,grid%ph_het_brno3,grid%ph_het_clno3, & !LSURL 20200421
               ids,ide, jds,jde, kds,kde,                                              &
               ims,ime, jms,jme, kms,kme,                                              &
               its,ite,jts,jte,kts,kte                                                 )
