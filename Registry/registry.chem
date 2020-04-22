@@ -1422,21 +1422,21 @@ state    real  ph_terpooh      ikj     misc        1         -      r        "PH
 state    real  ph_cl2          ikj     misc        1         -      rh       "PHOTR201"              "cl2 photolysis rate" "min{-1}"
 state    real  ph_hocl         ikj     misc        1         -      rh       "PHOTR202"              "hocl photolysis rate" "min{-1}"
 state    real  ph_fmcl         ikj     misc        1         -      rh       "PHOTR203"              "fmcl photolysis rate" "min{-1}"
-#WCV photolysis rates -- does not include ph_brno2, this is computed in KPP as a ratio of ph_hobr. Cl2, ClNO2 and HOCl are above
+#WCV photolysis rates
 state    real  ph_br2          ikj     misc        1         -      rh        "PHOTR135"        "BR2 Photolysis Rate" "min{-1}"
 state    real  ph_bro          ikj     misc        1         -      rh        "PHOTR136"        "BRO Photolysis Rate" "min{-1}"
-state    real  ph_hbr          ikj     misc        1         -      rh        "PHOTR137"        "HBR Photolysis Rate" "min{-1}"
+state    real  ph_brno2        ikj     misc        1         -      rh        "PHOTR137"        "BRNO2 Photolysis Rate" "min{-1}"
 state    real  ph_hobr         ikj     misc        1         -      rh        "PHOTR138"        "HOBR Photolysis Rate" "min{-1}"
 state    real  ph_brno3        ikj     misc        1         -      rh        "PHOTR139"        "BRNO3 Photolysis Rate" "min{-1}"
 state    real  ph_oclo         ikj     misc        1         -      rh        "PHOTR140"        "OCLO Photolysis Rate" "min{-1}"
 state    real  ph_clno3        ikj     misc        1         -      rh        "PHOTR143"        "CLNO3 Photolysis Rate" "min{-1}"
 state    real  ph_brcl         ikj     misc        1         -      rh        "PHOTR145"        "BRCL Photolysis Rate" "min{-1}"
 #psuedo photolysis rates used for heterogenous reaction rates
-state    real  ph_het_hobr_hbr      ikj     misc        1         -      rh        "HETR_HOBR_HBR"    "HOBR HBR het Rate" "min{-1}"
-state    real  ph_het_hobr_hcl      ikj     misc        1         -      rh        "HETR_HOBR_HCL"    "HOBR HCL het Rate" "min{-1}"
-state    real  ph_het_n2o5          ikj     misc        1         -      rh        "HETR_N2O5"        "N2O5 het Rate" "min{-1}"
-state    real  ph_het_brno3         ikj     misc        1         -      rh        "HETR_BRNO3"       "BRNO3 het Rate" "min{-1}"
-state    real  ph_het_clno3         ikj     misc        1         -      rh        "HETR_CLNO3"       "CLNO3 het Rate" "min{-1}"
+state    real  ph_het_hobr_hbr      ikj     misc        1         -      rh        "PHOTR_HETR_HOBR_HBR"    "HOBR HBR het Rate" "min{-1}"
+state    real  ph_het_hobr_hcl      ikj     misc        1         -      rh        "PHOTR_HETR_HOBR_HCL"    "HOBR HCL het Rate" "min{-1}"
+state    real  ph_het_n2o5          ikj     misc        1         -      rh        "PHOTR_HETR_N2O5"        "N2O5 het Rate" "min{-1}"
+state    real  ph_het_brno3         ikj     misc        1         -      rh        "PHOTR_HETR_BRNO3"       "BRNO3 het Rate" "min{-1}"
+state    real  ph_het_clno3         ikj     misc        1         -      rh        "PHOTR_HETR_CLNO3"       "CLNO3 het Rate" "min{-1}"
 
 # photolysis rad field diagnostic variables
 state    real  ph_par          ikj     misc        1         -      -        "ph_par"                "Photosynthetic Active Radiation"  "W m-2"

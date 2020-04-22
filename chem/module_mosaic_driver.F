@@ -519,7 +519,7 @@
                    ids,ide, jds,jde, kds,kde, ims,ime, &
                    jms,jme, kms,kme, &
                    its,ite, jts,jte, kts,kte,&
-                   rr_het_hobr_hbr,rr_het_hobr_hcl,
+                   rr_het_hobr_hbr,rr_het_hobr_hcl,&
                    rr_het_n2o5,&
                    rr_het_brno3,rr_het_clno3) 
 
