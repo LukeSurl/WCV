@@ -7871,7 +7871,8 @@ n2o5_flag = config_flags%n2o5_hetchem
                         its,ite, jts,jte, kts,kte
 
  REAL, INTENT(OUT), &
-        DIMENSION( ims:ime, kms:kme, jms:jme ) :: ph_het_hobr_hbr,ph_het_hobr_hcl
+        DIMENSION( ims:ime, kms:kme, jms:jme ) :: ph_het_hobr_hbr,ph_het_hobr_hcl,&
+                    ph_het_n2o5, ph_het_brno3, ph_het_clno3
         !Output reaction rates (psuedo photolysis rates)
 
 !Aerosol properties
@@ -8093,13 +8094,14 @@ ENDIF
 
     !Use MW to identify molecule
     IF(molar_weight .eq. 97.) THEN !HOBR
-      diffusion_constant = (11000._r8/press)*(temp/296._dp)**1.75_dp
-    ELSEIF(molar_weight .eq. 108.) THEN !N2O5
-      diffusion_constant = ( 8700._r8/press)*(temp/296._dp)**1.75_dp 
-    ELSEIF(molar_weight .eq. 142.) THEN !BRNO3
-      diffusion_constant = (36000._r8/press)*(temp/296._dp)**1.75_dp
+      diffusion_constant = (11000._r8/press)*(temp/296._r8)**1.75_r8
+    ELSE IF(molar_weight .eq. 108.) THEN !N2O5
+      diffusion_constant = ( 8700._r8/press)*(temp/296._r8)**1.75_r8 
+    ELSE IF(molar_weight .eq. 142.) THEN !BRNO3
+      diffusion_constant = (36000._r8/press)*(temp/296._r8)**1.75_r8
     ELSE !BRNO3
-      diffusion_constant = (37000._r8/press)*(temp/296._dp)**1.75_dp
+      diffusion_constant = (37000._r8/press)*(temp/296._r8)**1.75_r8
+    ENDIF
 
     
     !! diffusion_constant calculated as D = mean_free_path in air*molecular_velocity/3

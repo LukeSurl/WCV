@@ -161,7 +161,8 @@
 
 !heterogenous reaction rates
    REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                    &
-         INTENT(OUT ) :: rr_het_hobr_hbr, rr_het_hobr_hcl !LSURL
+         INTENT(OUT ) :: rr_het_hobr_hbr, rr_het_hobr_hcl, & !LSURL
+                         rr_het_n2o5,rr_het_brno3,rr_het_clno3
 !
 ! aerosol/radm2 interaction
 !
