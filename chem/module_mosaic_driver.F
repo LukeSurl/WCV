@@ -7916,7 +7916,7 @@ n2o5_flag = config_flags%n2o5_hetchem
  ! Calculate the diffusion constant (m2/s) for species ispecies
  CALL calc_diffusion_constant(t_phy(i,k,j), p_phy(i,k,j), 97., diffusion_constant_hobr)
  ! Calculate the  molecular free path in air (cm)
- CALL calc_freepath(t_phy(i,k,j), 97., diffusion_constant_hobr, freepath_hobr)
+ freepath_hobr = 3._r8 * diffusion_constant_hobr / mean_speed_hobr
 
  !N2O5
  !get mean speed of molecule
@@ -7924,7 +7924,7 @@ n2o5_flag = config_flags%n2o5_hetchem
  ! Calculate the diffusion constant (m2/s) for species ispecies
  CALL calc_diffusion_constant(t_phy(i,k,j), p_phy(i,k,j), 108., diffusion_constant_n2o5)
  ! Calculate the  molecular free path in air (cm)
- CALL calc_freepath(t_phy(i,k,j), 108., diffusion_constant_n2o5, freepath_n2o5)
+ freepath_n2o5 = 3._r8 * diffusion_constant_n2o5 / mean_speed_n2o5
 
  !BrNO3
  !get mean speed of molecule
@@ -7932,7 +7932,7 @@ n2o5_flag = config_flags%n2o5_hetchem
  ! Calculate the diffusion constant (m2/s) for species ispecies
  CALL calc_diffusion_constant(t_phy(i,k,j), p_phy(i,k,j), 142., diffusion_constant_brno3)
  ! Calculate the  molecular free path in air (cm)
- CALL calc_freepath(t_phy(i,k,j), 142., diffusion_constant_brno3, freepath_brno3)
+ freepath_brno3 = 3._r8 * diffusion_constant_brno3 / mean_speed_brno3
 
  !ClNO3
  !get mean speed of molecule
@@ -7940,7 +7940,7 @@ n2o5_flag = config_flags%n2o5_hetchem
  ! Calculate the diffusion constant (m2/s) for species ispecies
  CALL calc_diffusion_constant(t_phy(i,k,j), p_phy(i,k,j), 97.5, diffusion_constant_clno3)
  ! Calculate the  molecular free path in air (cm)
- CALL calc_freepath(t_phy(i,k,j), 97.5, diffusion_constant_clno3, freepath_clno3)
+ freepath_clno3 = 3._r8 * diffusion_constant_clno3 / mean_speed_clno3
 
  do ibin = 1,nsize_aer(1) !Start loop over bins
 
@@ -8024,11 +8024,11 @@ xH_HBR=1.3_r8*exp(10239.0_r8*((1._r8/t_phy(i,k,j)-3.3557E-3_r8)))
 ! HCl dissociation equilibrium: K_HCl = 1.7d6
 ! HBr dissociation equilibrium: K_HBr = 1.0d9
 ! calculate product ratio [BrCl] : [Br2]
-xpr = 0._r8
-IF (min(chem(i,k,j,p_hbr),chem(i,k,j,p_hcl)) .GT. 1._r8) THEN
-    xpr = 1.3_r8/1.8E4_r8 * 1.7E6_r8/1.0E9_r8 * xH_HCl/xH_HBR * &
+!xpr = 0._r8
+
+xpr = 1.3_r8/1.8E4_r8 * 1.7E6_r8/1.0E9_r8 * xH_HCl/xH_HBR * &
           chem(i,k,j,p_hcl)/chem(i,k,j,p_hbr)
-ENDIF
+
 ! yields for each pathway
 yBR2  = 0._r8
 yBRCL = 0._r8
@@ -8075,13 +8075,6 @@ ENDIF
     ! Subroutine arguments
     REAL, INTENT(IN) :: temp, press, molar_weight
     REAL(r8), INTENT(OUT) :: diffusion_constant
-    ! Local variables
-    REAL(r8) :: mw_kg
-    ! Parameters
-    REAL(r8), PARAMETER :: rgas = 8.3144598_r8 !TODO use the one from model constants (J K-1 mol-1, or kg*m2/s2/K/mol)
-
-    ! Molar weight in kg/mol
-    mw_kg =  molar_weight / 1000._r8
 
     !Pressure-independant diffusion coefficients from Wang at al 2014
     !Atmos. Chem. Phys., 14, 9233–9247, 2014
@@ -8114,47 +8107,36 @@ ENDIF
 
     END SUBROUTINE calc_diffusion_constant
 
-!------------------------------------------------------------------------
+! !------------------------------------------------------------------------
 
-    SUBROUTINE calc_freepath(temp, molar_weight, diffusion_constant, freepath)
-    !By Louis Marelle
+!     SUBROUTINE calc_freepath(temp, molar_weight, diffusion_constant,&
+!     	                            mean_speed,  freepath)
+!     !By Louis Marelle
 
-!   Calculates the molecular free path in air, in cm
-!
-!   Input parameters
-!    temp - Temperature (K)
-!    diffusion_constant - Diffusion constant (m2/s)
-!    molar_weight - Molar weight (g/mol)
-!   Output parameters
-!    freepath - Molecular freepath in air (cm)
-!    
+! !   Calculates the molecular free path in air, in cm
+! !
+! !   Input parameters
+! !    temp - Temperature (K)
+! !    diffusion_constant - Diffusion constant (m2/s)
+! !    molar_weight - Molar weight (g/mol)
+! !   Output parameters
+! !    freepath - Molecular freepath in air (cm)
+! !    
 
-    USE module_data_mosaic_other, ONLY: pi 
-    USE module_data_mosaic_kind,  ONLY: r8
+!     USE module_data_mosaic_other, ONLY: pi 
+!     USE module_data_mosaic_kind,  ONLY: r8
 
-    IMPLICIT NONE
+!     IMPLICIT NONE
 
-    ! Subroutine arguments
-    REAL, INTENT(IN) :: temp, molar_weight
-    REAL(r8), INTENT(OUT) :: freepath, diffusion_constant
-    ! Local variables
-    REAL mw_kg, c_bar
-    ! Parameters
-    REAL(r8), PARAMETER :: rgas = 8.3144598_r8 !TODO use the one from model constants (J K-1 mol-1, or kg*m2/s2/K/mol)
-    REAL(r8), PARAMETER :: m_to_cm = 100._r8
-    
-    ! Molar weight in kg/mol
-    mw_kg =  molar_weight / 1000._r8
+!     ! Subroutine arguments
+!     REAL, INTENT(IN) :: temp, molar_weight, mean_speed, diffusion_constant
+!     REAL(r8), INTENT(OUT) :: freepath
 
-     
-    ! Mean speed of molecules in m/s
-    c_bar = SQRT(8._r8 * rgas * temp / (pi * mw_kg))
+!     ! Calculate mean free path (cm) based on Fuchs and Sutugin (1971), equation
+!     ! from Seinfeld and Pandis, 1998, Table 11.1
+!     freepath = 3._r8 * diffusion_constant / mean_speed
 
-    ! Calculate mean free path (cm) based on Fuchs and Sutugin (1971), equation
-    ! from Seinfeld and Pandis, 1998, Table 11.1
-    freepath = 3._r8 * diffusion_constant / c_bar * m_to_cm
-
-    END SUBROUTINE calc_freepath
+!     END SUBROUTINE calc_freepath
 
 !------------------------------------------------------------------------
 
