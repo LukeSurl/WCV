@@ -7895,8 +7895,8 @@ n2o5_flag = config_flags%n2o5_hetchem
  REAL, parameter :: waterdens = 1000000.0_r8 !ug/cm^3
  REAL, parameter :: gamma_hobr = 0.6_r8
  REAL, parameter :: gamma_n2o5 = 0.03_r8
- REAL, parameter :: gamma_brno3 = 0.11_r8
- REAL, parameter :: gamma_clno3 = 0.8_r8
+ REAL, parameter :: gamma_brno3 = 0.8_r8
+ REAL, parameter :: gamma_clno3 = 0.11_r8
 
  do j= jts,jte
  do k= kts,kte

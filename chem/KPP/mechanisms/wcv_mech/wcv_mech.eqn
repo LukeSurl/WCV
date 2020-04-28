@@ -266,4 +266,4 @@
  {Het4} CLNO3       = HOCL + HNO3                       : j(Pj_het_clno3);
  {Het7} BRNO3       = HOBR + HNO3                       : j(Pj_het_brno3);
  {Het10} HOBR + HBR = BR2                               : khet_halogens_aer(j(Pj_het_hobr_hbr),HBR,HOBR);
- {Het11} HOBR + HCL = BRCL                              : khet_halogens_aer(j(Pj_het_hobr_hbr),HCL,HOBR);
+ {Het11} HOBR + HCL = BRCL                              : khet_halogens_aer(j(Pj_het_hobr_hcl),HCL,HOBR);
