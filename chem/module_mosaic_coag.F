@@ -143,7 +143,7 @@
 	temp_box = rsub(ktemp,k,m)
 	patm_box = ptotclm(k)/1.01325e6
 
-	nsubstep_coag = 1
+	nsubstep_coag = 1 
 	idiag_coag_onoff = -1
 
 !   do initial calculation of dry mass, volume, and density,

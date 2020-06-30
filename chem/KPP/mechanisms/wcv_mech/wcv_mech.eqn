@@ -222,7 +222,6 @@
  {152:126} HBR + OH = BR + H2O                          : ARR3(6.7D-12, -155._dp,TEMP) ;
  {??a:126} BRO + OH = HO2 + BR                          : ARR3(1.8D-11, -250._dp,TEMP) ;
  {??b:126} BR2 + OH = HOBR + BR                         : ARR3(1.9D-11, -240._dp,TEMP) ;
- {153:127} BR + NO2 = BRNO2                             : ATK_3(4.2d-31,-2.4d0,2.7d-11,0.d0,0.55d0, TEMP, C_M)  ;
  {154:128} BRNO3 = BRO + NO2                            : ARR3(2.8D13, 12360._dp,TEMP) ;
  {158:132} HG + BR = HGBR                               : 1.6D-12 ;
  {160:134} HG + BRO = HGBR2                             : 4.7D-14 ;

@@ -705,6 +705,32 @@ if(config_flags%emiss_opt_vol == 5)then
                 chem(i,k,j,p_so4_a07)=chem(i,k,j,p_so4_a07)+(emis_vol(i,k,j,p_e_vash7)*conv1*1.0)
                 chem(i,k,j,p_so4_a08)=chem(i,k,j,p_so4_a08)+(emis_vol(i,k,j,p_e_vash8)*conv1*1.0)
                 
+                !aerosol input debug
+                write(message,'("Increased so4_a01 by = ",E10.2)') &
+                    emis_vol(i,k,j,p_e_vash1)*conv1*1.0
+                CALL wrf_debug(15,message)
+                write(message,'("Increased so4_a02 by = ",E10.2)') &
+                    emis_vol(i,k,j,p_e_vash2)*conv1*1.0
+                CALL wrf_debug(15,message)
+                write(message,'("Increased so4_a03 by = ",E10.2)') &
+                    emis_vol(i,k,j,p_e_vash3)*conv1*1.0
+                CALL wrf_debug(15,message)
+                write(message,'("Increased so4_a04 by = ",E10.2)') &
+                    emis_vol(i,k,j,p_e_vash4)*conv1*1.0
+                CALL wrf_debug(15,message)
+                write(message,'("Increased so4_a05 by = ",E10.2)') &
+                    emis_vol(i,k,j,p_e_vash5)*conv1*1.0
+                CALL wrf_debug(15,message)
+                write(message,'("Increased so4_a06 by = ",E10.2)') &
+                    emis_vol(i,k,j,p_e_vash6)*conv1*1.0
+                CALL wrf_debug(15,message)
+                write(message,'("Increased so4_a07 by = ",E10.2)') &
+                    emis_vol(i,k,j,p_e_vash7)*conv1*1.0
+                CALL wrf_debug(15,message)
+                write(message,'("Increased so4_a08 by = ",E10.2)') &
+                    emis_vol(i,k,j,p_e_vash8)*conv1*1.0
+                CALL wrf_debug(15,message)
+
                 !gas phase chemistry species
                 conv = float(ivolcano)*4.828e-4/rho_phy(i,k,j)*dtstep/(dz8w(i,k,j)*60.)
                 write(message,'("ivolcano = ",i8)') ivolcano
@@ -717,6 +743,9 @@ if(config_flags%emiss_opt_vol == 5)then
                 CALL wrf_debug(15,message)  
                 write(message,'("conv = ",E10.2)') conv
                 CALL wrf_debug(15,message)  
+
+
+
                 !so2
                 chem(i,k,j,p_so2)  = chem(i,k,j,p_so2) +emis_vol(i,k,j,p_e_vso2) *conv
                 write(message,'("Increased SO2 mixing ratio by ppm = ",E10.2)') &
