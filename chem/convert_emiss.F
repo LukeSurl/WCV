@@ -1170,7 +1170,7 @@ PROGRAM convert_emissions
        do j=jps,jpe
        do k=kps,kpe
        do i=ips,ipe
-         zlevel(i,k,j) = (grid%phb(i,k,j)+grid%ph_2(i,k,j))/9.81
+         zlevel(i,j,k) = (grid%phb(i,j,k)+grid%ph_2(i,j,k))/9.81
          !This is bottom of the box
        enddo
        enddo
