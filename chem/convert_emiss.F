@@ -1170,7 +1170,7 @@ PROGRAM convert_emissions
        do j=jps,jpe
        do k=kps,kpe
        do i=ips,ipe
-         zlevel(i,j,k) = (grid%phb(i,j,k)+grid%ph_2(i,j,k))/9.81
+         zlevel(i,k,j) = (grid%phb(i,k,j)+grid%ph_2(i,k,j))/9.81
          !This is bottom of the box
        enddo
        enddo
@@ -1190,7 +1190,7 @@ PROGRAM convert_emissions
          !print *, kps
          do k=kps,kpe-1
 
-           print *,"k=",k,", zlevel=",zlevel(i,j,k)
+           print *,"k=",k,", zlevel=",zlevel(i,k,j)
            if(zlevel(i,k,j) > volc_vent(i,j))then
              k_initial=k-1
              print *,"volc_vent in mASL=",volc_vent(i,j)
