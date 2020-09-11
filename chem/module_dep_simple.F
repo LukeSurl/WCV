@@ -2063,6 +2063,136 @@ is_cbm4_kpp : &
                   hstar(p_cvbsoa4) = 1.24E+07
                 endif
               end if
+
+        !bromine and chlorine species
+        if (config_flags%chem_opt == WCV_MECH_KPP)  then
+           
+           !Br
+           hstar(p_br)     = 0.034
+           dhr(p_br)       = 1800.
+           f0(p_br)        = 1.
+           dvj(p_br)       = 0.11
+           
+           !Br2
+           hstar(p_br2)   = 0.72
+           dhr(p_br2)     = 4400.
+           f0(p_br2)      = 0.
+           dvj(p_br2)     = 0.079
+
+           !BrO
+           hstar(p_bro)     = 1e-5
+           dhr(p_bro)       = 0
+           f0(p_bro)        = 0.1
+           dvj(p_bro)       = 0.10
+
+           !HBr
+           hstar(p_hbr)   = 2.69e+13
+           dhr(p_hbr)     = 0.
+           f0(p_hbr)      = 0.
+           dvj(p_hbr)     = 0.11
+
+           !HOBr
+           hstar(p_hobr)  = 2.69e+13
+           dhr(p_hobr)    = 0.
+           f0(p_hobr)     = 0.
+           dvj(p_hobr)    = 0.1016
+
+           !BrNO2
+           hstar(p_brno2)     = 0.3
+           dhr(p_brno2)       = 0.
+           f0(p_brno2)        = 0.
+           dvj(p_brno2)       = 0.089
+
+           !BrNO3
+           hstar(p_brno3)     = 2.69e+13
+           dhr(p_brno3)       = 0.
+           f0(p_brno3)        = 0.
+           dvj(p_brno3)       = 0.084
+
+           !Cl
+           hstar(p_cl)     = 2.3
+           dhr(p_cl)       = 0.
+           f0(p_cl)        = 1.
+           dvj(p_cl)       = 0.17
+
+           !ClO
+           hstar(p_clo)     = 0.7 
+           dhr(p_clo)       = 0.
+           f0(p_clo)        = 0.1
+           dvj(p_clo)       = 0.14
+
+           !OClO
+           hstar(p_oclo)     = 1.
+           dhr(p_oclo)       = 3500.
+           f0(p_oclo)        = 0.1
+           dvj(p_oclo)       = 0.12
+
+           !Cl2
+           hstar(p_cl2)     = 0.092
+           dhr(p_cl2)       = 2000.
+           f0(p_cl2)        = 0.
+           dvj(p_cl2)       = 0.12
+
+           !ClNO2
+           hstar(p_clno2)     = 0.045
+           dhr(p_clno2)       = 0.
+           f0(p_clno2)        = 0.
+           dvj(p_clno2)       = 0.11
+
+           !ClNO3
+           hstar(p_clno3)     = 2.69e+13
+           dhr(p_clno3)       = 0.
+           f0(p_clno3)        = 0.
+           dvj(p_clno3)       = 0.093
+
+           !HOCl
+           hstar(p_hocl)     = 650.
+           dhr(p_hocl)       = 5900.
+           f0(p_hocl)        = 0.
+           dvj(p_hocl)       = 0.14
+
+           !BrCl
+           hstar(p_brcl)     = 0.97
+           dhr(p_brcl)       = 5600.
+           f0(p_brcl)        = 0.
+           dvj(p_brcl)       = 0.093
+        end if
+
+        !Hg species
+        if (config_flags%chem_opt == WCV_MECH_KPP)  then
+           !Hg
+           hstar(p_hg)    = 0.11
+           dhr(p_hg)      = 4800.
+           f0(p_hg)       = 0.
+           dvj(p_hg)      = 0.071
+
+           !HgBr
+           hstar(p_hgbr)  = 2.75E+13
+           dhr(p_hgbr)    = 0.
+           f0(p_hgbr)     = 0.
+           dvj(p_hgbr)    = 0.0597
+
+           !HgBr2
+           hstar(p_hgbr2) = 2.75E+13
+           dhr(p_hgbr2)   = 0.
+           f0(p_hgbr2)    = 0.
+           dvj(p_hgbr2)   = 0.0527
+
+           !HgCl
+           hstar(p_hgcl) = 2.75E+13
+           dhr(p_hgcl)   = 0.
+           f0(p_hgcl)    = 0.
+           dvj(p_hgcl)   = 0.065
+
+           !HgCl2
+           hstar(p_hgcl2) = 2.75E+13
+           dhr(p_hgcl2)   = 0.
+           f0(p_hgcl2)    = 0.
+           dvj(p_hgcl2)   = 0.061
+
+        end if              
+
+
               
      else if( config_flags%chem_opt == crimech_kpp .or. &
           config_flags%chem_opt == cri_mosaic_8bin_aq_kpp .or. &

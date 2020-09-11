@@ -21,7 +21,7 @@
 !    added rcldwtr_sub
 
 
-	integer, parameter :: imaxd=1, jmaxd=1, kmaxd=100
+	integer, parameter :: imaxd=1, jmaxd=1, kmaxd=200 !increase to 200 Luke Surl 2020-08-10
 
 	integer, parameter :: lmaxd=1200, l2maxd=1200 ! increased from 300 to 400 by Manish Shrivastava on 01/25/10 for additional soa gas species
 

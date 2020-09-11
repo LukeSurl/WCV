@@ -548,7 +548,7 @@ REAL(KIND=dp) FUNCTION khet_halogens_aer(k_uptake_gas, C_halogen_aer, &
   khet_halogens_aer = 0._dp
   ! In the other case, normalize the rate by the C_halogen_aer
   ! concentration
-  IF (min(C_halogen_aer, C_uptake_gas) .GT. 1._dp) THEN
+  IF (min(C_halogen_aer, C_uptake_gas) .GT. 100000._dp) THEN
     khet_halogens_aer = k_uptake_gas / C_halogen_aer
   END IF
 
