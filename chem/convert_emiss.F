@@ -1190,7 +1190,7 @@ PROGRAM convert_emissions
          !print *, kps
          do k=kps,kpe-1
 
-           print *,"k=",k,", zlevel=",zlevel(i,j,k)
+           print *,"k=",k,", zlevel=",zlevel(i,k,j)
            if(zlevel(i,k,j) > volc_vent(i,j))then
              k_initial=k-1
              print *,"volc_vent in mASL=",volc_vent(i,j)
