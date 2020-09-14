@@ -1257,7 +1257,9 @@ subroutine gasrainscav (ims,ime,kms,kme,jms,jme,its,ite,kts,kte,jts,jte,num_chem
   use module_configure, only:  grid_config_rec_type,   &
 		param_first_scalar,   &
 		p_so2, p_h2o2, p_sulf,p_h2so4, p_msa,   &
-		p_hno3, p_hcl, p_nh3
+		p_hno3, p_hcl, p_nh3, &
+      p_hbr,p_brno3,p_hobr,p_hgbr,p_hgbr2, &!new wetdep species LUKE SURL 2020-09-14
+      p_hocl,p_clno3,p_hgcl,p_hgcl2
 
    implicit none
 
@@ -1307,7 +1309,7 @@ subroutine gasrainscav (ims,ime,kms,kme,jms,jme,its,ite,kts,kte,jts,jte,num_chem
    integer :: p1st
    logical :: ispr_anywhere
 
-   integer, parameter :: ng = 7
+   integer, parameter :: ng = 16
    integer, parameter :: ig_so2   = 1
    integer, parameter :: ig_h2o2  = 2
    integer, parameter :: ig_h2so4 = 3
@@ -1315,6 +1317,19 @@ subroutine gasrainscav (ims,ime,kms,kme,jms,jme,its,ite,kts,kte,jts,jte,num_chem
    integer, parameter :: ig_hno3  = 5
    integer, parameter :: ig_hcl   = 6
    integer, parameter :: ig_nh3   = 7
+
+!new species LUKE SURL 2020-09-14
+   integer, parameter :: ig_hbr   = 8
+   integer, parameter :: ig_brno3   = 9
+   integer, parameter :: ig_hobr   = 10
+   integer, parameter :: ig_hgbr   = 11
+   integer, parameter :: ig_hgbr2   = 12
+   !new chlorine species
+   integer, parameter :: ig_hocl   = 13
+   integer, parameter :: ig_clno3   = 14
+   integer, parameter :: ig_hgcl   = 15
+   integer, parameter :: ig_hgcl2   = 16   
+
    integer :: ig, lg, lg_ptr(ng)
 
    real :: amtscav(ng), amtscav_sub(ng)
@@ -1348,6 +1363,16 @@ subroutine gasrainscav (ims,ime,kms,kme,jms,jme,its,ite,kts,kte,jts,jte,num_chem
    lg_ptr(ig_hno3 ) = p_hno3 
    lg_ptr(ig_hcl  ) = p_hcl  
    lg_ptr(ig_nh3  ) = p_nh3  
+   !new species. LUKE SURL 2020-09-14
+   lg_ptr(ig_hbr  ) = p_hbr
+   lg_ptr(ig_brno3  ) = p_brno3
+   lg_ptr(ig_hgbr  ) = p_hobr
+   lg_ptr(ig_hgbr  ) = p_hgbr
+   lg_ptr(ig_hgbr2  ) = p_hgbr2
+   lg_ptr(ig_hocl   ) = p_hocl
+   lg_ptr(ig_clno3  ) = p_clno3
+   lg_ptr(ig_hgcl   ) = p_hgcl
+   lg_ptr(ig_hgcl2  ) = p_hgcl2  
 
    scavrate_factor(ig_so2  ) = 1.08
    scavrate_factor(ig_h2o2 ) = 1.38
@@ -1356,6 +1381,19 @@ subroutine gasrainscav (ims,ime,kms,kme,jms,jme,its,ite,kts,kte,jts,jte,num_chem
    scavrate_factor(ig_hno3 ) = 1.00
    scavrate_factor(ig_hcl  ) = 1.15
    scavrate_factor(ig_nh3  ) = 1.59
+
+   !new species. For want of better information, will set scavrate equal to that of hno3. LUKE SURL 2020-09-14
+   scavrate_factor(ig_hbr ) = 1.00
+   scavrate_factor(ig_brno3 ) = 1.00
+   scavrate_factor(ig_hobr ) = 1.00
+   scavrate_factor(ig_hgbr ) = 1.00
+   scavrate_factor(ig_hgbr2 ) = 1.00   
+   !new species. For want of better information, will set scavrate equal to that of hno3. LUKE SURL 2020-09-14
+   scavrate_factor(ig_hocl ) = 1.00
+   scavrate_factor(ig_clno3 ) = 1.00
+   scavrate_factor(ig_hgcl ) = 1.00
+   scavrate_factor(ig_hgcl2 ) = 1.00   
+
 
 
    do 5900 j = jts,jte
