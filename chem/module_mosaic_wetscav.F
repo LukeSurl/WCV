@@ -167,7 +167,9 @@ CONTAINS
 !  scavenging of gas-phase gases by mass transfer and reaction
 
 !----------------------------------------------------------------------
-   USE module_configure, only: grid_config_rec_type
+   USE module_configure, only: grid_config_rec_type,&
+    p_hbr, p_brno3, p_hgbr,p_hgbr2,         &!added in these species so to identify when these species are being looped over.
+    p_hocl,  p_clno3, p_hgcl,p_hgcl2 !added soluble chlorine species.
    USE module_state_description
    USE module_model_constants, only: g, rhowater, mwdry
    USE module_dep_simple, only: is_aerosol
@@ -300,7 +302,18 @@ CONTAINS
       do 270 j = jts,jte
       do 270 k = kts,kte
       do 270 i = its,ite
-         fracscav = dtstepc*qlsink(i,k,j)*gas_aqfrac(i,k,j,l)
+
+         !lines for br cl wetdep species. Assume 100% soluble
+         if ((l .eq. p_hbr) .or. (l .eq. p_brno3) .or. (l .eq. p_hobr) &
+          .or. (l .eq. p_hgbr) .or. (l .eq. p_hgbr2) & 
+          .or. (l .eq. p_hocl) .or. (l .eq. p_clno3) &
+          .or. (l .eq. p_hgcl) .or. (l .eq. p_hgcl2)) then
+          fracscav = dtstepc*qlsink(i,k,j)*1.0
+         else
+          !otherwise, use the gas_aqfrac number
+          fracscav = dtstepc*qlsink(i,k,j)*gas_aqfrac(i,k,j,l)
+         end if
+
          if (fracscav > 0.0) then ! make sure fracscav > 0
             fracscav = min(1.0,fracscav) ! make sure fracscav <= 1
             scale = 1.0 - fracscav
