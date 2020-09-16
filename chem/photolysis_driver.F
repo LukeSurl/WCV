@@ -21,7 +21,7 @@
                ph_cl2,ph_hocl,ph_fmcl,                                   &
                ph_br2,ph_bro,ph_brno2,ph_hobr,ph_brno3,                  &
                ph_oclo,ph_clno3,                                &
-               ph_brcl,                                                  &
+               ph_brcl,ph_hgbr2,                                         &
                nref0, nw0, tuv_jmax0,                                    &
                ph_radfld, ph_adjcoe, ph_prate,                           &
                wc, zref,                                                 &
@@ -81,7 +81,7 @@
            ph_cl2,ph_hocl,ph_fmcl,                                     &
            ph_br2,ph_bro,ph_brno2,ph_hobr,ph_brno3,                    &
            ph_oclo,ph_clno3,                                  &
-           ph_brcl
+           ph_brcl,ph_hgbr2
 
    REAL, INTENT(INOUT)  ::                                             &
            dt_cld(ims:ime,kms:kme,jms:jme),                            &
@@ -191,7 +191,7 @@
                ph_cl2,ph_hocl,                                         &
                ph_br2,ph_bro,ph_brno2,ph_hobr,ph_brno3,                &
                ph_oclo,ph_clno2,ph_clno3,                              &
-               ph_brcl,                                                &
+               ph_brcl,ph_hgbr2,                                       &
                tauaer1,tauaer2,tauaer3,tauaer4,                        &
                gaer1,gaer2,gaer3,gaer4,                                &
                waer1,waer2,waer3,waer4,                                &

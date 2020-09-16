@@ -24,12 +24,12 @@
         USE module_data_mosaic_other, only : kmaxd
 !jdf
        integer, parameter :: double = 8        !compiler dependent value real*8
-       integer,parameter :: jppj=25        !Number of photolytic reactions supplied
+       integer,parameter :: jppj=26        !Number of photolytic reactions supplied
 !jdf
 
         INTEGER  NB, NC !values set in fastj_driver, don't confuse
                         !this nc with the one in module_fastj_mie
-        INTEGER, PARAMETER :: NS=26, NW=15, NP=21, NH=7, MX=3
+        INTEGER, PARAMETER :: NS=27, NW=15, NP=21, NH=7, MX=3
         ! NS to 26 for new halogen species
 
 !titls variables
@@ -122,7 +122,7 @@
            0.1000D+01,  0.1000D+01,  0.1000D+01,   & 
            0.1000D+01,  0.1000D+01,  0.1000D+01,   & 
            0.1000D+01,  0.1000D+01,  0.1000D+01,   & 
-           0.1000D+01                              & 
+           0.1000D+01,  0.1000D+01                 & 
          / ! Added more entries LUKE SURL
        data jlabel   &
          /   &
@@ -134,7 +134,7 @@
           'BR2    ', 'HOBR   ', 'BRNO3  ',   &
           'BRNO2  ', 'OCLO   ', 'CL2    ',   &
           'CLNO2  ', 'CLNO3  ', 'HOCL   ',   &
-          'BRCL   '                          & 
+          'BRCL   ', 'HGBR2  '               & 
          / ! Added more entries LUKE SURL
 
 ! from rd_tjpl2
@@ -144,7 +144,7 @@
          /
        data NJVAL,NWWW,NW1,NW2   &
          /   &
-          26,    7,    1,    7   &!NJVAL up to 26 LSURL
+          27,    7,    1,    7   &!NJVAL up to 26 LSURL
          /
        data (WBIN(IW),IW=1,  8)   &
          /   &
@@ -249,41 +249,41 @@
           0.2370E+00,   0.8570E-01,   0.0000E+00,   &
           0.0000E+00   &
          /
-        data (TITLEJ(1,JTMP), JTMP=4,26)   &              
+        data (TITLEJ(1,JTMP), JTMP=4,27)   &              
          /   &
         'H2O2   ',  'HCHO_a ',  'HCHO_b ',  'MeOOH  ',   &
         'NO2    ',  'NO3_X  ',  'NO3_L  ',  'N2O5   ',   &
         'HONO   ',  'HONO2  ',  'HO2NO2 ',  'C2H5O2 ',   &
         'BRO    ',  'BR2    ',  'HOBR   ',  'BRNO3  ',   & 
         'BRNO2  ',  'OCLO   ',  'CL2    ',  'CLNO2  ',   &
-        'CLNO3  ',  'HOCL   ',  'BRCL   '                & 
+        'CLNO3  ',  'HOCL   ',  'BRCL   ',  'HGBR2  '    & 
          / ! Added more entries LUKE SURL
-        data (TITLEJ(2,JTMP), JTMP=4,26)   &              
+        data (TITLEJ(2,JTMP), JTMP=4,27)   &              
          /   &
         'H2O2   ',  'HCHO_a ',  'HCHO_b ',  'MeOOH  ',   &
         'NO2    ',  'NO3_X  ',  'NO3_L  ',  'N2O5   ',   &
         'HONO   ',  'HONO2  ',  'HO2NO2 ',  'C2H5O2 ',   &
         'BRO    ',  'BR2    ',  'HOBR   ',  'BRNO3  ',   & 
         'BRNO2  ',  'OCLO   ',  'CL2    ',  'CLNO2  ',   &
-        'CLNO3  ',  'HOCL   ',  'BRCL   '                & 
+        'CLNO3  ',  'HOCL   ',  'BRCL   ',  'HGBR2  '    & 
          / ! Added more entries LUKE SURL
-        data (TQQ(1,JTMP), JTMP= 4,26)   &
+        data (TQQ(1,JTMP), JTMP= 4,27)   &
          /   &
          200.,   223.,   223.,   200.,   &
          200.,   200.,   200.,   225.,   &
          200.,   200.,   200.,   200.,   &
          228.,   297.,   297.,   220.,   & 
          296.,   204.,   297.,   220.,   &
-         220.,   200.,   297.            &
+         220.,   200.,   297.,   297.    &
          / ! Added more entries LUKE SURL
-        data (TQQ(2,JTMP), JTMP= 4,26)   &              
+        data (TQQ(2,JTMP), JTMP= 4,27)   &              
          /   &
          300.,   293.,   293.,   300.,   &
          300.,   300.,   300.,   300.,   &
          300.,   300.,   300.,   300.,   &
          298.,   298.,   298.,   298.,   & 
-         2987.,   296.,   298.,   298.,   &
-         296.,   300.,   298.            & 
+         2987.,  296.,   298.,   298.,   &
+         296.,   300.,   298.,   298.    & 
          / ! Added more entries LUKE SURL
         !____H2O2____at____200____!
         data (QQQ(IW,1, 1), IW=1, 7)   &
@@ -417,6 +417,12 @@
          /   &
          4.540E-21, 8.736E-21, 1.626E-20, 3.160E-20, 1.223E-19, 3.191E-19, 2.054E-20 &
          /
+
+      !____HGBR2____at____298____! added new photolysis rate for HGBR2 - LUKE SURL 2020-09-16
+        data (QQQ(IW,1,24), IW=1, 7)   &
+         /   &
+         1.36E-20, 3.20E-21, 3.10E-21, 2.16E-21, 0.0E+00, 0.0E+00, 0.0E+00 &
+         /
         !____H2O2____at____300____!
         data (QQQ(IW,2, 1), IW=1, 7)   &
          /   &
@@ -548,6 +554,11 @@
         data (QQQ(IW,2,23), IW=1, 7)   &
          /   &
          4.540E-21, 8.736E-21, 1.626E-20, 3.160E-20, 1.223E-19, 3.191E-19, 2.054E-20 &
+         /
+      !____HGBR2____at____298____! added new photolysis rate for HGBR2 - LUKE SURL 2020-09-16
+        data (QQQ(IW,2,24), IW=1, 7)   &
+         /   &
+         1.36E-20, 3.20E-21, 3.10E-21, 2.16E-21, 0.0E+00, 0.0E+00, 0.0E+00 &
          /
 
        data TITLE0(2)   &
