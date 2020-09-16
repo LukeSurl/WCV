@@ -225,7 +225,7 @@
  {??b:126} BR2 + OH = HOBR + BR                         : ARR3(1.9D-11, -240._dp,TEMP) ;
  {154:128} BRNO3 = BRO + NO2                            : ARR3(2.8D13, 12360._dp,TEMP) ;
  {SL:R1}   HG + BR = HGBR                               : ARR4MS(1.5D-32,1.86_dp,TEMP,C_M );
- {SL:R2}   HGBR = HG + BR                               : ARR3MS2(1.6D-9,781._dp,TEMP,C_M);
+ {SL:R2}   HGBR = HG + BR                               : ARR3MS2(1.6D-9,7801._dp,TEMP,C_M);
  {SL:R3}   HGBR + BR = HG + BR2                         : 3.9D-11 ;
  {SL:R4}   HGBR + BR = HGBR2                            : ARR4( 2.5D-10,0.57_dp,TEMP ) ;
  {164:138} API + OH = .0064 API1 + .055 API2            : ARR3(1.2D-11, -440._dp,TEMP) ;
