@@ -168,7 +168,7 @@ CONTAINS
 
 !----------------------------------------------------------------------
    USE module_configure, only: grid_config_rec_type,&
-    p_hbr, p_brno3, p_hgbr,p_hgbr2,         &!added in these species so to identify when these species are being looped over.
+    p_hbr, p_brno3, p_hgbr,p_hgbr2, p_hgbrcl  &!added in these species so to identify when these species are being looped over.
     p_hocl,  p_clno3, p_hgcl,p_hgcl2 !added soluble chlorine species.
    USE module_state_description
    USE module_model_constants, only: g, rhowater, mwdry
@@ -305,7 +305,7 @@ CONTAINS
 
          !lines for br cl wetdep species. Assume 100% soluble
          if ((l .eq. p_hbr) .or. (l .eq. p_brno3) .or. (l .eq. p_hobr) &
-          .or. (l .eq. p_hgbr) .or. (l .eq. p_hgbr2) & 
+          .or. (l .eq. p_hgbr) .or. (l .eq. p_hgbr2) .or. (l .eq. p_hgbrcl) & 
           .or. (l .eq. p_hocl) .or. (l .eq. p_clno3) &
           .or. (l .eq. p_hgcl) .or. (l .eq. p_hgcl2)) then
           fracscav = dtstepc*qlsink(i,k,j)*1.0
@@ -1258,7 +1258,7 @@ subroutine gasrainscav (ims,ime,kms,kme,jms,jme,its,ite,kts,kte,jts,jte,num_chem
 		param_first_scalar,   &
 		p_so2, p_h2o2, p_sulf,p_h2so4, p_msa,   &
 		p_hno3, p_hcl, p_nh3, &
-      p_hbr,p_brno3,p_hobr,p_hgbr,p_hgbr2, &!new wetdep species LUKE SURL 2020-09-14
+      p_hbr,p_brno3,p_hobr,p_hgbr,p_hgbr2,p_hgbrcl &!new wetdep species LUKE SURL 2020-09-14
       p_hocl,p_clno3,p_hgcl,p_hgcl2
 
    implicit none
@@ -1324,11 +1324,12 @@ subroutine gasrainscav (ims,ime,kms,kme,jms,jme,its,ite,kts,kte,jts,jte,num_chem
    integer, parameter :: ig_hobr   = 10
    integer, parameter :: ig_hgbr   = 11
    integer, parameter :: ig_hgbr2   = 12
+   integer, parameter :: ig_hgbrcl   = 13
    !new chlorine species
-   integer, parameter :: ig_hocl   = 13
-   integer, parameter :: ig_clno3   = 14
-   integer, parameter :: ig_hgcl   = 15
-   integer, parameter :: ig_hgcl2   = 16   
+   integer, parameter :: ig_hocl   = 14
+   integer, parameter :: ig_clno3   = 15
+   integer, parameter :: ig_hgcl   = 16
+   integer, parameter :: ig_hgcl2   = 17   
 
    integer :: ig, lg, lg_ptr(ng)
 
@@ -1369,6 +1370,7 @@ subroutine gasrainscav (ims,ime,kms,kme,jms,jme,its,ite,kts,kte,jts,jte,num_chem
    lg_ptr(ig_hgbr  ) = p_hobr
    lg_ptr(ig_hgbr  ) = p_hgbr
    lg_ptr(ig_hgbr2  ) = p_hgbr2
+   lg_ptr(ig_hgbrcl ) = p_hgbrcl
    lg_ptr(ig_hocl   ) = p_hocl
    lg_ptr(ig_clno3  ) = p_clno3
    lg_ptr(ig_hgcl   ) = p_hgcl
@@ -1388,6 +1390,7 @@ subroutine gasrainscav (ims,ime,kms,kme,jms,jme,its,ite,kts,kte,jts,jte,num_chem
    scavrate_factor(ig_hobr ) = 1.00
    scavrate_factor(ig_hgbr ) = 1.00
    scavrate_factor(ig_hgbr2 ) = 1.00   
+   scavrate_factor(ig_hgbrcl ) = 1.00
    !new species. For want of better information, will set scavrate equal to that of hno3. LUKE SURL 2020-09-14
    scavrate_factor(ig_hocl ) = 1.00
    scavrate_factor(ig_clno3 ) = 1.00

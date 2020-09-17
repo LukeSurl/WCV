@@ -325,7 +325,7 @@ call wrf_message("**************************************************************
             ( config_flags%chem_opt >= 31 .AND. config_flags%chem_opt <= 36) .OR. &
             ( config_flags%chem_opt >= 41 .AND. config_flags%chem_opt <= 43) .OR. &
             ( config_flags%chem_opt == 131 ) .OR. ( config_flags%chem_opt == 132 ) .OR. &
-            ( config_flags%chem_opt == 180).OR.  !LSURL
+            ( config_flags%chem_opt == 180).OR. & !LSURL
             ( config_flags%chem_opt == 503 .OR. config_flags%chem_opt == 504) .OR. &
             ( config_flags%chem_opt == 203).OR.                                    & !BSINGH(12/17/2013): Added for SAPRC 8 bin vbs
             ( config_flags%chem_opt == 601 .OR. config_flags%chem_opt == 611) .OR. &
@@ -356,7 +356,7 @@ call wrf_message("**************************************************************
            ( config_flags%chem_opt >= 31 .AND. config_flags%chem_opt <= 36)   .OR. &
            ( config_flags%chem_opt >= 501 .AND. config_flags%chem_opt <= 504) .OR. &
            ( config_flags%chem_opt >= 41 .AND. config_flags%chem_opt <= 43)  .OR. &
-           ( config_flags%chem_opt == 180).OR.  !LSURL
+           ( config_flags%chem_opt == 180).OR.  & !LSURL
            ( config_flags%chem_opt == 203).OR.                                    &
            ( config_flags%chem_opt == 131 ) .OR. ( config_flags%chem_opt == 132 ) .OR. &
            ( config_flags%chem_opt >= 601 .AND. config_flags%chem_opt <= 611)  .OR. &

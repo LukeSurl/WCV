@@ -2190,6 +2190,12 @@ is_cbm4_kpp : &
            f0(p_hgcl2)    = 0.
            dvj(p_hgcl2)   = 0.061
 
+           !HgBrCl
+           hstar(p_hgcl2) = 2.75E+13
+           dhr(p_hgcl2)   = 0.
+           f0(p_hgcl2)    = 0.
+           dvj(p_hgcl2)   = 0.061
+
         end if              
 
 
