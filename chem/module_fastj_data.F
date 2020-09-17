@@ -260,7 +260,7 @@
         'CLNO3  ',  'HOCL   ',  'BRCL   ',  'HGBR2  ',   &
         'HGBR   ',  'HGCL   '& 
          / ! Added more entries LUKE SURL
-        data (TITLEJ(2,JTMP), JTMP=4,27)   &              
+        data (TITLEJ(2,JTMP), JTMP=4,29)   &              
          /   &
         'H2O2   ',  'HCHO_a ',  'HCHO_b ',  'MeOOH  ',   &
         'NO2    ',  'NO3_X  ',  'NO3_L  ',  'N2O5   ',   &
