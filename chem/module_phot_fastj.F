@@ -79,7 +79,7 @@
                ph_cl2,ph_hocl,                                         &
                ph_br2,ph_bro,ph_brno2,ph_hobr,ph_brno3,                &
                ph_oclo,ph_clno2,ph_clno3,                              &
-               ph_brcl,ph_hgbr2,                                       &
+               ph_brcl,ph_hgbr2,ph_hgbr,ph_hgcl,                       &
                tauaer1,tauaer2,tauaer3,tauaer4,                        &
                gaer1,gaer2,gaer3,gaer4,                                &
                waer1,waer2,waer3,waer4,                                &
@@ -107,7 +107,7 @@
    integer, parameter :: single = 4        !compiler dependent value real*4
    integer, parameter :: double = 8        !compiler dependent value real*8
    integer,parameter :: ipar_fastj=1,jpar=1
-   integer,parameter :: jppj=26    !Number of photolytic reactions supplied !LUKESURL 2020-09-16
+   integer,parameter :: jppj=28    !Number of photolytic reactions supplied !LUKESURL 2020-09-16
    logical,parameter :: ldeg45=.false. !Logical flag for degraded CTM resolution
    integer,save :: lpar           !Number of levels in CTM
    integer,save :: jpnl           !Number of levels requiring chemistry
@@ -127,7 +127,7 @@
    data wavmid     &
        / 0.30e-4, 0.40e-4, 0.60e-4 ,0.999e-04 /
    integer nphoto_fastj
-   parameter (nphoto_fastj = 27)    !LUKESURL 2020-09-16
+   parameter (nphoto_fastj = 29)    !LUKESURL 2020-09-16
    integer   &
    lfastj_no2,   lfastj_o3a,   lfastj_o3b,    lfastj_h2o2,   &
    lfastj_hchoa, lfastj_hchob, lfastj_ch3ooh, lfastj_no3x,   &
@@ -138,7 +138,7 @@
    lfastj_brno3, lfastj_brno2,                    &
    lfastj_oclo, lfastj_cl2, lfastj_clno2, lfastj_clno3, &
    lfastj_hocl, lfastj_brcl, &!!LUKESURL 2020-09-16
-   lfastj_hgbr2 
+   lfastj_hgbr2, lfastj_hgbr, lfastj_hgcl 
 
    parameter( lfastj_no2   = 1 )
    parameter( lfastj_o3a   = 2 )
@@ -166,6 +166,8 @@
    parameter( lfastj_hocl  = 24 )!LUKE SURL 2014-08-04
    parameter( lfastj_brcl  = 25 )!LUKE SURL 2014-08-04
    parameter( lfastj_hgbr2 = 26 )!LUKEvSURL 2020-09-16
+   parameter( lfastj_hgbr = 27 )!LUKEvSURL 2020-09-16
+   parameter( lfastj_hgcl = 28 )!LUKEvSURL 2020-09-16
 !jdf
    INTEGER,      INTENT(IN   ) :: id,julday,                    &
                                   ids,ide, jds,jde, kds,kde,    &
@@ -182,7 +184,7 @@
            ph_hcochest,ph_ch3o2h,ph_ch3coo2h,ph_ch3ono2,ph_hcochob, &
            ph_n2o5,ph_bro,ph_br2,ph_hobr,ph_brno3,ph_brno2,         &
            ph_oclo,ph_cl2,ph_clno2,ph_clno3,ph_hocl,ph_brcl, & !LUKE SURL 2014-08-04
-           ph_hgbr2
+           ph_hgbr2,ph_hgbr,ph_hgcl
    REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                    &
          INTENT(IN ) ::                                             &
            tauaer1,tauaer2,tauaer3,tauaer4,                         &
@@ -394,7 +396,7 @@
            ph_n2o5, &
            ph_bro,ph_br2,ph_hobr,ph_brno3,ph_brno2,           &
            ph_oclo,ph_cl2,ph_clno2,ph_clno3,ph_hocl,ph_brcl, &
-           ph_hgbr2 ) !!LUKESURL 2020-09-16
+           ph_hgbr2,ph_hgbr,ph_hgcl ) !!LUKESURL 2020-09-16
 ! put the aerosol optical properties into the wrf arrays (this is hard-
 ! coded to 4 spectral bins, nspint)
 !     do k=kts,kte
@@ -436,14 +438,14 @@
         ph_n2o5, &
         ph_bro,ph_br2,ph_hobr,ph_brno3,ph_brno2,           &
         ph_oclo,ph_cl2,ph_clno2,ph_clno3,ph_hocl,ph_brcl, &
-        ph_hgbr2 ) !LUKE SURL 2014-08-04
+        ph_hgbr2,ph_hgbr,ph_hgcl ) !LUKE SURL 2014-08-04
 
 	USE module_data_cbmz
 
    implicit none
 !jdf
    integer nphoto_fastj
-   parameter (nphoto_fastj = 27)!changed 14 to 19  !changed 19 to 20 LUKESURL 2014-03-12 !changed 20 to 26 LUKESURL 2014-09-02
+   parameter (nphoto_fastj = 29)!changed 14 to 19  !changed 19 to 20 LUKESURL 2014-03-12 !changed 20 to 26 LUKESURL 2014-09-02
    integer   &
    lfastj_no2,   lfastj_o3a,   lfastj_o3b,    lfastj_h2o2,   &
    lfastj_hchoa, lfastj_hchob, lfastj_ch3ooh, lfastj_no3x,   &
@@ -453,7 +455,8 @@
    lfastj_bro,   lfastj_br2,    lfastj_hobr,   &
    lfastj_brno3, lfastj_brno2, &
    lfastj_oclo, lfastj_cl2, lfastj_clno2, &
-   lfastj_clno3, lfastj_hocl, lfastj_brcl, lfastj_hgbr2
+   lfastj_clno3, lfastj_hocl, lfastj_brcl, lfastj_hgbr2, &
+   lfastj_hgbr, lfastj_hgcl
 
    parameter( lfastj_no2   = 1 )
    parameter( lfastj_o3a   = 2 )
@@ -481,6 +484,8 @@
    parameter( lfastj_hocl  = 24 )!LUKE SURL 2014-08-04
    parameter( lfastj_brcl  = 25 )!LUKE SURL 2014-08-04
    parameter( lfastj_hgbr2 = 26 )!LUKESURL 2020-09-16
+   parameter( lfastj_hgbr = 27 )!LUKESURL 2020-09-16
+   parameter( lfastj_hgcl = 28 )!LUKESURL 2020-09-16
 !jdf
    INTEGER,      INTENT(IN   ) :: iflag,                        &
                                   ims,ime, jms,jme, kms,kme,    &
@@ -495,7 +500,7 @@
            ph_n2o5,&
            ph_bro,ph_br2,ph_hobr,ph_brno3,ph_brno2,          &
            ph_oclo,ph_cl2,ph_clno2,ph_clno3,ph_hocl,ph_brcl, &
-           ph_hgbr2
+           ph_hgbr2,ph_hgbr,ph_hgcl
 
    REAL, DIMENSION( kte,nphoto_fastj ), INTENT(INOUT) :: valuej
 
@@ -536,7 +541,8 @@
           ph_brcl(iclm,kt,jclm)       = valuej(kt,lfastj_brcl) * ft  !LUKE SURL 2014-08-04
 
           ph_hgbr2(iclm,kt,jclm)     = valuej(kt,lfastj_hgbr2) * ft !LUKESURL 2020-09-16
-
+          ph_hgbr(iclm,kt,jclm)     = valuej(kt,lfastj_hgbr) * ft !LUKESURL 2020-09-16
+          ph_hgcl(iclm,kt,jclm)     = valuej(kt,lfastj_hgcl) * ft !LUKESURL 2020-09-16
 
 	  ph_o2(iclm,kt,jclm)        = 0.0
 	  ph_ch3cho(iclm,kt,jclm)    = 0.0
@@ -582,6 +588,8 @@
           valuej(kt,lfastj_hocl)    = ph_hocl(iclm,kt,jclm)  / ft
           valuej(kt,lfastj_brcl)    = ph_brcl(iclm,kt,jclm)  / ft
           valuej(kt,lfastj_hgbr2)   = ph_hgbr2(iclm,kt,jclm)  / ft
+          valuej(kt,lfastj_hgbr)   = ph_hgbr(iclm,kt,jclm)  / ft
+          valuej(kt,lfastj_hgcl)   = ph_hgcl(iclm,kt,jclm)  / ft
 	end do
 
     return	!finished wrf->peg mapping
@@ -654,7 +662,7 @@
    integer, parameter :: single = 4        !compiler dependent value real*4
    integer, parameter :: double = 8        !compiler dependent value real*8
    integer,parameter :: ipar_fastj=1,jpar=1
-   integer,parameter :: jppj=27        !Number of photolytic reactions supplied UP TO 26 LSURL
+   integer,parameter :: jppj=29        !Number of photolytic reactions supplied UP TO 26 LSURL
    logical,parameter :: ldeg45=.false. !Logical flag for degraded CTM resolution
    integer lpar           !Number of levels in CTM
    integer jpnl           !Number of levels requiring chemistry
@@ -667,7 +675,7 @@
    integer month_fastj        !  Number of month (1-12)
    integer iday_fastj         !  Day of year
    integer nphoto_fastj
-   parameter (nphoto_fastj = 27) !changed 14 to 19 !changed 19 to 20 LUKESURL 2014-03-12 !changed 20 to 26 LUKESURL 2014-08-04
+   parameter (nphoto_fastj = 29) !changed 14 to 19 !changed 19 to 20 LUKESURL 2014-03-12 !changed 20 to 26 LUKESURL 2014-08-04
    integer   &
    lfastj_no2,   lfastj_o3a,   lfastj_o3b,    lfastj_h2o2,   &
    lfastj_hchoa, lfastj_hchob, lfastj_ch3ooh, lfastj_no3x,   &
@@ -677,7 +685,8 @@
    lfastj_bro,   lfastj_br2,    lfastj_hobr,   &
    lfastj_brno3, lfastj_brno2,                    &
    lfastj_oclo, lfastj_cl2, lfastj_clno2, lfastj_clno3, &
-   lfastj_hocl, lfastj_brcl, lfastj_hgbr2 !LUKE SURL 2020-09-16
+   lfastj_hocl, lfastj_brcl,&
+   lfastj_hgbr2, lfastj_hgbr, lfastj_hgcl !LUKE SURL 2020-09-16
    parameter( lfastj_no2   = 1 )
    parameter( lfastj_o3a   = 2 )
    parameter( lfastj_o3b   = 3 )
@@ -705,6 +714,8 @@
    parameter( lfastj_hocl   = 24 )!LUKE SURL 2014-08-04
    parameter( lfastj_brcl   = 25 )!LUKE SURL 2014-08-04
    parameter( lfastj_hgbr2   = 26 )!LUKE SURL 2020-09-26
+   parameter( lfastj_hgbr   = 27 )!LUKE SURL 2020-09-26
+   parameter( lfastj_hgcl   = 28 )!LUKE SURL 2020-09-26
 
    integer nspint           ! Num of spectral intervals across solar 
    parameter ( nspint = 4 ) ! spectrum for FAST-J
@@ -883,7 +894,9 @@
              valuej(k, lfastj_clno3) = jvalue(k,lfastj_clno3)
              valuej(k, lfastj_hocl) = jvalue(k,lfastj_hocl)
              valuej(k, lfastj_brcl) = jvalue(k,lfastj_brcl)   
-             valuej(k, lfastj_hgbr2) = jvalue(k,lfastj_hgbr2)     
+             valuej(k, lfastj_hgbr2) = jvalue(k,lfastj_hgbr2)  
+             valuej(k, lfastj_hgbr) = jvalue(k,lfastj_hgbr) 
+             valuej(k, lfastj_hgcl) = jvalue(k,lfastj_hgcl)    
 	  end do
 ! diagnostic output and zeroed value if negative photolysis rates returned
 	  do k = 1, lpar
