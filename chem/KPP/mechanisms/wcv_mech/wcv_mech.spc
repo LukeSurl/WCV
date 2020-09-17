@@ -35,6 +35,7 @@
  BRCL        = IGNORE ; {bromine monochloride}
  HGCL        = IGNORE ; {mercury chloride radical}
  HGCL2       = IGNORE ; {mercury (II) chloride}
+ HGBRCL      = IGNORE ; {mercury (II) bromide chloride}
  tracer_1    = IGNORE ; {Tracer 1}
  tracer_2    = IGNORE ; {Tracer 2}
  tracer_3    = IGNORE ; {Tracer 3}
