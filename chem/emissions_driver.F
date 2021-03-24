@@ -682,7 +682,7 @@ if(config_flags%emiss_opt_vol == 5)then
          endif ! julday.ge.begday .and. julday.le.endday
 
       volc5_select:  SELECT CASE(config_flags%chem_opt)
-      CASE (WCV_MECH_KPP)
+      CASE (WCV_MECH_KPP,WCV_FULLHG_KPP)
         CALL wrf_debug(15,'Adding volcanic emissions')
                do k=kts,kte
                 conv1=float(ivolcano)*alt(i,k,j)*dtstep/dz8w(i,k,j)
@@ -1122,6 +1122,7 @@ if(config_flags%emiss_opt_vol == 5)then
           CBMZSORG, CBMZSORG_AQ, CBMZ_MOSAIC_DMS_4BIN, CBMZ_MOSAIC_DMS_8BIN, &
           CBMZ_MOSAIC_KPP, &
           WCV_MECH_KPP, & !LSURL 20190226 added
+          WCV_FULLHG_KPP, & !LSURL 20210324 added
           CBMZ_MOSAIC_DMS_4BIN_AQ, CBMZ_MOSAIC_DMS_8BIN_AQ, &
           CBMZ_CAM_MAM3_NOAQ, CBMZ_CAM_MAM3_AQ, CBMZ_CAM_MAM7_NOAQ, CBMZ_CAM_MAM7_AQ)
        IF(config_flags%kemit .GT. kte-ksub) THEN
@@ -1707,6 +1708,7 @@ if(config_flags%emiss_opt_vol == 5)then
 !Added the aerosol case SAPRC99_MOSAIC_4BIN_VBS2_KPP to call mosaic addemiss
     CASE (CBMZ_MOSAIC_4BIN, CBMZ_MOSAIC_KPP, &
           WCV_MECH_KPP, & !LSURL 20190226 added
+          WCV_FULLHG_KPP, & !LSURL 20210324 added
           CBMZ_MOSAIC_8BIN, & 
           CBMZ_MOSAIC_4BIN_AQ, CBMZ_MOSAIC_8BIN_AQ, &
           CBMZ_MOSAIC_DMS_4BIN, CBMZ_MOSAIC_DMS_8BIN, & 

@@ -122,7 +122,8 @@
            0.1000D+01,  0.1000D+01,  0.1000D+01,   & 
            0.1000D+01,  0.1000D+01,  0.1000D+01,   & 
            0.1000D+01,  0.1000D+01,  0.1000D+01,   & 
-           0.1000D+01,  0.1000D+01                 & 
+           0.1000D+01,  0.1000D+01,  0.1000D+01,   &
+           0.1000D+01                 & 
          / ! Added more entries LUKE SURL
        data jlabel   &
          /   &
@@ -433,7 +434,7 @@
          /   &
          3.44E-19, 2.06E-19, 1.04E-18, 7.82E-19, 8.38E-18, 9.65E-18, 4.35E-19 &
          /
-      !____HGCL____at____298____! added new photolysis rate for HGBR - LUKE SURL 2020-09-16
+      !____HGCL____at____298____! added new photolysis rate for HGCL - LUKE SURL 2020-09-16
         data (QQQ(IW,1,26), IW=1, 7)   &
          /   &
          6.52E-22, 4.69E-19, 1.87E-18, 1.64E-18, 1.42E-17, 2.77E-18, 6.15E-19 &
@@ -581,7 +582,7 @@
          /   &
          3.44E-19, 2.06E-19, 1.04E-18, 7.82E-19, 8.38E-18, 9.65E-18, 4.35E-19 &
          /
-      !____HGCL____at____298____! added new photolysis rate for HGBR - LUKE SURL 2020-09-16
+      !____HGCL____at____298____! added new photolysis rate for HGCL - LUKE SURL 2020-09-16
         data (QQQ(IW,2,26), IW=1, 7)   &
          /   &
          6.52E-22, 4.69E-19, 1.87E-18, 1.64E-18, 1.42E-17, 2.77E-18, 6.15E-19 &

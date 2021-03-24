@@ -798,7 +798,7 @@ CASE(GOCARTRACM_KPP,RACM_KPP,RACMPM_KPP,RACMSORG_KPP,RACM_MIM_KPP,RACM_ESRLSORG_
              enddo
           enddo
         endif
-        CASE (WCV_MECH_KPP)
+        CASE (WCV_MECH_KPP, WCV_FULLHG_KPP)
         if(config_flags%chem_in_opt == 0 )then
           do j=jts,jte
              do k=kts,kte
@@ -1921,6 +1921,7 @@ ENDIF ghg_block
        endif
      CASE (CBMZ_MOSAIC_4BIN, CBMZ_MOSAIC_KPP, &
            WCV_MECH_KPP, & !LSURL 20190226 added
+           WCV_FULLHG_KPP, & !LSURL 20210324 added
            CBMZ_MOSAIC_8BIN, CBMZ_MOSAIC_4BIN_AQ, CBMZ_MOSAIC_8BIN_AQ, &
            CBMZ_MOSAIC_DMS_4BIN, CBMZ_MOSAIC_DMS_8BIN, CBMZ_MOSAIC_DMS_4BIN_AQ, CBMZ_MOSAIC_DMS_8BIN_AQ, &
            SAPRC99_MOSAIC_4BIN_VBS2_KPP, &
@@ -1981,6 +1982,7 @@ ENDIF ghg_block
    cbmz_select: SELECT CASE(config_flags%chem_opt)
      CASE (CBMZ, CBMZ_BB, CBMZ_BB_KPP,CBMZ_MOSAIC_KPP,  &
            WCV_MECH_KPP, & !LSURL 20190226 added
+           WCV_FULLHG_KPP, & !LSURL 20210324 added
            CBMZ_MOSAIC_4BIN, &
            CBMZ_MOSAIC_8BIN, CBMZ_MOSAIC_4BIN_AQ, CBMZ_MOSAIC_8BIN_AQ, CBMZSORG,CBMZSORG_AQ, &
            CBMZ_MOSAIC_DMS_4BIN, CBMZ_MOSAIC_DMS_8BIN, CBMZ_MOSAIC_DMS_4BIN_AQ, & 
@@ -2492,7 +2494,7 @@ subroutine print_chem_species_index( chem_opt )
      end select
   end select
   
-  case (CBMZ_MOSAIC_KPP, WCV_MECH_KPP)
+  case (CBMZ_MOSAIC_KPP, WCV_MECH_KPP, WCV_FULLHG_KPP)
     print*,p_so2,"so2"
      print*,p_sulf,"sulf"
      print*,p_no2,"no2"
@@ -2873,7 +2875,8 @@ subroutine print_chem_species_index( chem_opt )
      print*,p_hysw_a08,"hysw_a08"
      print*,p_water_a08,"water_a08"
      print*,p_num_a08,"num_a08"
-  case (CBMZ_MOSAIC_KPP, WCV_MECH_KPP) !LSURL 20190226 added
+  case (CBMZ_MOSAIC_KPP, WCV_MECH_KPP, & !LSURL 20190226 added
+        WCV_FULLHG_KPP) !LSURL 20190324 added
      print*,p_so4_a01,"so4_a01"
      print*,p_no3_a01,"no3_a01"
      print*,p_cl_a01,"cl_a01"

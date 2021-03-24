@@ -263,6 +263,7 @@
     select case (config_flags%chem_opt)
     case ( CBMZ_MOSAIC_4BIN,    CBMZ_MOSAIC_8BIN, CBMZ_MOSAIC_KPP,  &
            WCV_MECH_KPP, & !LSURL 20190226 added
+           WCV_FULLHG_KPP, & !LSURL 20210324 added
            CBMZ_MOSAIC_4BIN_AQ, CBMZ_MOSAIC_8BIN_AQ, &
            CBMZ_MOSAIC_DMS_4BIN, CBMZ_MOSAIC_DMS_8BIN, &
            CBMZ_MOSAIC_DMS_4BIN_AQ, CBMZ_MOSAIC_DMS_8BIN_AQ, &
@@ -748,7 +749,7 @@
 	real tmidh, sla, slo	
 
 	integer julian_day,iozone1
-    integer,parameter :: nfastj_rxns = 25
+    integer,parameter :: nfastj_rxns = 29
 	integer k, l
  		
 	real surface_pressure_mb, tauaer_550,   &
