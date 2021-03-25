@@ -168,7 +168,7 @@ CONTAINS
 
 !----------------------------------------------------------------------
    USE module_configure, only: grid_config_rec_type,&
-    p_hbr, p_brno3, p_hgbr,p_hgbr2, p_hgbrcl  &!added in these species so to identify when these species are being looped over.
+    p_hbr, p_brno3, p_hgbr,p_hgbr2, p_hgbrcl,  &!added in these species so to identify when these species are being looped over.
     p_hocl,  p_clno3, p_hgcl,p_hgcl2 !added soluble chlorine species.
    USE module_state_description
    USE module_model_constants, only: g, rhowater, mwdry
