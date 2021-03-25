@@ -1258,7 +1258,7 @@ subroutine gasrainscav (ims,ime,kms,kme,jms,jme,its,ite,kts,kte,jts,jte,num_chem
 		param_first_scalar,   &
 		p_so2, p_h2o2, p_sulf,p_h2so4, p_msa,   &
 		p_hno3, p_hcl, p_nh3, &
-      p_hbr,p_brno3,p_hobr,p_hgbr,p_hgbr2,p_hgbrcl &!new wetdep species LUKE SURL 2020-09-14
+      p_hbr,p_brno3,p_hobr,p_hgbr,p_hgbr2,p_hgbrcl, &!new wetdep species LUKE SURL 2020-09-14
       p_hocl,p_clno3,p_hgcl,p_hgcl2
 
    implicit none
