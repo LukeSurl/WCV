@@ -168,8 +168,11 @@ CONTAINS
 
 !----------------------------------------------------------------------
    USE module_configure, only: grid_config_rec_type,&
-    p_hbr, p_brno3, p_hgbr,p_hgbr2, p_hgbrcl  &!added in these species so to identify when these species are being looped over.
-    p_hocl,  p_clno3, p_hgcl,p_hgcl2 !added soluble chlorine species.
+    p_hbr, p_brno3, p_hgbr,p_hgbr2, p_hgbrcl,  &!added in these species so to identify when these species are being looped over.
+    p_hocl,  p_clno3, p_hgcl,p_hgcl2,& !added soluble chlorine species.
+    p_hgbrno2,p_hgbrho2,p_hgbrclo,p_hgbrbro,p_hgbroh,&
+    p_hgclno2,p_hgclho2,p_hgclclo,p_hgclbro,p_hgcloh!LSURL 2021-03-25 FullHg species 
+
    USE module_state_description
    USE module_model_constants, only: g, rhowater, mwdry
    USE module_dep_simple, only: is_aerosol
@@ -303,11 +306,22 @@ CONTAINS
       do 270 k = kts,kte
       do 270 i = its,ite
 
-         !lines for br cl wetdep species. Assume 100% soluble
+         !lines for br cl hg wetdep species. Assume 100% soluble
          if ((l .eq. p_hbr) .or. (l .eq. p_brno3) .or. (l .eq. p_hobr) &
           .or. (l .eq. p_hgbr) .or. (l .eq. p_hgbr2) .or. (l .eq. p_hgbrcl) & 
           .or. (l .eq. p_hocl) .or. (l .eq. p_clno3) &
-          .or. (l .eq. p_hgcl) .or. (l .eq. p_hgcl2)) then
+          .or. (l .eq. p_hgcl) .or. (l .eq. p_hgcl2) &
+          .or. (l .eq. p_hgbrno2) &
+          .or. (l .eq. p_hgbrho2) &
+          .or. (l .eq. p_hgbrclo) &
+          .or. (l .eq. p_hgbrbro) &
+          .or. (l .eq. p_hgbroh)  &
+          .or. (l .eq. p_hgclno2) &
+          .or. (l .eq. p_hgclho2) &
+          .or. (l .eq. p_hgclclo) &
+          .or. (l .eq. p_hgclbro) &
+          .or. (l .eq. p_hgcloh)  &
+          ) then
           fracscav = dtstepc*qlsink(i,k,j)*1.0
          else
           !otherwise, use the gas_aqfrac number
@@ -1258,8 +1272,11 @@ subroutine gasrainscav (ims,ime,kms,kme,jms,jme,its,ite,kts,kte,jts,jte,num_chem
 		param_first_scalar,   &
 		p_so2, p_h2o2, p_sulf,p_h2so4, p_msa,   &
 		p_hno3, p_hcl, p_nh3, &
-      p_hbr,p_brno3,p_hobr,p_hgbr,p_hgbr2,p_hgbrcl &!new wetdep species LUKE SURL 2020-09-14
-      p_hocl,p_clno3,p_hgcl,p_hgcl2
+      p_hbr,p_brno3,p_hobr,p_hgbr,p_hgbr2,p_hgbrcl, &!new wetdep species LUKE SURL 2020-09-14
+      p_hocl,p_clno3,p_hgcl,p_hgcl2,&
+      p_hgbrno2,p_hgbrho2,p_hgbrclo,p_hgbrbro,p_hgbroh,&
+      p_hgclno2,p_hgclho2,p_hgclclo,p_hgclbro,p_hgcloh !FullHg species LSURL 2021-03-25
+
 
    implicit none
 
@@ -1309,7 +1326,7 @@ subroutine gasrainscav (ims,ime,kms,kme,jms,jme,its,ite,kts,kte,jts,jte,num_chem
    integer :: p1st
    logical :: ispr_anywhere
 
-   integer, parameter :: ng = 16
+   integer, parameter :: ng = 27
    integer, parameter :: ig_so2   = 1
    integer, parameter :: ig_h2o2  = 2
    integer, parameter :: ig_h2so4 = 3
@@ -1330,6 +1347,17 @@ subroutine gasrainscav (ims,ime,kms,kme,jms,jme,its,ite,kts,kte,jts,jte,num_chem
    integer, parameter :: ig_clno3   = 15
    integer, parameter :: ig_hgcl   = 16
    integer, parameter :: ig_hgcl2   = 17   
+   !FullHg species
+   integer, parameter :: ig_hgbrno2   = 18
+   integer, parameter :: ig_hgbrho2   = 19
+   integer, parameter :: ig_hgbrclo   = 20
+   integer, parameter :: ig_hgbrbro   = 21
+   integer, parameter :: ig_hgbroh   = 22
+   integer, parameter :: ig_hgclno2   = 23
+   integer, parameter :: ig_hgclho2   = 24
+   integer, parameter :: ig_hgclclo   = 25
+   integer, parameter :: ig_hgclbro   = 26
+   integer, parameter :: ig_hgcloh   = 27
 
    integer :: ig, lg, lg_ptr(ng)
 
@@ -1375,6 +1403,18 @@ subroutine gasrainscav (ims,ime,kms,kme,jms,jme,its,ite,kts,kte,jts,jte,num_chem
    lg_ptr(ig_clno3  ) = p_clno3
    lg_ptr(ig_hgcl   ) = p_hgcl
    lg_ptr(ig_hgcl2  ) = p_hgcl2  
+   !FullHg species LSURL 2021-03-25
+   lg_ptr(ig_hgbrno2  ) = p_hgbrno2
+   lg_ptr(ig_hgbrho2  ) = p_hgbrho2
+   lg_ptr(ig_hgbrclo  ) = p_hgbrclo
+   lg_ptr(ig_hgbrbro  ) = p_hgbrbro
+   lg_ptr(ig_hgbroh  ) = p_hgbroh
+   lg_ptr(ig_hgclno2  ) = p_hgclno2
+   lg_ptr(ig_hgclho2  ) = p_hgclho2
+   lg_ptr(ig_hgclclo  ) = p_hgclclo
+   lg_ptr(ig_hgclbro  ) = p_hgclbro
+   lg_ptr(ig_hgcloh  ) = p_hgcloh
+
 
    scavrate_factor(ig_so2  ) = 1.08
    scavrate_factor(ig_h2o2 ) = 1.38
@@ -1396,8 +1436,17 @@ subroutine gasrainscav (ims,ime,kms,kme,jms,jme,its,ite,kts,kte,jts,jte,num_chem
    scavrate_factor(ig_clno3 ) = 1.00
    scavrate_factor(ig_hgcl ) = 1.00
    scavrate_factor(ig_hgcl2 ) = 1.00   
-
-
+   !FullHg species
+   scavrate_factor(ig_hgbrno2 ) = 1.00
+   scavrate_factor(ig_hgbrho2 ) = 1.00
+   scavrate_factor(ig_hgbrclo ) = 1.00
+   scavrate_factor(ig_hgbrbro ) = 1.00
+   scavrate_factor(ig_hgbroh )  = 1.00
+   scavrate_factor(ig_hgclno2 ) = 1.00
+   scavrate_factor(ig_hgclho2 ) = 1.00
+   scavrate_factor(ig_hgclclo ) = 1.00
+   scavrate_factor(ig_hgclbro ) = 1.00
+   scavrate_factor(ig_hgcloh )  = 1.00
 
    do 5900 j = jts,jte
    do 5900 i = its,ite

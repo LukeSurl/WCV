@@ -981,6 +981,8 @@
               grid%ph_br2,grid%ph_bro,grid%ph_brno2,grid%ph_hobr,grid%ph_brno3,       &
               grid%ph_oclo,grid%ph_clno3,                                             &
               grid%ph_brcl,grid%ph_hgbr2,grid%ph_hgbr,grid%ph_hgcl,                   & 
+              grid%ph_hgxno2,grid%ph_hgxho2,                                          &
+              grid%ph_hgxclo,grid%ph_hgxbro,grid%ph_hgxoh,                            &
               config_flags%track_tuv_lev,                                             &
               config_flags%track_rad_num,                                             &
               config_flags%track_tuv_num,                                             &

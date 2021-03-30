@@ -2212,14 +2212,77 @@ is_cbm4_kpp : &
            dvj(p_hgcl2)   = 0.061
 
            !HgBrCl
-           hstar(p_hgcl2) = 2.75E+13
-           dhr(p_hgcl2)   = 0.
-           f0(p_hgcl2)    = 0.
-           dvj(p_hgcl2)   = 0.061
+           hstar(p_hgbrcl) = 2.75E+13
+           dhr(p_hgbrcl)   = 0.
+           f0(p_hgbrcl)    = 0.
+           dvj(p_hgbrcl)   = 0.056
 
-        end if              
+        end if
 
+        !FullHg Hg(II) species              
+        if (config_flags%chem_opt == WCV_FULLHG_KPP)  then
+           
+           !HgBrNO2
+           hstar(p_hgbrno2) = 2.75E+13
+           dhr(p_hgbrno2)   = 0.
+           f0(p_hgbrno2)    = 0.
+           dvj(p_hgbrno2)   = 0.055
 
+           !HgBrHO2
+           hstar(p_hgbrho2) = 2.75E+13
+           dhr(p_hgbrho2)   = 0.
+           f0(p_hgbrho2)    = 0.
+           dvj(p_hgbrho2)   = 0.056
+
+           !HgBrClO
+           hstar(p_hgbrclo) = 2.75E+13
+           dhr(p_hgbrclo)   = 0.
+           f0(p_hgbrclo)    = 0.
+           dvj(p_hgbrclo)   = 0.055
+
+           !HgBrBrO
+           hstar(p_hgbrbro) = 2.75E+13
+           dhr(p_hgbrbro)   = 0.
+           f0(p_hgbrbro)    = 0.
+           dvj(p_hgbrbro)   = 0.052
+
+           !HgBrOH
+           hstar(p_hgbroh) = 2.75E+13
+           dhr(p_hgbroh)   = 0.
+           f0(p_hgbroh)    = 0.
+           dvj(p_hgbroh)   = 0.056
+
+           !HgClNO2
+           hstar(p_hgclno2) = 2.75E+13
+           dhr(p_hgclno2)   = 0.
+           f0(p_hgclno2)    = 0.
+           dvj(p_hgclno2)   = 0.060
+
+           !HgClHO2
+           hstar(p_hgclho2) = 2.75E+13
+           dhr(p_hgclho2)   = 0.
+           f0(p_hgclho2)    = 0.
+           dvj(p_hgclho2)   = 0.061
+
+           !HgClClO
+           hstar(p_hgclclo) = 2.75E+13
+           dhr(p_hgclclo)   = 0.
+           f0(p_hgclclo)    = 0.
+           dvj(p_hgclclo)   = 0.059
+
+           !HgClBrO
+           hstar(p_hgclbro) = 2.75E+13
+           dhr(p_hgclbro)   = 0.
+           f0(p_hgclbro)    = 0.
+           dvj(p_hgclbro)   = 0.055
+
+           !HgClOH
+           hstar(p_hgcloh) = 2.75E+13
+           dhr(p_hgcloh)   = 0.
+           f0(p_hgcloh)    = 0.
+           dvj(p_hgcloh)   = 0.063
+
+        end if
               
      else if( config_flags%chem_opt == crimech_kpp .or. &
           config_flags%chem_opt == cri_mosaic_8bin_aq_kpp .or. &

@@ -80,6 +80,7 @@
                ph_br2,ph_bro,ph_brno2,ph_hobr,ph_brno3,                &
                ph_oclo,ph_clno2,ph_clno3,                              &
                ph_brcl,ph_hgbr2,ph_hgbr,ph_hgcl,                       &
+               ph_hgxno2,ph_hgxho2,ph_hgxbro,ph_hgxclo,ph_hgxoh,       &
                tauaer1,tauaer2,tauaer3,tauaer4,                        &
                gaer1,gaer2,gaer3,gaer4,                                &
                waer1,waer2,waer3,waer4,                                &
@@ -107,7 +108,7 @@
    integer, parameter :: single = 4        !compiler dependent value real*4
    integer, parameter :: double = 8        !compiler dependent value real*8
    integer,parameter :: ipar_fastj=1,jpar=1
-   integer,parameter :: jppj=28    !Number of photolytic reactions supplied !LUKESURL 2020-09-16
+   integer,parameter :: jppj=33    !Number of photolytic reactions supplied !LUKESURL 2021-03-25
    logical,parameter :: ldeg45=.false. !Logical flag for degraded CTM resolution
    integer,save :: lpar           !Number of levels in CTM
    integer,save :: jpnl           !Number of levels requiring chemistry
@@ -127,7 +128,7 @@
    data wavmid     &
        / 0.30e-4, 0.40e-4, 0.60e-4 ,0.999e-04 /
    integer nphoto_fastj
-   parameter (nphoto_fastj = 29)    !LUKESURL 2020-09-16
+   parameter (nphoto_fastj = 34)    !LUKESURL 2021-03-25
    integer   &
    lfastj_no2,   lfastj_o3a,   lfastj_o3b,    lfastj_h2o2,   &
    lfastj_hchoa, lfastj_hchob, lfastj_ch3ooh, lfastj_no3x,   &
@@ -138,7 +139,9 @@
    lfastj_brno3, lfastj_brno2,                    &
    lfastj_oclo, lfastj_cl2, lfastj_clno2, lfastj_clno3, &
    lfastj_hocl, lfastj_brcl, &!!LUKESURL 2020-09-16
-   lfastj_hgbr2, lfastj_hgbr, lfastj_hgcl 
+   lfastj_hgbr2, lfastj_hgbr, lfastj_hgcl , &
+   lfastj_hgxno2,lfastj_hgxho2,lfastj_hgxbro,&
+   lfastj_hgxclo,lfastj_hgxoh !LSURL 2021-03-26
 
    parameter( lfastj_no2   = 1 )
    parameter( lfastj_o3a   = 2 )
@@ -153,21 +156,27 @@
    parameter( lfastj_n2o5  = 11 )
    parameter( lfastj_hno3  = 12 )
    parameter( lfastj_hno4  = 13 )
-   parameter( lfastj_c2h5o2= 14 ) !LUKE SURL 2014-03-12
-   parameter( lfastj_bro   = 15 ) !LUKE SURL 2014-03-11 NOTE CHANGE. THIS IS DONE TO STOP  C2H5O2 messing everthing up
-   parameter( lfastj_br2   = 16 ) !LUKE SURL 2014-03-11
-   parameter( lfastj_hobr  = 17 ) !LUKE SURL 2014-03-11
-   parameter( lfastj_brno3 = 18 ) !LUKE SURL 2014-03-11
-   parameter( lfastj_brno2   = 19 ) !LUKE SURL 2014-03-11
-   parameter( lfastj_oclo  = 20 )!LUKE SURL 2014-08-04
-   parameter( lfastj_cl2   = 21 )!LUKE SURL 2014-08-04
-   parameter( lfastj_clno2 = 22 )!LUKE SURL 2014-08-04
-   parameter( lfastj_clno3 = 23 )!LUKE SURL 2014-08-04
-   parameter( lfastj_hocl  = 24 )!LUKE SURL 2014-08-04
-   parameter( lfastj_brcl  = 25 )!LUKE SURL 2014-08-04
-   parameter( lfastj_hgbr2 = 26 )!LUKEvSURL 2020-09-16
-   parameter( lfastj_hgbr = 27 )!LUKEvSURL 2020-09-16
-   parameter( lfastj_hgcl = 28 )!LUKEvSURL 2020-09-16
+   parameter( lfastj_c2h5o2= 14 ) !LSURL 2014-03-12
+   parameter( lfastj_bro   = 15 ) !LSURL 2014-03-11 NOTE CHANGE. THIS IS DONE TO STOP  C2H5O2 messing everthing up
+   parameter( lfastj_br2   = 16 ) !LSURL 2014-03-11
+   parameter( lfastj_hobr  = 17 ) !LSURL 2014-03-11
+   parameter( lfastj_brno3 = 18 ) !LSURL 2014-03-11
+   parameter( lfastj_brno2   = 19 ) !LSURL 2014-03-11
+   parameter( lfastj_oclo  = 20 )!LSURL 2014-08-04
+   parameter( lfastj_cl2   = 21 )!LSURL 2014-08-04
+   parameter( lfastj_clno2 = 22 )!LSURL 2014-08-04
+   parameter( lfastj_clno3 = 23 )!LSURL 2014-08-04
+   parameter( lfastj_hocl  = 24 )!LSURL 2014-08-04
+   parameter( lfastj_brcl  = 25 )!LSURL 2014-08-04
+   parameter( lfastj_hgbr2 = 26 )!LSURL 2020-09-16
+   parameter( lfastj_hgbr = 27 )!LSURL 2020-09-16
+   parameter( lfastj_hgcl = 28 )!LSURL 2020-09-16
+   parameter( lfastj_hgxno2 = 29 )!LSURL 2021-03-25
+   parameter( lfastj_hgxho2 = 30 )!LSURL 2021-03-25
+   parameter( lfastj_hgxclo = 31 )!LSURL 2021-03-25
+   parameter( lfastj_hgxbro = 32 )!LSURL 2021-03-25
+   parameter( lfastj_hgxoh = 33 )!LSURL 2021-03-25
+
 !jdf
    INTEGER,      INTENT(IN   ) :: id,julday,                    &
                                   ids,ide, jds,jde, kds,kde,    &
@@ -184,7 +193,8 @@
            ph_hcochest,ph_ch3o2h,ph_ch3coo2h,ph_ch3ono2,ph_hcochob, &
            ph_n2o5,ph_bro,ph_br2,ph_hobr,ph_brno3,ph_brno2,         &
            ph_oclo,ph_cl2,ph_clno2,ph_clno3,ph_hocl,ph_brcl, & !LUKE SURL 2014-08-04
-           ph_hgbr2,ph_hgbr,ph_hgcl
+           ph_hgbr2,ph_hgbr,ph_hgcl, &
+           ph_hgxno2,ph_hgxho2,ph_hgxclo,ph_hgxbro,ph_hgxoh !LSURL 2021-03-25
    REAL, DIMENSION( ims:ime, kms:kme, jms:jme ),                    &
          INTENT(IN ) ::                                             &
            tauaer1,tauaer2,tauaer3,tauaer4,                         &
@@ -397,7 +407,8 @@
            ph_n2o5, &
            ph_bro,ph_br2,ph_hobr,ph_brno3,ph_brno2,           &
            ph_oclo,ph_cl2,ph_clno2,ph_clno3,ph_hocl,ph_brcl, &
-           ph_hgbr2,ph_hgbr,ph_hgcl ) !!LUKESURL 2020-09-16
+           ph_hgbr2,ph_hgbr,ph_hgcl, & !!LUKESURL 2020-09-16
+           ph_hgxno2,ph_hgxho2,ph_hgxclo,ph_hgxbro,ph_hgxoh )!LSURL 2021-03-25
 ! put the aerosol optical properties into the wrf arrays (this is hard-
 ! coded to 4 spectral bins, nspint)
 !     do k=kts,kte
@@ -439,7 +450,8 @@
         ph_n2o5, &
         ph_bro,ph_br2,ph_hobr,ph_brno3,ph_brno2,           &
         ph_oclo,ph_cl2,ph_clno2,ph_clno3,ph_hocl,ph_brcl, &
-        ph_hgbr2,ph_hgbr,ph_hgcl ) !LUKE SURL 2014-08-04
+        ph_hgbr2,ph_hgbr,ph_hgcl, & !LUKE SURL 2014-08-04
+        ph_hgxno2,ph_hgxho2,ph_hgxclo,ph_hgxbro,ph_hgxoh )
 
 	USE module_data_cbmz
 
@@ -457,7 +469,9 @@
    lfastj_brno3, lfastj_brno2, &
    lfastj_oclo, lfastj_cl2, lfastj_clno2, &
    lfastj_clno3, lfastj_hocl, lfastj_brcl, lfastj_hgbr2, &
-   lfastj_hgbr, lfastj_hgcl
+   lfastj_hgbr, lfastj_hgcl, &
+   lfastj_hgxno2,lfastj_hgxho2,lfastj_hgxbro,&
+   lfastj_hgxclo,lfastj_hgxoh !LSURL 2021-03-26
 
    parameter( lfastj_no2   = 1 )
    parameter( lfastj_o3a   = 2 )
@@ -487,6 +501,12 @@
    parameter( lfastj_hgbr2 = 26 )!LUKESURL 2020-09-16
    parameter( lfastj_hgbr = 27 )!LUKESURL 2020-09-16
    parameter( lfastj_hgcl = 28 )!LUKESURL 2020-09-16
+   parameter( lfastj_hgxno2 = 29 )!LSURL 2021-03-25
+   parameter( lfastj_hgxho2 = 30 )!LSURL 2021-03-25
+   parameter( lfastj_hgxclo = 31 )!LSURL 2021-03-25
+   parameter( lfastj_hgxbro = 32 )!LSURL 2021-03-25
+   parameter( lfastj_hgxoh = 33 )!LSURL 2021-03-25
+
 !jdf
    INTEGER,      INTENT(IN   ) :: iflag,                        &
                                   ims,ime, jms,jme, kms,kme,    &
@@ -501,7 +521,8 @@
            ph_n2o5,&
            ph_bro,ph_br2,ph_hobr,ph_brno3,ph_brno2,          &
            ph_oclo,ph_cl2,ph_clno2,ph_clno3,ph_hocl,ph_brcl, &
-           ph_hgbr2,ph_hgbr,ph_hgcl
+           ph_hgbr2,ph_hgbr,ph_hgcl,&
+           ph_hgxno2,ph_hgxho2,ph_hgxclo,ph_hgxbro,ph_hgxoh
 
    REAL, DIMENSION( kte,nphoto_fastj ), INTENT(INOUT) :: valuej
 
@@ -527,23 +548,30 @@
 	  ph_ch2or(iclm,kt,jclm)     = valuej(kt,lfastj_hchoa) * ft
 	  ph_ch2om(iclm,kt,jclm)     = valuej(kt,lfastj_hchob) * ft
 	  ph_n2o5(iclm,kt,jclm)      = valuej(kt,lfastj_n2o5) * ft
-!         NO WRITING TO/FROM PHOTOLYSIS VARIABLE FOR C2H5O2
+    !       NO WRITING TO/FROM PHOTOLYSIS VARIABLE FOR C2H5O2
+    !Bromine species
 	  ph_bro(iclm,kt,jclm)       = valuej(kt,lfastj_bro)  * ft
 	  ph_br2(iclm,kt,jclm)       = valuej(kt,lfastj_br2)  * ft
 	  ph_hobr(iclm,kt,jclm)      = valuej(kt,lfastj_hobr) * ft
 	  ph_brno3(iclm,kt,jclm)     = valuej(kt,lfastj_brno3) * ft
 	  ph_brno2(iclm,kt,jclm)     = valuej(kt,lfastj_brno2) * ft
-
-          ph_oclo(iclm,kt,jclm)       = valuej(kt,lfastj_oclo) * ft  !LUKE SURL 2014-08-04
-          ph_cl2(iclm,kt,jclm)       = valuej(kt,lfastj_cl2) * ft    !LUKE SURL 2014-08-04
-          ph_clno2(iclm,kt,jclm)       = valuej(kt,lfastj_clno2) * ft!LUKE SURL 2014-08-04
-          ph_clno3(iclm,kt,jclm)       = valuej(kt,lfastj_clno3) * ft!LUKE SURL 2014-08-04
-          ph_hocl(iclm,kt,jclm)       = valuej(kt,lfastj_hocl) * ft  !LUKE SURL 2014-08-04
-          ph_brcl(iclm,kt,jclm)       = valuej(kt,lfastj_brcl) * ft  !LUKE SURL 2014-08-04
-
-          ph_hgbr2(iclm,kt,jclm)     = valuej(kt,lfastj_hgbr2) * ft !LUKESURL 2020-09-16
-          ph_hgbr(iclm,kt,jclm)     = valuej(kt,lfastj_hgbr) * ft !LUKESURL 2020-09-16
-          ph_hgcl(iclm,kt,jclm)     = valuej(kt,lfastj_hgcl) * ft !LUKESURL 2020-09-16
+    !Chlorine species
+    ph_oclo(iclm,kt,jclm)      = valuej(kt,lfastj_oclo) * ft  !LUKE SURL 2014-08-04
+    ph_cl2(iclm,kt,jclm)       = valuej(kt,lfastj_cl2) * ft    !LUKE SURL 2014-08-04
+    ph_clno2(iclm,kt,jclm)     = valuej(kt,lfastj_clno2) * ft!LUKE SURL 2014-08-04
+    ph_clno3(iclm,kt,jclm)     = valuej(kt,lfastj_clno3) * ft!LUKE SURL 2014-08-04
+    ph_hocl(iclm,kt,jclm)      = valuej(kt,lfastj_hocl) * ft  !LUKE SURL 2014-08-04
+    ph_brcl(iclm,kt,jclm)      = valuej(kt,lfastj_brcl) * ft  !LUKE SURL 2014-08-04
+    !Mercury spcies
+    ph_hgbr2(iclm,kt,jclm)     = valuej(kt,lfastj_hgbr2) * ft !LUKESURL 2020-09-16
+    ph_hgbr(iclm,kt,jclm)      = valuej(kt,lfastj_hgbr ) * ft !LUKESURL 2020-09-16
+    ph_hgcl(iclm,kt,jclm)      = valuej(kt,lfastj_hgcl ) * ft !LUKESURL 2020-09-16
+    !FulHg Hg(II) species
+    ph_hgxno2(iclm,kt,jclm)    = valuej(kt,lfastj_hgxno2) * ft !LUKESURL 2021-03-25
+    ph_hgxho2(iclm,kt,jclm)    = valuej(kt,lfastj_hgxho2) * ft !LUKESURL 2021-03-25
+    ph_hgxclo(iclm,kt,jclm)    = valuej(kt,lfastj_hgxclo) * ft !LUKESURL 2021-03-25
+    ph_hgxbro(iclm,kt,jclm)    = valuej(kt,lfastj_hgxbro) * ft !LUKESURL 2021-03-25
+    ph_hgxoh(iclm,kt,jclm)     = valuej(kt,lfastj_hgxoh ) * ft !LUKESURL 2021-03-25
 
 	  ph_o2(iclm,kt,jclm)        = 0.0
 	  ph_ch3cho(iclm,kt,jclm)    = 0.0
@@ -575,22 +603,30 @@
 	  valuej(kt,lfastj_hchoa)  = ph_ch2or(iclm,kt,jclm)/ ft
 	  valuej(kt,lfastj_hchob)  = ph_ch2om(iclm,kt,jclm)/ ft
 	  valuej(kt,lfastj_n2o5)   = ph_n2o5(iclm,kt,jclm) / ft
-!         NO WRITING TO/FROM PHOTOLYSIS VARIABLE FOR C2H5O2
-          valuej(kt,lfastj_bro)    = ph_bro(iclm,kt,jclm)  / ft
-          valuej(kt,lfastj_br2)    = ph_br2(iclm,kt,jclm)  / ft
-          valuej(kt,lfastj_hobr)   = ph_hobr(iclm,kt,jclm) / ft
-          valuej(kt,lfastj_brno3)  = ph_brno3(iclm,kt,jclm)/ ft
-          valuej(kt,lfastj_brno2)    = ph_brno2(iclm,kt,jclm)  / ft
-
-          valuej(kt,lfastj_oclo)    = ph_oclo(iclm,kt,jclm)  / ft
-          valuej(kt,lfastj_cl2)    = ph_cl2(iclm,kt,jclm)  / ft
-          valuej(kt,lfastj_clno2)    = ph_clno2(iclm,kt,jclm)  / ft
-          valuej(kt,lfastj_clno3)    = ph_clno3(iclm,kt,jclm)  / ft
-          valuej(kt,lfastj_hocl)    = ph_hocl(iclm,kt,jclm)  / ft
-          valuej(kt,lfastj_brcl)    = ph_brcl(iclm,kt,jclm)  / ft
-          valuej(kt,lfastj_hgbr2)   = ph_hgbr2(iclm,kt,jclm)  / ft
-          valuej(kt,lfastj_hgbr)   = ph_hgbr(iclm,kt,jclm)  / ft
-          valuej(kt,lfastj_hgcl)   = ph_hgcl(iclm,kt,jclm)  / ft
+    !     NO WRITING TO/FROM PHOTOLYSIS VARIABLE FOR C2H5O2
+    !Bromine species
+    valuej(kt,lfastj_bro)    = ph_bro(iclm,kt,jclm)  / ft
+    valuej(kt,lfastj_br2)    = ph_br2(iclm,kt,jclm)  / ft
+    valuej(kt,lfastj_hobr)   = ph_hobr(iclm,kt,jclm) / ft
+    valuej(kt,lfastj_brno3)  = ph_brno3(iclm,kt,jclm)/ ft
+    valuej(kt,lfastj_brno2)    = ph_brno2(iclm,kt,jclm)  / ft
+    !Chlorine species
+    valuej(kt,lfastj_oclo)    = ph_oclo(iclm,kt,jclm)  / ft
+    valuej(kt,lfastj_cl2)    = ph_cl2(iclm,kt,jclm)  / ft
+    valuej(kt,lfastj_clno2)    = ph_clno2(iclm,kt,jclm)  / ft
+    valuej(kt,lfastj_clno3)    = ph_clno3(iclm,kt,jclm)  / ft
+    valuej(kt,lfastj_hocl)    = ph_hocl(iclm,kt,jclm)  / ft
+    valuej(kt,lfastj_brcl)    = ph_brcl(iclm,kt,jclm)  / ft
+    !Mercury species
+    valuej(kt,lfastj_hgbr2)   = ph_hgbr2(iclm,kt,jclm)  / ft
+    valuej(kt,lfastj_hgbr)   = ph_hgbr(iclm,kt,jclm)  / ft
+    valuej(kt,lfastj_hgcl)   = ph_hgcl(iclm,kt,jclm)  / ft
+    !FullHg Hg(II) species
+    valuej(kt,lfastj_hgxno2)   = ph_hgxno2(iclm,kt,jclm)  / ft
+    valuej(kt,lfastj_hgxho2)   = ph_hgxho2(iclm,kt,jclm)  / ft
+    valuej(kt,lfastj_hgxclo)   = ph_hgxclo(iclm,kt,jclm)  / ft
+    valuej(kt,lfastj_hgxbro)   = ph_hgxbro(iclm,kt,jclm)  / ft
+    valuej(kt,lfastj_hgxoh )   = ph_hgxoh(iclm,kt,jclm)   / ft
 	end do
 
     return	!finished wrf->peg mapping
@@ -663,7 +699,7 @@
    integer, parameter :: single = 4        !compiler dependent value real*4
    integer, parameter :: double = 8        !compiler dependent value real*8
    integer,parameter :: ipar_fastj=1,jpar=1
-   integer,parameter :: jppj=29        !Number of photolytic reactions supplied UP TO 26 LSURL
+   integer,parameter :: jppj=34        !Number of photolytic reactions supplied UP TO 34 LSURL
    logical,parameter :: ldeg45=.false. !Logical flag for degraded CTM resolution
    integer lpar           !Number of levels in CTM
    integer jpnl           !Number of levels requiring chemistry
@@ -676,7 +712,9 @@
    integer month_fastj        !  Number of month (1-12)
    integer iday_fastj         !  Day of year
    integer nphoto_fastj
-   parameter (nphoto_fastj = 29) !changed 14 to 19 !changed 19 to 20 LUKESURL 2014-03-12 !changed 20 to 26 LUKESURL 2014-08-04
+   parameter (nphoto_fastj = 34) !changed 14 to 19 !changed 19 to 20 LUKESURL 2014-03-12 !changed 20 to 26 LUKESURL 2014-08-04
+   !changed 29 to 34 LSURL 2021-03-25
+
    integer   &
    lfastj_no2,   lfastj_o3a,   lfastj_o3b,    lfastj_h2o2,   &
    lfastj_hchoa, lfastj_hchob, lfastj_ch3ooh, lfastj_no3x,   &
@@ -687,7 +725,10 @@
    lfastj_brno3, lfastj_brno2,                    &
    lfastj_oclo, lfastj_cl2, lfastj_clno2, lfastj_clno3, &
    lfastj_hocl, lfastj_brcl,&
-   lfastj_hgbr2, lfastj_hgbr, lfastj_hgcl !LUKE SURL 2020-09-16
+   lfastj_hgbr2, lfastj_hgbr, lfastj_hgcl,& !LUKE SURL 2020-09-16
+   lfastj_hgxno2,lfastj_hgxho2,lfastj_hgxbro,&
+   lfastj_hgxclo,lfastj_hgxoh !LSURL 2021-03-26
+
    parameter( lfastj_no2   = 1 )
    parameter( lfastj_o3a   = 2 )
    parameter( lfastj_o3b   = 3 )
@@ -717,6 +758,12 @@
    parameter( lfastj_hgbr2   = 26 )!LUKE SURL 2020-09-26
    parameter( lfastj_hgbr   = 27 )!LUKE SURL 2020-09-26
    parameter( lfastj_hgcl   = 28 )!LUKE SURL 2020-09-26
+
+   parameter( lfastj_hgxno2 = 29 )!LSURL 2021-03-25
+   parameter( lfastj_hgxho2 = 30 )!LSURL 2021-03-25
+   parameter( lfastj_hgxclo = 31 )!LSURL 2021-03-25
+   parameter( lfastj_hgxbro = 32 )!LSURL 2021-03-25
+   parameter( lfastj_hgxoh = 33 )!LSURL 2021-03-25
 
    integer nspint           ! Num of spectral intervals across solar 
    parameter ( nspint = 4 ) ! spectrum for FAST-J
@@ -882,22 +929,30 @@
 	     valuej(k, lfastj_n2o5) = jvalue(k,lfastj_n2o5)
 	     valuej(k, lfastj_hno3) = jvalue(k,lfastj_hno3)
 	     valuej(k, lfastj_hno4) = jvalue(k,lfastj_hno4)
-             valuej(k, lfastj_c2h5o2) = jvalue(k,lfastj_c2h5o2)
-             valuej(k, lfastj_bro) = jvalue(k,lfastj_bro)
-             valuej(k, lfastj_br2) = jvalue(k,lfastj_br2)
-             valuej(k, lfastj_hobr) = jvalue(k,lfastj_hobr)
-             valuej(k, lfastj_brno3) = jvalue(k,lfastj_brno3)
-             valuej(k, lfastj_brno2) = jvalue(k,lfastj_brno2)
-
-             valuej(k, lfastj_oclo) = jvalue(k,lfastj_oclo)
-             valuej(k, lfastj_cl2) = jvalue(k,lfastj_cl2)
-             valuej(k, lfastj_clno2) = jvalue(k,lfastj_clno2)
-             valuej(k, lfastj_clno3) = jvalue(k,lfastj_clno3)
-             valuej(k, lfastj_hocl) = jvalue(k,lfastj_hocl)
-             valuej(k, lfastj_brcl) = jvalue(k,lfastj_brcl)   
-             valuej(k, lfastj_hgbr2) = jvalue(k,lfastj_hgbr2)  
-             valuej(k, lfastj_hgbr) = jvalue(k,lfastj_hgbr) 
-             valuej(k, lfastj_hgcl) = jvalue(k,lfastj_hgcl)    
+       valuej(k, lfastj_c2h5o2) = jvalue(k,lfastj_c2h5o2)
+       !Bromine species
+       valuej(k, lfastj_bro) = jvalue(k,lfastj_bro)
+       valuej(k, lfastj_br2) = jvalue(k,lfastj_br2)
+       valuej(k, lfastj_hobr) = jvalue(k,lfastj_hobr)
+       valuej(k, lfastj_brno3) = jvalue(k,lfastj_brno3)
+       valuej(k, lfastj_brno2) = jvalue(k,lfastj_brno2)
+       !Chlorine species
+       valuej(k, lfastj_oclo) = jvalue(k,lfastj_oclo)
+       valuej(k, lfastj_cl2) = jvalue(k,lfastj_cl2)
+       valuej(k, lfastj_clno2) = jvalue(k,lfastj_clno2)
+       valuej(k, lfastj_clno3) = jvalue(k,lfastj_clno3)
+       valuej(k, lfastj_hocl) = jvalue(k,lfastj_hocl)
+       valuej(k, lfastj_brcl) = jvalue(k,lfastj_brcl)   
+       !Mercury species
+       valuej(k, lfastj_hgbr2) = jvalue(k,lfastj_hgbr2)  
+       valuej(k, lfastj_hgbr) = jvalue(k,lfastj_hgbr) 
+       valuej(k, lfastj_hgcl) = jvalue(k,lfastj_hgcl)
+       !FullHg Hg(II) species
+       valuej(k, lfastj_hgxno2) = jvalue(k,lfastj_hgxno2) 
+       valuej(k, lfastj_hgxho2) = jvalue(k,lfastj_hgxho2) 
+       valuej(k, lfastj_hgxclo) = jvalue(k,lfastj_hgxclo) 
+       valuej(k, lfastj_hgxbro) = jvalue(k,lfastj_hgxbro) 
+       valuej(k, lfastj_hgxoh ) = jvalue(k,lfastj_hgxoh) 
 	  end do
 ! diagnostic output and zeroed value if negative photolysis rates returned
 	  do k = 1, lpar

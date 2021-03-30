@@ -852,7 +852,17 @@ state   real  dvel_hgbr2    i%jf      dvel           1         -      -      "dv
 state   real  dvel_hcl      i%jf      dvel           1         -      -      "dvel_hcl"       "HCL deposition velocity "   "cm/s"
 state   real  dvel_hgcl     i%jf      dvel           1         -      -      "dvel_hgcl"      "HGCL deposition velocity "  "cm/s"
 state   real  dvel_hgcl2    i%jf      dvel           1         -      -      "dvel_hgcl2"      "HGCL2 deposition velocity " "cm/s"
-
+#fullHg Hg(II) species
+state   real  dvel_hgbrno2    i%jf      dvel           1         -      -      "dvel_hgbrno2"      "HGBRNO2 deposition velocity " "cm/s"
+state   real  dvel_hgbrho2    i%jf      dvel           1         -      -      "dvel_hgbrho2"      "HGBRHO2 deposition velocity " "cm/s"
+state   real  dvel_hgbrclo    i%jf      dvel           1         -      -      "dvel_hgbrclo"      "HGBRCLO deposition velocity " "cm/s"
+state   real  dvel_hgbrbro    i%jf      dvel           1         -      -      "dvel_hgbrbro"      "HGBRBRO deposition velocity " "cm/s"
+state   real  dvel_hgbroh     i%jf      dvel           1         -      -      "dvel_hgbroh"       "HGBROH deposition velocity " "cm/s"
+state   real  dvel_hgclno2     i%jf      dvel           1         -      -      "dvel_hgclno2"     "HGCLNO2 deposition velocity "  "cm/s"
+state   real  dvel_hgclho2     i%jf      dvel           1         -      -      "dvel_hgclho2"     "HGCLHO2 deposition velocity "  "cm/s"
+state   real  dvel_hgclclo     i%jf      dvel           1         -      -      "dvel_hgclclo"     "HGCLCLO deposition velocity "  "cm/s"
+state   real  dvel_hgclbro     i%jf      dvel           1         -      -      "dvel_hgclbro"     "HGCLBRO deposition velocity "  "cm/s"
+state   real  dvel_hgcloh      i%jf      dvel           1         -      -      "dvel_hgcloh"      "HGCLOH deposition velocity "  "cm/s"
 
 # accumulated dry deposition
 state    real  ddmass_o3       i%jf      dvel          1         -      rdu    "ddmass_o3"        "O3 dry deposition, accumulated "  "mol/m2"
@@ -1129,6 +1139,17 @@ state   real  ddmass_hgbr2    i%jf      dvel           1         -      rdu     
 state   real  ddmass_hcl      i%jf      dvel           1         -      rdu      "ddmass_hcl"       "HCL dry deposition, accumulated"  "ug/m2"
 state   real  ddmass_hgcl     i%jf      dvel           1         -      rdu      "ddmass_hgcl"      "HGCL dry deposition, accumulated"  "ug/m2"
 state   real  ddmass_hgcl2    i%jf      dvel           1         -      rdu      "ddmass_hgcl2"      "HGCL2 dry deposition, accumulated"  "ug/m2"
+#fullHg Hg(II) species
+state   real  ddmass_hgbrno2     i%jf      dvel           1         -      rdu      "ddmass_hgbrno2"      "HGBRNO2 dry deposition, accumulated"  "ug/m2"
+state   real  ddmass_hgbrho2     i%jf      dvel           1         -      rdu      "ddmass_hgbrho2"      "HGBRHO2 dry deposition, accumulated"  "ug/m2"
+state   real  ddmass_hgbrclo     i%jf      dvel           1         -      rdu      "ddmass_hgbrclo"      "HGBRCLO dry deposition, accumulated"  "ug/m2"
+state   real  ddmass_hgbrbro     i%jf      dvel           1         -      rdu      "ddmass_hgbrbro"      "HGBRBRO dry deposition, accumulated"  "ug/m2"
+state   real  ddmass_hgbroh      i%jf      dvel           1         -      rdu      "ddmass_hgbroh"       "HGBROH dry deposition, accumulated"  "ug/m2"
+state   real  ddmass_hgclno2     i%jf      dvel           1         -      rdu      "ddmass_hgclno2"      "HGCLNO2 dry deposition, accumulated"  "ug/m2"
+state   real  ddmass_hgclho2     i%jf      dvel           1         -      rdu      "ddmass_hgclho2"      "HGCLHO2 dry deposition, accumulated"  "ug/m2"
+state   real  ddmass_hgclclo     i%jf      dvel           1         -      rdu      "ddmass_hgclclo"      "HGCLCLO dry deposition, accumulated"  "ug/m2"
+state   real  ddmass_hglbro      i%jf      dvel           1         -      rdu      "ddmass_hgclbro"      "HGCLBRO dry deposition, accumulated"  "ug/m2"
+state   real  ddmass_hgcloh      i%jf      dvel           1         -      rdu      "ddmass_hgcloh"       "HGCLOH dry deposition, accumulated"  "ug/m2"
 
 # aerosol surface area diagnostic
 state  real  -                ikjf    aero_srf_area   1    -   -     - 
@@ -1434,6 +1455,13 @@ state    real  ph_brcl         ikj     misc        1         -      rh        "P
 state    real  ph_hgbr2        ikj     misc        1         -      rh        "PHOTR146"        "HGBR2 Photolysis Rate" "min{-1}"
 state    real  ph_hgbr        ikj     misc        1         -      rh        "PHOTR147"        "HGBR Photolysis Rate" "min{-1}"
 state    real  ph_hgcl        ikj     misc        1         -      rh        "PHOTR148"        "HGCL Photolysis Rate" "min{-1}"
+#FullHg HG(II) photolysis rates
+state    real  ph_hgxno2        ikj     misc        1         -      rh        "PHOTR_HGXNO2"        "HGXNO2 Photolysis Rate" "min{-1}"
+state    real  ph_hgxho2        ikj     misc        1         -      rh        "PHOTR_HGXHO2"        "HGXHO2 Photolysis Rate" "min{-1}"
+state    real  ph_hgxclo        ikj     misc        1         -      rh        "PHOTR_HGXCLO"        "HGXCLO Photolysis Rate" "min{-1}"
+state    real  ph_hgxbro        ikj     misc        1         -      rh        "PHOTR_HGXBRO"        "HGXBRO Photolysis Rate" "min{-1}"
+state    real  ph_hgxoh         ikj     misc        1         -      rh        "PHOTR_HGXOH"         "HGXOH  Photolysis Rate" "min{-1}"
+
 #psuedo photolysis rates used for heterogenous reaction rates
 state    real  ph_het_hobr_hbr      ikj     misc        1         -      rh        "PHOTR_HETR_HOBR_HBR"    "HOBR HBR het Rate" "min{-1}"
 state    real  ph_het_hobr_hcl      ikj     misc        1         -      rh        "PHOTR_HETR_HOBR_HCL"    "HOBR HCL het Rate" "min{-1}"
@@ -2358,6 +2386,18 @@ state   real   clno3     ikjftb   chem      1      -   i0{12}rhusdf=(bdy_interp:
 state   real   brcl      ikjftb   chem      1      -   i0{12}rhusdf=(bdy_interp:dt)  "brcl"     "BRCL mixing ratio"       "ppmv"
 state   real   hgcl      ikjftb   chem      1      -   i0{12}rhusdf=(bdy_interp:dt)  "hgcl"     "HGCL mixing ratio"       "ppmv"
 state   real   hgcl2     ikjftb   chem      1      -   i0{12}rhusdf=(bdy_interp:dt)  "hgcl2"    "HGCL2 mixing ratio"      "ppmv"
+
+#FullHg Hg(II) species
+state   real   hgbrno2      ikjftb   chem      1      -   i0{12}rhusdf=(bdy_interp:dt)  "hgbrno2"     "HGBRNO2 mixing ratio"       "ppmv"
+state   real   hgbrho2      ikjftb   chem      1      -   i0{12}rhusdf=(bdy_interp:dt)  "hgbrho2"     "HGBRHO2 mixing ratio"       "ppmv"
+state   real   hgbrclo      ikjftb   chem      1      -   i0{12}rhusdf=(bdy_interp:dt)  "hgbrclo"     "HGBRCLO mixing ratio"       "ppmv"
+state   real   hgbrbro      ikjftb   chem      1      -   i0{12}rhusdf=(bdy_interp:dt)  "hgbrbro"     "HGBRBRO mixing ratio"       "ppmv"
+state   real   hgbroh       ikjftb   chem      1      -   i0{12}rhusdf=(bdy_interp:dt)  "hgbroh"      "HGBROH mixing ratio"        "ppmv"
+state   real   hgclno2      ikjftb   chem      1      -   i0{12}rhusdf=(bdy_interp:dt)  "hgclno2"     "HGCLNO2 mixing ratio"       "ppmv"
+state   real   hgclho2      ikjftb   chem      1      -   i0{12}rhusdf=(bdy_interp:dt)  "hgclho2"     "HGCLHO2 mixing ratio"       "ppmv"
+state   real   hgclclo      ikjftb   chem      1      -   i0{12}rhusdf=(bdy_interp:dt)  "hgclclo"     "HGCLCLO mixing ratio"       "ppmv"
+state   real   hgclbro      ikjftb   chem      1      -   i0{12}rhusdf=(bdy_interp:dt)  "hgclbro"     "HGCLBRO mixing ratio"       "ppmv"
+state   real   hgcloh       ikjftb   chem      1      -   i0{12}rhusdf=(bdy_interp:dt)  "hgcloh"      "HGCLOH mixing ratio"        "ppmv"
 #trac prod
 state   real   tracprod_1   ikjftb   chem        1         -   i0{12}rhusdf=(bdy_interp:dt)  "tracprod_1"           "tracprod1    mix ratio"        "ppmv"
 state   real   tracprod_2   ikjftb   chem        1         -   i0{12}rhusdf=(bdy_interp:dt)  "tracprod_2"           "tracprod2    mix ratio"        "ppmv"
@@ -4095,7 +4135,7 @@ package   wcv_mech_kpp chem_opt==180               -             chem:so2,sulf,n
 #surf_dcen,vol_dcen removed from uea01_hg3 mech
 
 #wcv_fullhg_kpp (chem_opt=181) extension of wcv_mech_kpp to include a fuller gas-phase Hg mechanism
-package   wcv_fullhg_kpp chem_opt==181               -             chem:so2,sulf,no2,no,o3,hno3,h2o2,ald,hcho,op1,op2,ora1,ora2,nh3,n2o5,no3,pan,eth,co,ol2,olt,oli,tol,xyl,hono,hno4,ket,mgly,onit,csl,iso,ho,ho2,hcl,ch3o2,ethp,ch3oh,c2h5oh,par,to2,cro,open,op3,c2o3,ro2,ano2,nap,xo2,xpar,isoprd,isopp,isopn,ch4,aro1,aro2,alk1,ole1,api1,api2,lim1,lim2,api,lim,br,br2,bro,hbr,hobr,brno2,brno3,hg,hgbr,hgbr2,hgbrcl,cl,clo,oclo,cl2,clno2,clno3,hocl,brcl,hgcl,hgcl2,surf_dcen,recipd,tracer_1,tracer_2,tracer_3,tracer_5,tracer_6,tracer_8,tracer_9,tracprod_1,tracprod_2,tracprod_3,tracprod_5,tracprod_6,tracprod_8,isopo2,so4_a01,no3_a01,cl_a01,co3_a01,nh4_a01,na_a01,ca_a01,oin_a01,oc_a01,bc_a01,hysw_a01,water_a01,aro1_a01,aro2_a01,alk1_a01,ole1_a01,api1_a01,api2_a01,lim1_a01,lim2_a01,num_a01,so4_a02,no3_a02,cl_a02,co3_a02,nh4_a02,na_a02,ca_a02,oin_a02,oc_a02,bc_a02,hysw_a02,water_a02,aro1_a02,aro2_a02,alk1_a02,ole1_a02,api1_a02,api2_a02,lim1_a02,lim2_a02,num_a02,so4_a03,no3_a03,cl_a03,co3_a03,nh4_a03,na_a03,ca_a03,oin_a03,oc_a03,bc_a03,hysw_a03,water_a03,aro1_a03,aro2_a03,alk1_a03,ole1_a03,api1_a03,api2_a03,lim1_a03,lim2_a03,num_a03,so4_a04,no3_a04,cl_a04,co3_a04,nh4_a04,na_a04,ca_a04,oin_a04,oc_a04,bc_a04,hysw_a04,water_a04,aro1_a04,aro2_a04,alk1_a04,ole1_a04,api1_a04,api2_a04,lim1_a04,lim2_a04,num_a04,so4_a05,no3_a05,cl_a05,co3_a05,nh4_a05,na_a05,ca_a05,oin_a05,oc_a05,bc_a05,hysw_a05,water_a05,aro1_a05,aro2_a05,alk1_a05,ole1_a05,api1_a05,api2_a05,lim1_a05,lim2_a05,num_a05,so4_a06,no3_a06,cl_a06,co3_a06,nh4_a06,na_a06,ca_a06,oin_a06,oc_a06,bc_a06,hysw_a06,water_a06,aro1_a06,aro2_a06,alk1_a06,ole1_a06,api1_a06,api2_a06,lim1_a06,lim2_a06,num_a06,so4_a07,no3_a07,cl_a07,co3_a07,nh4_a07,na_a07,ca_a07,oin_a07,oc_a07,bc_a07,hysw_a07,water_a07,aro1_a07,aro2_a07,alk1_a07,ole1_a07,api1_a07,api2_a07,lim1_a07,lim2_a07,num_a07,so4_a08,no3_a08,cl_a08,co3_a08,nh4_a08,na_a08,ca_a08,oin_a08,oc_a08,bc_a08,hysw_a08,water_a08,aro1_a08,aro2_a08,alk1_a08,ole1_a08,api1_a08,api2_a08,lim1_a08,lim2_a08,num_a08
+package   wcv_fullhg_kpp chem_opt==181               -             chem:so2,sulf,no2,no,o3,hno3,h2o2,ald,hcho,op1,op2,ora1,ora2,nh3,n2o5,no3,pan,eth,co,ol2,olt,oli,tol,xyl,hono,hno4,ket,mgly,onit,csl,iso,ho,ho2,hcl,ch3o2,ethp,ch3oh,c2h5oh,par,to2,cro,open,op3,c2o3,ro2,ano2,nap,xo2,xpar,isoprd,isopp,isopn,ch4,aro1,aro2,alk1,ole1,api1,api2,lim1,lim2,api,lim,br,br2,bro,hbr,hobr,brno2,brno3,hg,hgbr,hgbr2,hgbrcl,hgbrno2,hgbrho2,hgbrclo,hgbrbro,hgbroh,cl,clo,oclo,cl2,clno2,clno3,hocl,brcl,hgcl,hgcl2,hgclno2,hgclho2,hgclclo,hgclbro,hgcloh,surf_dcen,recipd,tracer_1,tracer_2,tracer_3,tracer_5,tracer_6,tracer_8,tracer_9,tracprod_1,tracprod_2,tracprod_3,tracprod_5,tracprod_6,tracprod_8,isopo2,so4_a01,no3_a01,cl_a01,co3_a01,nh4_a01,na_a01,ca_a01,oin_a01,oc_a01,bc_a01,hysw_a01,water_a01,aro1_a01,aro2_a01,alk1_a01,ole1_a01,api1_a01,api2_a01,lim1_a01,lim2_a01,num_a01,so4_a02,no3_a02,cl_a02,co3_a02,nh4_a02,na_a02,ca_a02,oin_a02,oc_a02,bc_a02,hysw_a02,water_a02,aro1_a02,aro2_a02,alk1_a02,ole1_a02,api1_a02,api2_a02,lim1_a02,lim2_a02,num_a02,so4_a03,no3_a03,cl_a03,co3_a03,nh4_a03,na_a03,ca_a03,oin_a03,oc_a03,bc_a03,hysw_a03,water_a03,aro1_a03,aro2_a03,alk1_a03,ole1_a03,api1_a03,api2_a03,lim1_a03,lim2_a03,num_a03,so4_a04,no3_a04,cl_a04,co3_a04,nh4_a04,na_a04,ca_a04,oin_a04,oc_a04,bc_a04,hysw_a04,water_a04,aro1_a04,aro2_a04,alk1_a04,ole1_a04,api1_a04,api2_a04,lim1_a04,lim2_a04,num_a04,so4_a05,no3_a05,cl_a05,co3_a05,nh4_a05,na_a05,ca_a05,oin_a05,oc_a05,bc_a05,hysw_a05,water_a05,aro1_a05,aro2_a05,alk1_a05,ole1_a05,api1_a05,api2_a05,lim1_a05,lim2_a05,num_a05,so4_a06,no3_a06,cl_a06,co3_a06,nh4_a06,na_a06,ca_a06,oin_a06,oc_a06,bc_a06,hysw_a06,water_a06,aro1_a06,aro2_a06,alk1_a06,ole1_a06,api1_a06,api2_a06,lim1_a06,lim2_a06,num_a06,so4_a07,no3_a07,cl_a07,co3_a07,nh4_a07,na_a07,ca_a07,oin_a07,oc_a07,bc_a07,hysw_a07,water_a07,aro1_a07,aro2_a07,alk1_a07,ole1_a07,api1_a07,api2_a07,lim1_a07,lim2_a07,num_a07,so4_a08,no3_a08,cl_a08,co3_a08,nh4_a08,na_a08,ca_a08,oin_a08,oc_a08,bc_a08,hysw_a08,water_a08,aro1_a08,aro2_a08,alk1_a08,ole1_a08,api1_a08,api2_a08,lim1_a08,lim2_a08,num_a08
 
 #SAPRCNOV new package, automatically created using diff_mechanisSpc_wrfRegistry.m script (pablo-saide@uiowa.edu)
 package saprc99_kpp    chem_opt==195   -       chem:o3,h2o2,no,no2,no3,n2o5,hono,hno3,hno4,so2,h2so4,co,hcho,ccho,rcho,acet,mek,hcooh,meoh,etoh,cco_oh,rco_oh,gly,mgly,bacl,cres,bald,isoprod,methacro,mvk,prod2,dcb1,dcb2,dcb3,ethene,isoprene,c2h6,c3h8,c2h2,c3h6,alk3,alk4,alk5,aro1,aro2,ole1,ole2,terp,rno3,nphe,phen,pan,pan2,pbzn,ma_pan,co2,cco_ooh,rco_o2,rco_ooh,xn,xc,ho,ho2,c_o2,cooh,rooh,ro2_r,r2o2,ro2_n,cco_o2,bzco_o2,ma_rco3,nh3,hcl,ch4
@@ -4179,7 +4219,7 @@ package   vwcv emiss_opt_vol==5                   -             emis_vol:e_vash1
 #
 
 package   photmad       phot_opt==1                  -             state:uvrad,ph_o31d,ph_o33p,ph_no2,ph_no3o2,ph_no3o,ph_hno2,ph_hno3,ph_hno4,ph_h2o2,ph_ch2or,ph_ch2om,ph_ch3cho,ph_ch3coch3,ph_ch3coc2h5,ph_hcocho,ph_ch3cocho,ph_hcochest,ph_ch3o2h,ph_ch3coo2h,ph_ch3ono2,ph_hcochob,ph_macr,ph_n2o5,ph_o2,ph_pan,ph_acet,ph_mglo,ph_hno4_2,ph_n2o,ph_pooh,ph_mpan,ph_mvk,ph_etooh,ph_prooh,ph_onitr,ph_acetol,ph_glyald,ph_hyac,ph_mek,ph_open,ph_gly,ph_acetp,ph_xooh,ph_isooh,ph_alkooh,ph_mekooh,ph_tolooh,ph_terpooh,ph_cl2,ph_hocl,ph_fmcl
-package   photfastj     phot_opt==2                  -             state:ph_o31d,ph_o33p,ph_no2,ph_no3o2,ph_no3o,ph_hno2,ph_hno3,ph_hno4,ph_h2o2,ph_ch2or,ph_ch2om,ph_ch3cho,ph_ch3coch3,ph_ch3coc2h5,ph_hcocho,ph_ch3cocho,ph_hcochest,ph_ch3o2h,ph_ch3coo2h,ph_ch3ono2,ph_hcochob,ph_macr,ph_n2o5,ph_o2,ph_pan,ph_acet,ph_mglo,ph_hno4_2,ph_n2o,ph_pooh,ph_mpan,ph_mvk,ph_etooh,ph_prooh,ph_onitr,ph_acetol,ph_glyald,ph_hyac,ph_mek,ph_open,ph_gly,ph_acetp,ph_xooh,ph_isooh,ph_alkooh,ph_mekooh,ph_tolooh,ph_terpooh,ph_cl2,ph_hocl,ph_fmcl,ph_br2,ph_bro,ph_hbr,ph_hobr,ph_brno3,ph_oclo,ph_clno2,ph_clno3,ph_brcl,ph_hgbr2,ph_hgbr,ph_hgcl,ph_het_hobr_hbr,ph_het_hobr_hcl,ph_het_n2o5,ph_het_brno3,ph_het_clno3
+package   photfastj     phot_opt==2                  -             state:ph_o31d,ph_o33p,ph_no2,ph_no3o2,ph_no3o,ph_hno2,ph_hno3,ph_hno4,ph_h2o2,ph_ch2or,ph_ch2om,ph_ch3cho,ph_ch3coch3,ph_ch3coc2h5,ph_hcocho,ph_ch3cocho,ph_hcochest,ph_ch3o2h,ph_ch3coo2h,ph_ch3ono2,ph_hcochob,ph_macr,ph_n2o5,ph_o2,ph_pan,ph_acet,ph_mglo,ph_hno4_2,ph_n2o,ph_pooh,ph_mpan,ph_mvk,ph_etooh,ph_prooh,ph_onitr,ph_acetol,ph_glyald,ph_hyac,ph_mek,ph_open,ph_gly,ph_acetp,ph_xooh,ph_isooh,ph_alkooh,ph_mekooh,ph_tolooh,ph_terpooh,ph_cl2,ph_hocl,ph_fmcl,ph_br2,ph_bro,ph_hbr,ph_hobr,ph_brno3,ph_oclo,ph_clno2,ph_clno3,ph_brcl,ph_hgbr2,ph_hgbr,ph_hgcl,ph_hgxno2,ph_hgxho2,ph_hgxclo,ph_hgxbro,ph_hgxoh,ph_het_hobr_hbr,ph_het_hobr_hcl,ph_het_n2o5,ph_het_brno3,ph_het_clno3,
 package   ftuv          phot_opt==3                  -             state:radfld,adjcoe,phrate,ph_o31d,ph_o33p,ph_no2,ph_no3o2,ph_no3o,ph_hno2,ph_hno3,ph_hno4,ph_h2o2,ph_ch2or,ph_ch2om,ph_ch3cho,ph_ch3coch3,ph_ch3coc2h5,ph_hcocho,ph_ch3cocho,ph_hcochest,ph_ch3o2h,ph_ch3coo2h,ph_ch3ono2,ph_hcochob,ph_macr,ph_n2o5,ph_o2,ph_pan,ph_acet,ph_mglo,ph_hno4_2,ph_n2o,ph_pooh,ph_mpan,ph_mvk,ph_etooh,ph_prooh,ph_onitr,ph_acetol,ph_glyald,ph_hyac,ph_mek,ph_open,ph_gly,ph_acetp,ph_xooh,ph_isooh,ph_alkooh,ph_mekooh,ph_tolooh,ph_terpooh,ph_cl2,ph_hocl,ph_fmcl
 package   tuv           phot_opt==4                  -             state:uvrad,dt_cld,af_dir,af_dn,af_up,ph_par,ph_erythema,ph_o31d,ph_o33p,ph_no2,ph_no3o2,ph_no3o,ph_hno2,ph_hno3,ph_hno4,ph_h2o2,ph_ch2or,ph_ch2om,ph_ch3cho,ph_ch3coch3,ph_ch3coc2h5,ph_hcocho,ph_ch3cocho,ph_hcochest,ph_ch3o2h,ph_ch3coo2h,ph_ch3ono2,ph_hcochob,ph_macr,ph_n2o5,ph_o2,ph_pan,ph_acet,ph_mglo,ph_hno4_2,ph_n2o,ph_pooh,ph_mpan,ph_mvk,ph_etooh,ph_prooh,ph_onitr,ph_acetol,ph_glyald,ph_hyac,ph_mek,ph_open,ph_gly,ph_acetp,ph_xooh,ph_isooh,ph_alkooh,ph_mekooh,ph_tolooh,ph_terpooh,ph_cl2,ph_hocl,ph_fmcl
 

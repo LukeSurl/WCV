@@ -22,6 +22,7 @@
                ph_br2,ph_bro,ph_brno2,ph_hobr,ph_brno3,                  &
                ph_oclo,ph_clno3,                                &
                ph_brcl,ph_hgbr2,ph_hgbr,ph_hgcl,                         &
+               ph_hgxno2,ph_hgxho2,ph_hgxclo,ph_hgxbro,ph_hgxoh,         &
                nref0, nw0, tuv_jmax0,                                    &
                ph_radfld, ph_adjcoe, ph_prate,                           &
                wc, zref,                                                 &
@@ -80,8 +81,9 @@
            ph_terpooh,ph_mvk,ph_glyald,ph_hyac,                        &
            ph_cl2,ph_hocl,ph_fmcl,                                     &
            ph_br2,ph_bro,ph_brno2,ph_hobr,ph_brno3,                    &
-           ph_oclo,ph_clno3,                                  &
-           ph_brcl,ph_hgbr2,ph_hgbr,ph_hgcl
+           ph_oclo,ph_clno3,                                           &
+           ph_brcl,ph_hgbr2,ph_hgbr,ph_hgcl,                           &
+           ph_hgxno2,ph_hgxho2,ph_hgxclo,ph_hgxbro,ph_hgxoh
 
    REAL, INTENT(INOUT)  ::                                             &
            dt_cld(ims:ime,kms:kme,jms:jme),                            &
@@ -192,6 +194,7 @@
                ph_br2,ph_bro,ph_brno2,ph_hobr,ph_brno3,                &
                ph_oclo,ph_clno2,ph_clno3,                              &
                ph_brcl,ph_hgbr2,ph_hgbr,ph_hgcl,                       &
+               ph_hgxno2,ph_hgxho2,ph_hgxclo,ph_hgxbro,ph_hgxoh,       &
                tauaer1,tauaer2,tauaer3,tauaer4,                        &
                gaer1,gaer2,gaer3,gaer4,                                &
                waer1,waer2,waer3,waer4,                                &
